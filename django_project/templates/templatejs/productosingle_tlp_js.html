@@ -1,0 +1,226 @@
+{% verbatim %}	
+
+<script id="productoSingles_tlp" type="text/template">
+	<div class="nav-breadcrumb container"></div>
+	<div class="producto-single">
+		<div class="section-productos container">
+			<div class="row">
+				<div class="imagenes_producto col-md-8">
+					<div id="galeria_full" class="fotos_productos">
+			        </div>
+			        <div id="galeria_movil" class="fotos_productos_mobil">          
+			        </div>
+				</div>
+				<div class="datos_producto col-md-4">
+					<h1 class="product-name">
+						{%for categoria in categorias%}
+							{%if !categoria.padre %}
+							<span class="product-name-gender">{{categoria.nombre}}</span>
+							{%endif%}
+						{% endfor %}
+						<span> {{full_name}} </span>
+					</h1>
+					<div class="categorias_productos">
+						{% for categoria in categorias %}
+						<a href="{{categoria.link}}" class="btn btn-default">{{categoria.nombre}}</a>
+						{% endfor %}
+					</div>
+					<div class="product-content">
+						<div class="precios">
+							{% for varia in variaciones%}
+							<div class="precio_variacion {{varia.id}} {%if loop.first%}mostrar{% endif%}">
+								{%if varia.oferta%}
+									<div class="descuento">-{{varia.oferta}}%</div>
+									<div class="precios_old">S/. {{varia.precio}}</div>
+								{%endif%}
+								<div class="precio_actual">S/. {{varia.precio_venta}}</div>
+							</div>
+							{%endfor%}
+						</div>
+						<div class="product-review-links">
+							<div class="pr-snippet-wrapper">
+								<div class="pr-snippet-stars">
+									<div class="estrellas">
+										<span class="estrella icon-star"></span>
+										<span class="estrella icon-star"></span>
+										<span class="estrella icon-star"></span>
+										<span class="estrella icon-star"></span>
+										<span class="estrella icon-star"></span>
+									</div>
+								</div>
+								<div class="pr-snippet-read-write">
+									<div class="num_estrellas"><span class="ratio">4.5</span>
+										<div class="pr-snippet-read-reviews">(45)</div>
+										<div class="pr-snippet-write-review">Escribe un Comentario</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="product-variations">
+							<div class="variacion_color">
+								<div class="color_titulo label">
+									Color Seleccionado:<span class="selectedColor">{{color}}</span>
+								</div>
+								<div class="color_valor">
+									<ul class="swatches_Color">
+										<li class="selected">
+											<figure>
+												<a href="/producto/{{slug}}/" class="link">
+													<img src="{{thum}}"/>
+												</a>
+											</figure>
+										</li>
+										{%for relacion in relaciones%}
+										<li>
+											<figure>
+												<a href="/producto/{{relacion.slug}}/" class="link">
+													<img src="{{relacion.thum}}"/>
+												</a>
+											</figure>
+										</li>
+										{%endfor%}
+									</ul>
+								</div>
+							</div>
+							<div class="variacion_talla">
+								<div class="sizes-title label">Tallas Disponibles:
+									<select class="tallas_form form-control">
+										<option value="">Seleccina una talla</option>
+										{% for varia in variaciones %}
+										{%if varia.stock%}
+										<option value="{{varia.id}}">{{varia.talla}}</option>
+										{%else%}
+										<option class="sin_stock" value="{{varia.id}}">{{varia.talla}} -- sin stock --</option>
+										{%endif%}
+										{%endfor%}
+									</select>
+								</div>
+							</div>
+						</div>
+						<div id="addtocart" class="product-add-to-cart">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+		<div id="producto_detalles" class="container-fluid">
+			<div class="row">
+				<section id="product-sub-details-anchor" class="product-sub-details col-md-7">
+			        <div class="product-long-description">
+			          <h2>Detalles</h2>
+			          <p>Beautiful scallop seaming modernizes this luxe over-the-knee boot and elongates the leg. Crafted from sumptuous Twinface sheepskin and suede, the Samantha sits on a modern crepe outsole, cushioning insole, and slight stacked heel for comfort and contemporary style.</p>
+			          <ul>
+			            <li> Twinface sheepskin and suede </li>
+			            <li> Twinface sheepskin and suede </li>
+			            <li> Twinface sheepskin and suede </li>
+			            <li> Twinface sheepskin and suede </li>
+			            <li> Twinface sheepskin and suede</li>
+			          </ul>
+			        </div>
+			    </section>
+			    <div class="product-fit segundo_producto col-md-5">
+			        <div><img src="https://smassets.stevemadden.com/content/styletips/2015/promo/styletip-US_2015.08.07_SMFREE50.gif"/></div>
+			    </div>
+			</div>
+		</div>
+		<section id="producto-asociado" class="">
+	      <h2>Tambien te podria gustar</h2>
+	      <div class="lista-productos"></div>
+	    </section>
+	    <section id="recomendation-producto" class="">
+	      <h2>Comentarios
+	        <button class="btn btn-default btn-contraste"><span>Escribe un Comentario</span></button>
+	      </h2>
+	      <div class="rw-control-bar rw-filter">
+	        <div class="rw-contador"><span>1-4 de 97 Comentarios</span></div>
+	        <div class="rw-sort"><span>Ordenar</span><span class="icono">#</span>
+	          <ul class="mostrar-ordenar">
+	            <li><span data="mas-relevante">Mas Relevante</span></li>
+	            <li><span data="mas-ayuda">Que mas Ayudo</span></li>
+	            <li><span data="mayor-rating">Mayor Puntuacion</span></li>
+	            <li><span data="menor-rating">Menor Puntuacion</span></li>
+	            <li><span data="mas-reciente">Mas Reciente</span></li>
+	          </ul>
+	        </div>
+	      </div>
+	      <div class="reviews-lista">
+	        <article>
+	          <div class="review-header">
+	            <div class="rw-author-avatar">
+	              <figure><span>Avatar</span></figure>
+	            </div>
+	            <div class="rw-author-summary">
+	              <div class="rw-content-header">
+	                <div class="estrellas"><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span></div>
+	                <div class="rw-content-nombre"><span class="nombre">Gabbi</span><span class="time">15 days ago</span></div>
+	                <div class="rw-content-titulo">
+	                  <h4 class="rw-titulo">Confortable y estilos</h4>
+	                </div>
+	              </div>
+	              <div class="rw-content-sumary-body">
+	                <p>I love these they are the best casual sneakers!!!!</p>
+	                <div class="rw-data">
+	                  <div class="rw-categoria"><span class="icono">#</span><span class="cate">Casual</span><span class="cate">Cute</span><span class="cate">Style</span></div>
+	                  <div class="recomentacion-value">
+	                    <dt class="label-recomendacion"><span class="icono">#</span><span class="value-recomendacion">Si,</span></dt>
+	                    <dd class="rw-recomendacion-content">Yo recomiendo este producto</dd>
+	                  </div>
+	                </div>
+	              </div>
+	              <div class="rw-helps">
+	                <div class="feedback-help"><strong>Te ayudo?</strong>
+	                  <div class="feedback-yes"><span class="label-feedback">Yes</span><span class="num-feedback">0</span></div>
+	                  <div class="feedback-yes"><span class="label-feedback">No</span><span class="num-feedback">0</span></div>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	        </article>
+	      </div>
+	    </section>
+	</div>
+</script>
+
+<script id="galeriafull_tlp" type="text/template">
+	<div id="thumbnails" class="product-thumbnails">
+	  <ul>
+	    {% for img in imagenes_producto%}
+	    <li class="thumb selected">
+	      <img data-imagen="{{img.imagen}}" src="{{img.imagen_thum}}"/>
+	    </li>
+	    {%endfor%}
+	  </ul>
+	</div>
+	<div id="imagen_primary">
+	  {% for img in imagenes_producto%}
+	  	{% if !img.orden%}
+	  	<img src="{{img.imagen}}"/>
+	  	{%endif%}
+	  {% endfor%}
+	</div>
+</script>
+
+<script id="galeria_mobil_tlp" type="text/template">
+	{%for img in imagenes_producto%}
+	<div>
+		<img src="{{img.imagen}}"/>
+	</div>
+	{%endfor%}
+</script>
+
+<script id="add_to_cart_tlp" type="text/template">
+	<input type="text" name="producto" value="{{producto}}">
+	<input type="text" name="variacion" value="{{variacion}}">
+	<input type="text" name="carro" value="{{carro}}">
+	<input type="text" name="cantidad" value="1">
+	{% if !variacion%}
+	<button class="btn btn-contraste btn-large" type="submit" value="Selecciona una talla" disabled="disabled" >
+		<span>Selecciona una talla</span>
+	</button>
+	{%else%}
+	<button id="addtocart" class="btn btn-contraste btn-large" type="submit" value="Enviar">
+		<span>Agregar al Carro</span>
+	</button>
+	{%endif%}
+</script>
+{% endverbatim %}

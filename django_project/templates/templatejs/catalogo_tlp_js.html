@@ -1,0 +1,84 @@
+{% verbatim %}	
+
+<script id="page_catalogo_template" type="text/template">
+	<div class="catalogo container-fluid">
+		<section class="imagen_categoria">
+		</section>
+		<div class="nav-breadcrumb">
+		</div>
+		<div class="row">
+			<div class="section-refinamiento col-md-3">
+				<aside class="js-panel from-right">
+			      <div id="refinamientoCategoria" class="refinement Categoria"></div>
+			      <div class="refinement Color">
+			      </div>
+			    </aside>
+			</div>
+			<div class="section-main search-result-wrapper col-md-9">
+				<div class="titulo-categoria text-center">
+			    </div>
+			 	<div class="resultados lista-productos row"></div>	
+			</div>
+		</div>
+	</div>
+	
+</script>
+
+<script id="titulo_catalogo_tlp" type="text/template">
+	<h1 class="titulo">
+        {%if nombre2%}
+          {{nombre}}
+          <small>
+            <span class="icono-triangulo-left"></span>{{nombre1}} de {{nombre2}}<span class="icono-triangulo-right">
+          </small>
+        {%else%}
+          {%if nombre1%}
+            {{nombre}}
+            <small>
+              <span class="icono-triangulo-left"></span>{{nombre1}}<span class="icono-triangulo-right">
+            </small>
+          {%else%}
+            {{nombre}}
+          {%endif%}
+        {%endif%}
+      </h1>
+      <div class="descripcion">
+      <p>Este seria una pequeña descripcion de la categoria que dictamina q se muestra en la busqueta</p>
+    </div>
+</script>
+
+<script id="categoria_bloque_tlp" type="text/template">
+	<h3 class="toogle"><span>{{nombre}}</span></h3>
+		<ul class="clearfix swatches lista">
+	</ul>
+</script>
+
+<script id="categoria_link_tlp" type="text/template">
+	{%if valor%}
+	<a class="no-link {{slug}} no_activo" href="#" data-tipo="{{valor}}" data-valor="{{nombre}}">
+		{{nombre}}
+	</a>
+	{%else%}
+	<a class="link" href="/catalogo/{{slug}}/">{{nombre}}</a>
+	{%endif%}
+</script>
+
+<script id="productosLista_tlp" type="text/template">
+	<a href="{{link}}" class="link">
+		<figure>
+			<img src="{{thum}}"/>
+		</figure>
+	    <div class="nombre_productos">
+	    	<span>{{nombre}}</span>
+	    	<span class="color_productos">"{{color}}"</span>
+	    </div>
+	    <div class="precios">
+	      {%if en_oferta%}    
+	        <div class="old_precio"><span>S/. {{precio}}</span></div>     
+	      {%endif%}
+	      <div class="current_precio"><span>S/. {{precio_venta}}</span></div>
+	    </div>
+	</a>
+</script>
+
+{% endverbatim %}

@@ -1,0 +1,49 @@
+{% verbatim %}	
+
+<script id="page_home_template" type="text/template">
+	<div id="home-section-a">
+	  <div class="row margin-bot-0">
+	    <div class="col-xs-12 text-center sale-banner"><a href="/" class="link">
+	        <p class="font-good-headline all-caps margin-top-0 margin-bot-0 font-white font-12 letter-space-2"><strong class="margin-top-0 margin-bot-0">Dias de ofertas</strong>
+	          <p>Ahorra hasta un 30% en moda de primavera y Verano listo por tiempo limitado</p><span class="btn border-gold-white-btn font-italic">visitar tienda</span>
+	        </p></a></div>
+	  </div>
+	  <section id="homepage-carousel"></section>
+	  <section id="home_ofertas" class="carrusel">
+	    <h2>Ofertas en Loviz DelCarpio<span class="linea"></span></h2>
+	    <div class="lista-productos"></div>
+	  </section>
+	  <section id="home_best_seller" class="carrusel">
+	    <h2>Lo mas Vendido en Loviz DelCarpio</h2>
+	    <div class="lista-productos"></div>
+	  </section>
+	</div>
+</script>
+
+
+<script id="breadcrumb_tlp" type="text/template">
+	<ol class="breadcrumb">
+	</ol>	
+</script>
+
+<script id="breadcrumb_link_tlp" type="text/template">
+	{%if link%}
+		<a href="{{link}}" class="link">{{nombre}}</a>
+	{%else%}
+		<span class="last">{{nombre}}</span>
+	{%endif%}
+</script>
+
+<script id="bloque_ajax_tlp" type="text/template">
+	<div class="bubblingG">
+		<span id="bubblingG_1">
+		</span>
+		<span id="bubblingG_2">
+		</span>
+		<span id="bubblingG_3">
+		</span>
+	</div>
+</script>
+
+
+{% endverbatim %}

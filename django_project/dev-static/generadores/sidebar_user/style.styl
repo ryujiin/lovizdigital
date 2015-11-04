@@ -1,0 +1,136 @@
+f_imprenta ='Pathway Gothic One', sans-serif;
+f_cusrsiva = 'Great Vibes', cursive;
+
+.right-nav-btns
+	.nav-sidebar
+		position fixed
+		width 310px
+		background-color #fff
+		background-color rgba(255,255,255,.9)
+		right 0
+		top 0
+		height 100%
+		transition visibility 0s linear .3s,padding 250ms,transform .3s
+		z-index 1
+		transform translate3d(100%,0,0)
+		box-shadow 1px 1px 3pc rgba(0,0,0,.035)
+		visibility hidden
+		>div
+			height 100%
+			overflow-y auto
+			-webkit-overflow-scrolling touch
+		&.top_side
+			padding-top 91px
+			top 36px
+		&.show
+			visibility visible
+			transition-delay 0s
+			transform translate3d(0,0,0)
+.right-nav-btns 
+	.header-account-btn
+	.nav-sidebar
+		font-size 1em
+		overflow hidden
+		h1
+			display none
+		.account-welcome-box, .box, .login-box
+			margin 0
+			border-top none
+		.box, .login-box
+			background-color transparent
+		.section-header
+			display block
+			background-color #fafafa
+			cursor pointer
+			border-bottom 1px solid #f4f4f4
+			font-size 1.1em!important
+			font-family f_imprenta
+			font-weight inherit
+			letter-spacing 2px
+			margin 0
+			padding 1em
+			position relative
+			text-transform uppercase
+			line-height 1.1
+		.section-header
+			position relative
+			padding-right 45px
+		.section-header
+			&.active
+				background-color #f4f4f4
+				&:hover
+					background-color #f4f4f4					
+			&:hover
+				background-color #fff
+				text-decoration none
+		.login-box-content			
+			overflow hidden
+			transition  300ms, height 300ms, padding 300ms
+			padding-top 0
+			padding-bottom 0
+			min-height 0
+			height 0
+			&.active
+				height auto
+
+/*
+.right-nav-btns
+	.nav-sidebar
+		position fixed
+		width 310px
+		right 0
+		top 0
+		height 100%
+		transition visibility 0s linear .3s,padding 250ms,transform .3s
+		transform translate3d(100%,0,0)
+		box-shadow 1px 1px 3pc rgba(0,0,0,.035)
+		>div
+			height 100%
+			overflow-y auto
+			
+.right-nav-btns 
+	.header-account-btn
+	.nav-sidebar			
+		font-size 1em
+		overflow hidden
+.right-nav-btns .nav-sidebar .section-header
+	display block
+	cursor pointer
+	border-bottom 1px solid #f4f4f4
+	font-size 1.1em!important
+	letter-spacing 2px
+	margin 0
+	padding 1em
+	text-transform uppercase
+	line-height 1.1
+	font-weight inherit
+.right-nav-btns .nav-sidebar .section-header
+	position relative
+	padding-right 45px
+	&+div
+		overflow hidden
+		transition min-height .3s,height .3s,padding .3s
+.right-nav-btns
+	.nav-sidebar
+		z-index 1
+		background-color transparent
+		font-size 1em
+		&.top_side
+			padding-top 120px
+		&.show
+			visibility visible
+			transition-delay 0
+			transform translate3d(0,0,0)
+		h1
+			display none
+		.login-box
+			background-color transparent
+			margin 0
+			border-top none
+		.section-header
+			&.active
+				background-color #f4f4f4
+			&.active+div
+				padding-top 1em
+				padding-bottom 1em
+*/

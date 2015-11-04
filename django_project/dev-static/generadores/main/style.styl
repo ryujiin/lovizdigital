@@ -1,0 +1,47 @@
+#wrapper
+	background #fff
+	padding-top 93pt
+	width 100%
+	position static
+	z-index 50
+	transition all .3s linear
+	#main
+		&>nav
+			width 100%
+		.container
+			padding 0
+.container:after
+	clear both
+.flexcontainer
+	display flex
+#main
+	#primary
+		position relative
+		min-height 1px
+		padding-left 15px
+		padding-right 15px
+		width 61%
+		float left
+		box-sizing border-box
+		&.full-with
+			width 100%
+			padding 0
+	#secundary
+		position relative
+		min-height 1px
+		padding-left 15px
+		padding-right 15px
+		width 33%
+		float left
+#home-section-a
+	.carrusel
+		h2
+			text-align center
+h2
+	.linea
+		width 100px
+		display block
+		height 2px
+		margin 5px auto
+		background #333
+		box-shadow 1px 1px 3px rgba(0,0,0,0.5)

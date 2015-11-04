@@ -1,0 +1,289 @@
+{% verbatim %}	
+
+<script id="procesar_page_tlp" type="text/template">
+	<div class="container procesar_pago">
+		<div class="row">
+			<div class="titulo">
+				<h1 class="titulo text-center">Bienvenido a la pasarela de pagos</h1>
+			</div>
+			<div class="columnas_pago ">
+				<div class="pasos col-md-8">
+					<div class="section_panel paso_envio">
+					</div>
+					<div class="section_panel paso_pago">
+					</div>
+				</div>
+				<div class="resumen col-md-4">
+					<div class="section_panel orden_sumary">
+					</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+</script>
+
+<script id="direccion_tlp" type="text/template">
+	<div class="radio">
+		 <label>
+		   <input type="radio" name="selecion_direccion" value="{{id}}">
+		   <p><strong>{{nombre}}</strong></p>
+		   <p><strong>{{departamento}}, {{provincia}}</strong> {{direccion}}</p>
+		 </label>
+	</div>
+</script>
+
+<script id="paso_metodoenvio_tlp" type="text/template">
+	<div class="panel_header">
+		<h3>
+			<span class="glyphicon glyphicon-ok"></span>
+			1.-Metodo de Envio
+		</h3>
+	</div>
+	<div class="panel_cuerpo">			
+		<div class="panel_seccion">
+			<h4>Mis direcciones registradas</h4>
+			<div class="error_direccion">
+				<p class="bg-warning text-warning">Por favor seleccione una direccion de envio</p>
+			</div>
+			<div class="direcciones">
+				<p class="bg-warning text-warning">Aun no tienes direcciones agregadas</p>
+			</div>
+
+			<div class="radio add_direccion">
+			  <label>
+			    <input type="radio" name="selecion_direccion" id="add_direccion" value="add_form">
+			    Agregar direccion nueva
+			  </label>
+			</div>
+		</div>
+		<div class="panel_seccion form_addDirec">
+			<div class="formulario">			
+			</div>
+		</div>
+		<div class="panel_seccion panel_seccion_final">
+			<button class="btn btn-large btn-next">Siguiente Paso</button>
+		</div>
+	</div>	
+</script>
+
+<script id="paso_pago_tlp" type="text/template">
+	<div class="panel_header">
+		<h3>2.- Forma de Pago y Pagar</h3>
+	</div>
+	<div class="panel_cuerpo">
+		<div class="panel_seccion">
+			<h4>Metodo de Pago</h4>
+			<div>
+			  <!-- Nav tabs -->
+			  <ul class="nav nav-tabs" role="tablist">
+			    <li role="presentation" class="active">
+			    	<a href="#tarjeta" aria-controls="tarjeta" role="tab" data-toggle="tab" data-selector="tarjeta">Tarjeta de Credito / Debito</a>
+			    </li>
+			    <li role="presentation">
+			    	<a href="#paypal" aria-controls="paypal" role="tab" data-toggle="tab" data-selector="paypal">Paypal</a>
+			    </li>
+			    <li role="presentation">
+			    	<a href="#pagoefectivo" aria-controls="pagoefectivo" role="tab" data-toggle="tab" data-selector="pagoefectivo">PagoEfectivo</a>
+			    </li>
+			    <li role="presentation">
+			    	<a href="#entrega" aria-controls="entrega" role="tab" data-toggle="tab" data-selector="contraentrega">Contra entrega</a>
+			    </li>
+			  </ul>
+
+			  <!-- Tab panes -->
+			  <div class="tab-content row">
+			    <div role="tabpanel" class="tab-pane active" id="tarjeta">			    	
+			   	</div>
+			    <div role="tabpanel" class="tab-pane" id="paypal">
+			    	<p>Si deseas pagar con tarjetas VISA, MASTERCARD, AMERCIAN EXPRESS, DINERS, o cualquier otra internacional puedes usar <span class="card_paypal"></span>.</p>
+			    	<p>Si cuentas con una cuenta paypal puedes utilizarla en nuestra tienda online. Si no la tienes, también puedes crearla para realizar pagos en diferentes tipos de tarjeta de crédito. Una vez conforme serás re dirigido a la página oficial de paypal para concretar tu transacción.</p>
+			    </div>
+			    <div role="tabpanel" class="tab-pane" id="pagoefectivo">
+			    	<p>Compra con PagoEfectivo y paga a través de internet o en cualquier oficina del BCP, BBVA, Interbank, Scotiabank, en Agencias de Pago de Servicios Western Union y en establecimientos autorizados que tengan el logo de PagoEfectivo y/o FullCarga.</p>
+			    </div>
+			    <div role="tabpanel" class="tab-pane" id="entrega">
+			    	<p>Si desea pagar cuando su producto llega asu casa.</p>
+			    	<p>Recuerda que puedes poner la direccion de tu centro de trabajo y recibirlos ahi mismo.</p>
+			    </div>
+			  </div>
+			</div>
+		</div>
+		<div class="panel_seccion panel_seccion_final">
+			<button class="btn btn-large btn-next visto tarjeta">Pagar con Tarjeta</button>
+			<button class="btn btn-large btn-next paypal">Pagar con Paypal</button>
+			<button class="btn btn-large btn-next pagoefectivo">Pagar con PagoEfectivo</button>
+			<button class="btn btn-large btn-next deposito">Deposito Bancario</button>
+			<button class="btn btn-large btn-next contraentrega">Pagar Contraentrega</button>
+		</div>
+	</div>
+</script>
+
+<script id="nueva_direccion_tlp" type="text/template">
+	<h4>Informacion de Direccion de Envio
+		<span class="required-label">Campos Requeridos</span>
+	</h4>
+	<form id="form_nueva_direccion">
+		<div class="form-group f_nombre">
+			<label>Nombre <span class="requerido">*</span></label>
+			<input type="text" placeholder="Un nombre que identifique tu direccion Ejem: Casa" npattern="/^[\w.%+\-]+@[\w.\-]+\.[\w]{2,}$/" class="form-control" data-contenedor="f_nombre">
+			<p class="text-danger">Este campo es obligatorio</p>
+		</div>
+		<div class="form-group f_depas">
+			<label>Departamento <span class="requerido">*</span></label>
+			<select class="form-control" id="departamentos" data-contenedor="f_depas">						
+				<option disabled=="disabled" selected="selected" value="">Seleciona una Departamentooption>
+			</select>
+			<p class="text-danger">Este campo es obligatorio</p>			
+		</div>
+		<div class="form-group f_provi">
+			<label>Provincia <span class="requerido">*</span></label>
+			<select class="form-control" id="provincias" data-contenedor="f_provi">
+				<option disabled=="disabled" selected="selected" value="">Seleciona una provincia</option>
+			</select>
+			<p class="text-danger">Este campo es obligatorio</p>
+		</div>
+		<div class="form-group f_distri">
+			<label>Distrito <span class="requerido">*</span></label>
+			<select class="form-control" id="distritos" data-contenedor="f_distri">
+				<option disabled=="disabled" selected="selected" value="">Seleciona una Distrito</option>
+			</select>
+			<p class="text-danger">Este campo es obligatorio</p>			
+		</div>
+		<div class="form-group direcciones">
+			<label>Direccion de Envio <span class="requerido">*</span></label>
+			<input type="text" class="form-control" id="direcciones" placeholder="Direcci" data-contenedor="direcciones">
+			<p class="text-danger">Este campo es obligatorio</p>
+		</div>
+		<button type="submit" class="btn btn-default btn-contraste">Agregar direccion</button>
+	</form>
+</script>
+
+<script id="linea_resumen_tlp" type="text/template">
+	<div class="img_resumen">
+		<figure class="img">
+			<img src="{{thum}}">
+		</figure>
+	</div>
+	<div class="detalle_resumen">
+		<h4>{{nombre}}</h4>		
+		<div class="color"><i>Color: </i>{{color}}</div>
+		<div class="talla"><i>Talla: </i>{{talla}}</div>
+		<div class="genero"><i>Cantidad: </i>{{cantidad}}</div>
+		<div class="genero"><i>Precio: </i>S/.{{precio}}</div>
+	</div>
+</script>
+
+<script id="resumen_tlp" type="text/template">
+	<div class="panel_header">							
+		<h3>Resumen de Orden <a href="/carro/" class="edit link pull-right">Editar</a></h3>							
+	</div>
+	<div class="panel_cuerpo">
+		<div class="lienas_resumen">
+		</div>
+		<div class="panel_seccion table-subtotal">							
+			<table>
+				<tbody>
+					<tr>
+						<td>Subtotal</td>
+						<td class="text-right">S/. {{subtotal}}</td>
+					</tr>
+					<tr>
+						<td>Manipulacion y Envio</td>
+						{%if envio%}
+						<td class="text-right">S/. {{envio}}</td>
+						{%else%}
+						<td class="text-right">Gratis!</td>			
+						{%endif%}
+					</tr>
+					<tr>
+						{%if descuento%}
+						<td>Descuento</td>
+						<td class="text-right">S/. 0.00</td>
+						{%endif%}
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="panel_seccion resumen_total">	
+			<table class="table-total">
+				<tbody>
+					<tr>
+						<td><h3>Tu Total</h3></td>
+						<td class="total_precio text-right">S/. {{total}}</td>
+					</tr>
+				</tbody>
+			</table>						
+		</div>
+	</div>	
+</script>
+
+<script id="pago_tarjeta_tlp" type="text/template">
+	<form id="pagar_tarjeta">
+		<div class="col-md-12">
+			<p class="text-muted">Paga de manera segura con tarjetas de crédito.</p>
+			<input id="carro_pago" value="{{id}}" disabled type="hidden">
+		</div>
+		<span class="payment-errors">Enrique</span>
+		<div class="form-group col-xs-12 nombre_tarjeta">
+			<label for="exampleInputEmail1">Nombre del Titular <span class="requerido">*</span></label>
+			<input type="text" class="form-control" data-contenedor="nombre_tarjeta" id="name" placeholder="Ingresa el nombre del Titular" >
+			<p class="text-danger">Este campo es Obligatorio</p>
+		</div>
+		<div class="form-group col-xs-12 numero_tarjeta">
+			<label for="exampleInputEmail1">Numero de Tarjeta  <span class="requerido">*</span></label>
+			<input type="text" class="form-control" data-contenedor="numero_tarjeta" id="number" placeholder="Ingresa el numero de su tarjeta" maxlength="16">
+			<p class="text-danger">Este campo es Obligatorio</p>				
+			<p class="text-muted">Ejemplo :4111111111111111 (sin espacios)</p>
+			<ul class="tajetas-habilitadas">
+				<li class="card_visa"></li>
+				<li class="card_master"></li>
+				<li class="card_discover"></li>
+				<li class="card_american"></li>
+			</ul>
+			<p class="text-muted">En estos momentos no esta disponible el pago con American Express, estamos trabajando para poder habilitarlo lo antres posible. Gracias por su comprencion.</p>
+		</div>
+		<div class="col-xs-4 form-group mes_tarjeta">
+			<label for="exampleInputEmail1">Mes<span class="requerido">*</span></label>			    		
+			<select class="form-control" id="mes" data-contenedor="mes_tarjeta">
+				<option value="">Mes</option>			
+				<option value="01">01 - Enero</option>
+				<option value='02'>02 - Febrero</option>
+				<option value='03'>03 - Marzo</option>
+				<option value='04'>04 - Abril</option>
+				<option value='05'>05 - Mayo</option>
+				<option value='06'>06 - Junio</option>
+				<option value='07'>07 - Julio</option>
+				<option value='08'>08 - Agosto</option>
+				<option value='09'>09 - Setiembre</option>
+				<option value='10'>10 - Octuubre</option>
+				<option value='11'>11 - Noviembre</option>
+				<option value='12'>12 - Diciembre</option>
+			</select>
+			<p class="text-danger">Este campo es Obligatorio</p>		
+		</div>
+		<div class="col-xs-3 form-group year_tarjeta">
+			<label for="exampleInputEmail1">Año<span class="requerido">*</span></label>			    		
+			<select class="form-control" id="year" data-contenedor="year_tarjeta">
+				<option value="">Año</option>
+				<option>2015</option>
+				<option>2016</option>
+				<option>2017</option>
+				<option>2018</option>
+				<option>2019</option>
+				<option>2020</option>
+				<option>2021</option>
+				<option>2022</option>
+				<option>2023</option>
+				<option>2024</option>
+				<option>2025</option>
+			</select>
+			<p class="text-danger">Este campo es Obligatorio</p>
+		</div>
+		<div class="col-xs-2 form-group cvc_tarjeta">
+			<label for="exampleInputEmail1">CVC<span class="requerido">*</span></label>
+			<input type="text" class="form-control" id="cvc" placeholder="Codigo" data-contenedor="cvc_tarjeta" maxlength="4">			    		
+			<p class="text-danger">Este campo es Obligatorio</p>
+		</div>
+	</form>
+</script>
+{% endverbatim %}

@@ -10,19 +10,20 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+import config
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+location = lambda x: os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), x)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'eRxdv6fbST83vtMf9na0V72n1wivBLhDgFEv7pedNGEPvIuufl'
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -36,6 +37,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #apps terceros
+    'require',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'sorl.thumbnail',
+    #'storages',
+    'carro',
+    'catalogo',
+    'cliente',
+    'cmsweb',
+    'material',
+    'pedido',
+    'pago',
+    'ubigeo',
+    'utiles',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -43,11 +59,33 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'django_project.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            location('templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': DEBUG,
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
@@ -58,9 +96,9 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'fUFhS3ZL1c',
+        'NAME': config.NAME,
+        'USER': config.USER,
+        'PASSWORD': config.PASSWORD,
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -83,4 +121,47 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+MEDIA_ROOT = location("public/media")
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = location('public/static')
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    location('staticos'),
+)
+
+#STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
+STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = (
+    'cliente.backends.EmailOrUsernameModelBackend',    
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AWS_STORAGE_BUCKET_NAME = "lovizheroku"
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+MEDIA_ROOT = ''
+MEDIA_URL = "https://%s.s3.amazonaws.com/" % AWS_STORAGE_BUCKET_NAME
+
+AWS_ACCESS_KEY_ID = config.AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY
+
+STRIPE_SECRET_KEY=config.STRIPE_SECRET_KEY
+SHOP_CURRENCY = 'PEN'
+
+try:
+    from .local import *
+except ImportError:
+    pass

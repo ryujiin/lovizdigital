@@ -1,0 +1,132 @@
+naranja = #C2A125
+
+.procesar_pago
+	.error_direccion
+		display none;
+	.lista-direccion
+		border-bottom 1px solid #f4f4f4
+		padding 5px 0
+		p
+			margin 0
+		&:hover
+			background #F4F4F4;
+	h4
+		font-size 20px
+		margin 10px 0
+		.required-label
+			float right
+			font-size 14px
+			font-style italic
+			&:before
+				content " * "
+				color naranja
+				font-size 2em	
+	.columnas_pago
+		.section_panel
+			margin-bottom 30px
+			position relative
+			&.correcto
+				.panel_header
+					h3
+						.glyphicon
+							display inline-block
+							color green
+			&.is-activo
+				.panel_header
+					background #111
+					color #fff
+				.panel_cuerpo
+					display block
+			&.orden_sumary
+				.edit
+					color naranja
+				.panel_cuerpo
+					display block
+			.panel_header
+				cursor pointer
+				background #f4f4f4
+				padding 18px 30px
+				transition .2
+				h3
+					margin 0
+					font-size 20px
+					.glyphicon
+						display none
+			.panel_cuerpo
+				display none
+			.panel_seccion
+				padding 22px 30px 8px
+				border-bottom 2px solid #F4F4F4
+				border-right 2px solid #F4F4F4
+				border-left 2px solid #F4F4F4
+				position relative
+				min-height 88px
+				.icono
+					position absolute
+					top 40%
+					right 40px
+					color green
+				.tab-content
+					margin 15px 0
+			.panel_seccion_final
+				padding 30px
+				background #f4f4f4
+				min-height 10px
+				overflow hidden
+				.requiere_label
+					&:before
+						content " * "
+						color naranja
+						font-size 2em
+				button
+					float right
+					
+	.lienas_resumen
+		.linea
+			display flex
+			.img_resumen
+				width 40%
+			.detalle_resumen
+				font-size 0.8em
+				width 60%
+	.orden_sumary
+		table
+			width 100%
+			font-family f_imprenta			
+	.resumen_total
+		h3
+			margin 0
+		.total_precio
+			color green
+			font-weight 700
+			font-size 1.4em
+	.tajetas-habilitadas
+		li
+			display inline-block
+			width 51px
+			height 32px
+			background-repeat no-repeat
+			background-image url('../imgs/payment.png');
+		.card_visa
+			background-position -108px 0
+		.card_master
+			background-position -214px 0
+		.card_discover
+			background-position -269px 0
+		.card_american
+			background-position -54px -33px
+	#paypal
+		.card_paypal
+			display inline-block
+			width 51px
+			height 32px
+			background-repeat no-repeat
+			background-image url('../imgs/payment.png');
+			background-position -161px 0
+.paso_pago
+	.panel_seccion_final
+		button
+			display none
+			&.visto
+				display block
+	

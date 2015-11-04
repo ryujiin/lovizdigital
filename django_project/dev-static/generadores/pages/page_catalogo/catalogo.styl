@@ -1,0 +1,60 @@
+.catalogo
+	#main
+		#primary
+			width 100%
+			display flex
+			justify-content space-between
+		#secundary
+			width 20%
+		.search-result-wrapper
+			width 80%
+					
+	.refinement
+		position: relative;
+		display: block;
+		border-bottom: 1px solid #f4f4f4;
+		margin: 0 0 .5em;
+		.toogle
+			cursor pointer
+			font-size 1.3em
+		ul
+			margin 0
+			padding 0
+			li
+				cursor pointer
+				a
+					padding 3px 3px 2px
+					text-transform uppercase
+					font-size .8em					
+					&.activo
+						background-color #111
+						color #fff
+		.Size
+			li
+				display inline-block
+				border 1px solid #111				
+				font-weight 700
+				font-family f_imprenta
+				padding 0 .25em
+				min-width 4em
+				span
+					width 100%
+					display block
+					text-align center
+	.titulo-categoria
+		small
+			display block
+			font-size 0.4em
+			span
+				display inline-block
+				width 40px
+				height 3px
+				background-color rgba(17, 17, 17, 0.8)
+				content '2'
+				margin 4px 6px
+	.resultados
+		display flex
+		flex-flow row wrap
+		justify-content space-around
+		.productos
+			width 320px

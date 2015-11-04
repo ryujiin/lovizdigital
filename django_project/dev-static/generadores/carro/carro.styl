@@ -1,0 +1,66 @@
+.lineas_carro
+	.etiquetas
+		display flex
+		padding 10px 0
+		border-bottom 2px solid #f4f4f4
+		margin-bottom 20px
+		span
+			font-weight 700
+			text-transform uppercase
+			font-family f_imprenta
+			letter-spacing 1px
+		.hiden
+			display none
+	.lineas_items
+		.linea
+			display flex
+			position relative
+			border-bottom 1px solid #f4f4f4
+			padding 20px 0
+	.img_linea
+		width 15%
+	.detalle_linea
+		width 30%
+		.nombre
+			text-transform uppercase
+			font-weight 700
+			font-family f_imprenta
+			letter-spacing 2px
+			font-size 1.2em
+	.precio_linea
+		width 15%
+	.cantidad_linea
+		width 15%
+		.cantidad
+			border 1px solid #f4f4f4
+			padding 8px 20px
+		.cant
+			cursor pointer
+	.subtotal_linea
+		width 15%
+	.acciones_linea
+		width 15%
+		.eliminar
+			font-family f_imprenta
+			text-transform uppercase
+			font-weight 700
+			cursor pointer
+	.carga_linea
+		display none
+		z-index 2
+		width 100%
+		position absolute
+		height 100%
+		background-color rgba(255,255,255,0.5)
+		left 0
+.total_carro
+	margin 30px 0
+	table
+		width 100%
+		font-size 1.1em
+		tr
+			td
+				padding 8px
+				border-top 1px solid #f4f4f4
+		.tabla_total_carro
+			font-size 1.5em

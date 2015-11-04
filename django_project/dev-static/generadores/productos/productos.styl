@@ -1,0 +1,33 @@
+f_imprenta = 'BenchNine', sans-serif;
+f_imprenta2 = 'Pathway Gothic One', sans-serif;
+f_cusrsiva = 'Great Vibes', cursive;
+
+rosado = #F7727A
+
+.lista-productos
+	display flex
+	.productos
+		text-align center
+		figure
+			width 90%
+			min-height 100px
+			margin 2px 2px
+		.nombre_productos
+			font-family f_imprenta
+			font-weight bold
+			font-size 1.2em
+			span
+				display block
+				&.color_productos
+					font-size .8em
+					text-transform uppercase
+					font-weight 400
+		.precios
+			div
+				display inline-block
+				font-family f_imprenta
+			.old_precio
+				font-size 0.9em
+				margin 0 5px
+				text-decoration line-through
+				color rosado

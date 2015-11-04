@@ -1,0 +1,160 @@
+#header
+	background white
+	position fixed
+	top 0
+	left 0
+	width 100%
+	z-index 101
+	header
+		position relative
+		padding 0
+		background #fff
+.section-header
+	background 0 0
+	border-bottom 1px solid #f4f4f4
+	font-size 1.1em!important
+	font-family f_imprenta
+	font-weight inherit
+	letter-spacing 2px
+	margin 0
+	padding 1em
+	position relative
+	text-transform uppercase
+	line-height 1.1
+.header-utility
+	#header-utility-shipping
+		h6
+			font-size 1em
+			margin 8px
+	.secondary-nav
+		ul
+			li
+				a
+					font-family f_imprenta
+					text-transform uppercase
+.header-global
+	position relative
+	padding 0 15px 0 0
+	border-bottom 1px solid #f4f4f4
+	box-shadow 0 3px 3px -2px rgba(0,0,0,0.05)
+	height 5.4em
+	max-width 100%
+	.right-nav-btns
+		position absolute
+		right 0
+		height 100%
+		top 0
+#navigation
+	font-family f_imprenta	
+	.primary-nav
+		ul
+			li
+				a
+					font-size 18px
+					text-transform uppercase
+					color #111
+					padding 28px 15px			
+#mini-cart
+	float right
+	line-height 5pc
+	z-index 200
+	padding 0 25px
+	height 100%
+	font-family f_imprenta
+	color #000
+	letter-spacing 1px
+	&:hover
+		opacity 0.7
+		cursor pointer
+		background #f4f4f4
+	.mini-cart-container .icon-cart-stripe
+		font-size 1.4em
+		vertical-align text-bottom
+	.mini-cart-items
+		background #468847
+		color #fff
+		width: 20px;
+		display: inline-block;
+		line-height: 20px;
+		text-align: center;
+		border-radius: 10px;
+		position: absolute;
+		right: 10px;
+		top: 20px;
+		font-weight: 700;
+		font-size: .8em;
+.right-nav-btns
+	.nav-sidebar
+		position fixed
+		width 310px
+		background-color #fff
+		background-color rgba(255,255,255,.9)
+		right 0
+		top 0
+		height 100%
+		transition visibility 0s linear .3s,padding 250ms,transform .3s
+		z-index 1
+		transform translate3d(100%,0,0)
+		box-shadow 1px 1px 3pc rgba(0,0,0,.035)
+		visibility hidden
+		>div
+			height 100%
+			overflow-y auto
+			-webkit-overflow-scrolling touch
+		&.top_side
+			padding-top 91px
+			top 36px
+		&.show
+			visibility visible
+			transition-delay 0s
+			transform translate3d(0,0,0)
+.right-nav-btns 
+	.header-account-btn
+	.nav-sidebar
+		font-size 1em
+		overflow hidden
+		h1
+			display none
+		.account-welcome-box, .box, .login-box
+			margin 0
+			border-top none
+		.box, .login-box
+			background-color transparent
+		.login-box
+			border 1px solid #f4f4f4
+		.section-header
+			display block
+			background-color #fafafa
+			cursor pointer
+			border-bottom 1px solid #f4f4f4
+			font-size 1.1em!important
+			font-family f_imprenta
+			font-weight inherit
+			letter-spacing 2px
+			margin 0
+			padding 1em
+			position relative
+			text-transform uppercase
+			line-height 1.1
+		.section-header
+			position relative
+			padding-right 45px
+		.section-header
+			&.active
+				background-color #f4f4f4
+				&:hover
+					background-color #f4f4f4					
+			&:hover
+				background-color #fff
+				text-decoration none
+		.login-box-content			
+			overflow hidden
+			transition  300ms, height 300ms, padding 300ms
+			padding-top 0
+			padding-bottom 0
+			min-height 0
+			height 0
+			&.active
+				height auto
+				padding 1em
+

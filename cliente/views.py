@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly
-from rest_framework import authentication, permissions, parsers, renderers
+from rest_framework import authentication, permissions, parsers, renderers, status
 from rest_framework import viewsets, generics
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import api_view, throttle_classes
@@ -49,16 +49,28 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 		return (AllowAny() if self.request.method == 'POST'
 			else IsStaffOrTargetUser()),
 
+class ComentarioImagenViewSet(viewsets.ModelViewSet):
+	serializer_class = ComentarioImagenSerializer
+	queryset = ComentarioImagen.objects.all()
 
 class ComentarioViewSet(viewsets.ModelViewSet):
 	serializer_class = ComentairoSerializer
 
 	def get_queryset(self):
 		queryset = Comentario.objects.all().order_by('-pk')
-		producto = self.request.QUERY_PARAMS.get('producto', None)
+		producto = self.request.query_params.get('producto', None)
 		if producto is not None:
 			queryset = Comentario.objects.filter(producto=producto).order_by('-pk')
 		return queryset
+
+	def create(self, request):
+		if request.user.is_authenticated:
+			request.data['usuario'] = request.user.pk
+		serializer = ComentairoSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DireccionViewsets(viewsets.ModelViewSet):
 	serializer_class = DireccionSerilizer
@@ -72,6 +84,12 @@ class DireccionViewsets(viewsets.ModelViewSet):
 class SuscritoViewset(viewsets.ModelViewSet):
 	serializer_class = SuscritoSerializer
 	queryset = Suscrito.objects.all()
+
+class MayoristaViewset(viewsets.ModelViewSet):
+	permission_classes = (IsAdminUser,)
+	serializer_class = MayoristaSerializer
+	queryset = Mayorista.objects.all()
+
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required

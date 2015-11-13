@@ -1,0 +1,107 @@
+{% verbatim %}
+<script id="page_catalogo_oficna" type="text/template">
+	<div class="cabezera">
+		<h2>Productos</h2>
+		<div class="page-bar pull-right">
+			<ul class="nav nav-pills pull-right collapse navbar-collapse">
+				<li>
+					<a href="/catalogo/add_producto/" class="link text-center">
+						<div class="glyphicon glyphicon-plus-sign"></div>
+						<div>Añadir un nuevo producto</div>						
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div id="catalogo_stadisticas">
+					<div class="panel panel-default">
+					  <div class="panel-body row">
+					  	<div class="col-md-3">
+					  		Articulos sin Stock
+					  	</div>
+					  	<div class="col-md-3">
+					  		Promedio margen de ganancia
+					  	</div>
+					  	<div class="col-md-3">
+					  		Promedio de compras 30 dias
+					  	</div>
+					  	<div class="col-md-3">
+					  		Productos Desabilitados
+					  	</div>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div id="lista_productos">
+					<div class="panel panel-default">
+					  <div class="panel-heading">
+					  	Productos <span class="badge">7</span>
+					  	<a href="/oficina/catalogo/add_producto/" class="link btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-plus-sign"></span>Add Producto</a>
+					  </div>
+					  <div class="panel-body">
+					  	<div class="table-responsive">
+					  		<table class="table">
+					  			<thead>
+					  				<tr>
+					  					<th></th>
+						  				<th>ID</th>
+						  				<th>Imagen</th>
+						  				<th>Nombre</th>
+						  				<th>Referencia</th>
+						  				<th>Precio Base</th>
+						  				<th>Cantidad</th>
+						  				<th>Estado</th>
+						  				<th></th>
+					  				</tr>					  				
+					  			</thead>
+					  			<tbody id="catalgo_list">
+					  			
+					  			</tbody>
+					  		</table>
+					  	</div>
+					  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="add_producto_tlp" type="text/template">
+	<div class="cabezera">
+		<h2>Añadir Producto</h2>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+				  <div class="panel-body">				  
+				  </div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+				  <div class="panel-body">				  
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script id="producto_list_tlp" type="text/template">
+	<td></td>
+	<td>1</td>
+	<td><img src="/fmfm/gneg.jpg"> </td>
+	<td>el nombre del producto</td>
+	<td></td>
+	<td>S/. 20.00</td>
+	<td>5</td>
+	<td>Activo</td>
+	<td>Ver</td>
+</script>
+{% endverbatim %}

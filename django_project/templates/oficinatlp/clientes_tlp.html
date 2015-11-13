@@ -1,0 +1,54 @@
+{% verbatim %}
+<script id="cliente_oficina_tlp" type="text/template">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-default mayorista_panel">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<a href="/oficina/clientes/mayoristas/" class="link">Clientes Mayoristas</a>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="mayoristas_panel_tlp">
+	<div class="panel-heading">
+		Clientes Mayoristas <span class="badge">{{num}}</span>
+		<a href="/oficina/mayorista/add_mayorista/" class="link btn btn-default btn-xs pull-right">
+			<span class="glyphicon glyphicon-plus-sign"></span>New Mayorista
+		</a>
+	</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Nombre</th>
+						<th>Ruc</th>
+						<th>Venta</th>
+						<th>Pago</th>
+						<th>Deuda</th>
+						<th></th>
+					</tr>					  				
+				</thead>
+				<tbody class="lista_mayoristas">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="mayorista_lista">
+	<td></td>
+	<td>{{nombre}}</td>
+	<td>{{ruc}}</td>
+	<td>{{venta}}</td>
+	<td>{{pago}}</td>
+	<td>{{deuda}}</td>
+	<td><a href="/oficina/mayorista/ver/{{id}}/">Ver</a> </td>
+</script>
+
+{% endverbatim %}

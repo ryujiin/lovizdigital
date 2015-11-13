@@ -1,6 +1,7 @@
 from models import *
 from rest_framework import serializers
 from django.contrib.auth.models import User as User
+from cliente.models import Cliente
 
 
 class DireccionSerilizer(serializers.ModelSerializer):
@@ -42,27 +43,58 @@ class UserSerializer(serializers.ModelSerializer):
 		user.set_password(attrs['password'])
 		return user
 
+class ComentarioImagenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ComentarioImagen
+
 from django.utils.timesince import timesince
 
 class ComentairoSerializer(serializers.ModelSerializer):
 	creado = serializers.SerializerMethodField('get_tiempo_creado')
 	nombre = serializers.SerializerMethodField('get_nombre_user')
 	img_producto = serializers.SerializerMethodField('get_img')
+	foto = serializers.SerializerMethodField()
+	recomen = serializers.SerializerMethodField()
+	fotos_coment = ComentarioImagenSerializer(many=True)
 	class Meta:
 		model = Comentario
-		fields = ('id','verificado','valoracion','titulo_comentario','comentario','creado','producto','variacion','usuario','nombre','img_producto','email_invitado')
+		fields = ('id','verificado','valoracion','titulo_comentario','comentario','creado','producto','variacion','usuario','nombre',
+			'img_producto','email_invitado','recomendacion','foto','recomen','ayuda_si','ayuda_no','fotos_coment')
 
 	def get_tiempo_creado(self,obj):
 		time = timesince(obj.creado)
 		return time
 
 	def get_nombre_user(self,obj):
+		nombre = 'Anonimo'
 		if obj.usuario:
-			return obj.usuario.username
+			nombre = obj.usuario.username 
+			if obj.usuario.first_name:
+				nombre = "%s %s" %(obj.usuario.first_name,obj.usuario.last_name)
+		return nombre
+
+	def get_foto(self,obj):
+		try:
+			cliente = Cliente.objects.get(pk=obj.usuario.pk)
+			foto = cliente.foto.url
+		except Exception, e:
+			foto = None		
+		return foto
 
 	def get_img(self,obj):
 		return obj.producto.get_thum().url
 
+	def get_recomen(self,obj):
+		if obj.recomendacion=='si':
+			return True
+		else:
+			return False
+
+
 class SuscritoSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Suscrito
+
+class MayoristaSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Mayorista

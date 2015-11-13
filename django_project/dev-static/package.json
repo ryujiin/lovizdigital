@@ -34,6 +34,7 @@
   },
   "scripts": {
     "styl": "stylus --use nib --watch generador2/app2.styl --out ../staticos/css/",
+    "styloficina": "stylus --use nib --watch oficina/oficina.styl --out ../staticos/css/",
     "jade": "jade app/lib/index.jade --pretty --watch --out ./app/"
   }
 }

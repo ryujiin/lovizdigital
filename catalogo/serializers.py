@@ -71,9 +71,16 @@ class ImgProductoSerializer(serializers.ModelSerializer):
 		url = obj.get_thum().url
 		return url
 
+class MaterialProductoSerializer(serializers.ModelSerializer):
+	material = serializers.CharField(read_only=True)
+	class Meta:
+		model = MaterialProducto
+		fields = ('material','descripcion')
+
 class ProductoSingleSereializer(serializers.ModelSerializer):
 	color= serializers.CharField(read_only=True)
 	variaciones = ProductoVariacionSerializer(many=True)
+	material_producto = MaterialProductoSerializer(many=True)
 	imagenes_producto = ImgProductoSerializer(many=True)
 	thum = serializers.SerializerMethodField('get_thum_img')
 	link = serializers.SerializerMethodField()
@@ -92,7 +99,7 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 		model = Producto
 		fields = ('id','nombre','full_name','color','slug','activo','descripcion','thum','link',
 				'oferta','precio','precio_venta',
-				'imagenes_producto','variaciones','relaciones','video','detalles','valoracion','num_comentarios','categorias')
+				'imagenes_producto','variaciones','relaciones','video','detalles','valoracion','num_comentarios','categorias','material_producto')
 
 	def get_thum_img(self,obj):
 		thum = obj.get_thum().url
@@ -124,7 +131,10 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 			valor = valor+varia.valoracion
 		if num!=0:
 			valoracion = valor/num
+		valoracion ="%0.1f" %(valoracion)		
+
 		return valoracion
 
 	def get_num_comentarios(self,obj):
 		return Comentario.objects.filter(producto=obj.id).count()
+

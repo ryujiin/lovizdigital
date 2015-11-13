@@ -41,17 +41,14 @@
 							<div class="pr-snippet-wrapper">
 								<div class="pr-snippet-stars">
 									<div class="estrellas">
-										<span class="estrella icon-star"></span>
-										<span class="estrella icon-star"></span>
-										<span class="estrella icon-star"></span>
-										<span class="estrella icon-star"></span>
-										<span class="estrella icon-star"></span>
 									</div>
 								</div>
 								<div class="pr-snippet-read-write">
-									<div class="num_estrellas"><span class="ratio">4.5</span>
-										<div class="pr-snippet-read-reviews">(45)</div>
-										<div class="pr-snippet-write-review">Escribe un Comentario</div>
+									<div class="num_estrellas"><span class="ratio">{{valoracion}}</span>
+										<div class="pr-snippet-read-reviews">({{num_comentarios}})</div>
+										<div class="pr-snippet-write-review add_comentario" data-toggle="modal" data-target="#nuevo_comentario">
+											Escribe un Comentario
+										</div>
 									</div>
 								</div>
 							</div>
@@ -103,82 +100,135 @@
 				</div>
 			</div>
 		</div>	
-		<div id="producto_detalles" class="container-fluid">
-			<div class="row">
-				<section id="product-sub-details-anchor" class="product-sub-details col-md-7">
-			        <div class="product-long-description">
-			          <h2>Detalles</h2>
-			          <p>Beautiful scallop seaming modernizes this luxe over-the-knee boot and elongates the leg. Crafted from sumptuous Twinface sheepskin and suede, the Samantha sits on a modern crepe outsole, cushioning insole, and slight stacked heel for comfort and contemporary style.</p>
-			          <ul>
-			            <li> Twinface sheepskin and suede </li>
-			            <li> Twinface sheepskin and suede </li>
-			            <li> Twinface sheepskin and suede </li>
-			            <li> Twinface sheepskin and suede </li>
-			            <li> Twinface sheepskin and suede</li>
-			          </ul>
-			        </div>
-			    </section>
-			    <div class="product-fit segundo_producto col-md-5">
-			        <div><img src="https://smassets.stevemadden.com/content/styletips/2015/promo/styletip-US_2015.08.07_SMFREE50.gif"/></div>
-			    </div>
+		<div id="producto_detalles" class="">
+			<div class="container">
+				<div class="row">
+					<section id="product-sub-details-anchor" class="product-sub-details col-md-7">
+				        <div class="product-long-description">
+				          <h2>Detalles</h2>
+				          <p>{{detalles}}</p>
+				          <h4>Materiales</h4>
+				          <ul class="list">
+				          	{%for material in material_producto%}
+				          	<li>{{material.descripcion}}</li>
+				          	{%endfor%}
+				          </ul>
+				        </div>
+				    </section>
+				    <div class="product-fit segundo_producto col-md-5">
+				        <div><img src="https://smassets.stevemadden.com/content/styletips/2015/promo/styletip-US_2015.08.07_SMFREE50.gif"/></div>
+				    </div>
+				</div>
 			</div>
 		</div>
-		<section id="producto-asociado" class="">
-	      <h2>Tambien te podria gustar</h2>
-	      <div class="lista-productos"></div>
-	    </section>
-	    <section id="recomendation-producto" class="">
-	      <h2>Comentarios
-	        <button class="btn btn-default btn-contraste"><span>Escribe un Comentario</span></button>
-	      </h2>
-	      <div class="rw-control-bar rw-filter">
-	        <div class="rw-contador"><span>1-4 de 97 Comentarios</span></div>
-	        <div class="rw-sort"><span>Ordenar</span><span class="icono">#</span>
-	          <ul class="mostrar-ordenar">
-	            <li><span data="mas-relevante">Mas Relevante</span></li>
-	            <li><span data="mas-ayuda">Que mas Ayudo</span></li>
-	            <li><span data="mayor-rating">Mayor Puntuacion</span></li>
-	            <li><span data="menor-rating">Menor Puntuacion</span></li>
-	            <li><span data="mas-reciente">Mas Reciente</span></li>
-	          </ul>
-	        </div>
-	      </div>
-	      <div class="reviews-lista">
-	        <article>
-	          <div class="review-header">
-	            <div class="rw-author-avatar">
-	              <figure><span>Avatar</span></figure>
-	            </div>
-	            <div class="rw-author-summary">
-	              <div class="rw-content-header">
-	                <div class="estrellas"><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span><span class="estrella">#</span></div>
-	                <div class="rw-content-nombre"><span class="nombre">Gabbi</span><span class="time">15 days ago</span></div>
-	                <div class="rw-content-titulo">
-	                  <h4 class="rw-titulo">Confortable y estilos</h4>
-	                </div>
-	              </div>
-	              <div class="rw-content-sumary-body">
-	                <p>I love these they are the best casual sneakers!!!!</p>
-	                <div class="rw-data">
-	                  <div class="rw-categoria"><span class="icono">#</span><span class="cate">Casual</span><span class="cate">Cute</span><span class="cate">Style</span></div>
-	                  <div class="recomentacion-value">
-	                    <dt class="label-recomendacion"><span class="icono">#</span><span class="value-recomendacion">Si,</span></dt>
-	                    <dd class="rw-recomendacion-content">Yo recomiendo este producto</dd>
-	                  </div>
-	                </div>
-	              </div>
-	              <div class="rw-helps">
-	                <div class="feedback-help"><strong>Te ayudo?</strong>
-	                  <div class="feedback-yes"><span class="label-feedback">Yes</span><span class="num-feedback">0</span></div>
-	                  <div class="feedback-yes"><span class="label-feedback">No</span><span class="num-feedback">0</span></div>
-	                </div>
-	              </div>
-	            </div>
-	          </div>
-	        </article>
-	      </div>
-	    </section>
+		<div class="container-fluid review_realciones">
+			<div class="row">
+				<div class="col-md-9">
+					<section id="recomendation-producto" class="">				    
+				    </section>
+				</div>
+				<div class="col-md-3" id="producto-asociado">
+				    <section>						
+						<h3 class="text-center">Tambien te podria gustar</h3>
+				      	<div class="lista-productos"></div>
+				    </section>
+				</div>
+			</div>
+		</div>	    
 	</div>
+
+	<div id="nuevo_comentario" class="modal fade ">
+		 <div class="modal-dialog modal-lg">
+		   <div class="modal-content">
+		  		<input type="hidden" id="producto_id_coment" value="{{id}}">
+		     	<div class="imagen">
+		     		<div class="figura">
+		     			{% for img in imagenes_producto%}
+						  	{% if !img.orden%}
+						  	<img src="{{img.imagen}}"/>
+						  	{%endif%}
+						{% endfor%}
+		     		</div>
+		     		<div class="nombre">{{full_name}}</div>
+		     	</div>
+		     	<div class="formulario">		     	
+		     		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		     		<h3>Mi Comentario</h3>
+		     		<div class="error-form">
+		     			<p class="text-warning bg-warning">Faltan campos que son obligatorios</p>
+		     		</div>
+		     		<div class="form-group form-inline form_estrellas">
+						<label for="exampleInputName2">Calificacion General *</label>
+						<div class="btn-group estrellas_form" role="group" aria-label="...">
+							<button type="button" class="btn btn-default 1" data-texto="Malo" data-valor="1">
+								<span class="glyphicon glyphicon-star" data-valor="1"></span>
+							</button>							
+							<button type="button" class="btn btn-default 2" data-texto="Justa" data-valor="2">
+								<span class="glyphicon glyphicon-star" data-valor="2"></span>
+							</button>							
+							<button type="button" class="btn btn-default 3" data-texto="Promedio" data-valor="3">
+								<span class="glyphicon glyphicon-star" data-valor="3"></span>
+							</button>							
+							<button type="button" class="btn btn-default 4" data-texto="Bueno" data-valor="4">
+								<span class="glyphicon glyphicon-star" data-valor="4"></span>
+							</button>							
+							<button type="button" class="btn btn-default 5" data-texto="Exelente" data-valor="5">
+								<span class="glyphicon glyphicon-star" data-valor="5"></span>
+							</button>							
+						</div>
+						<div class="enlinea texto f_arial">Click para votar!</div>
+						<div class="enlinea icono_valido"><span class="glyphicon glyphicon-ok"></span></div>
+					</div>
+					<div class="form-group titulo_coment">
+						<label for="">Titulo del Comentario *</label>
+						<input type="text" id="titulo_coment" data-contenedor="titulo_coment" class="form-control" placeholder="Ejemplo: Magnifico producto!!!">						
+					</div>					
+					<div class="form-group content_coment">
+						<label for="">Opinion *</label>
+						<div class="requerido enlinea pull-right f_arial">0/50</div>
+						<div class="opinion-content">
+							<textarea placeholder="Ejemplo: Compré este hace un mes y estoy muy contento de haberlo hecho ..." class="form-control" id="coment_content"></textarea>
+							<div class="buton_subir">
+								<input type="file" name="foto_comentario" id="foto_comentario" multiple/>
+								<button type="button" class="btn btn-default btn-sm">
+									<span class="glyphicon glyphicon-camera"></span>
+									Añadir Foto usando este producto
+								</button>
+							</div>
+						</div>						
+					</div>		
+					<div class="form-group form-inline recomendaciones">
+						<label for="exampleInputName2">¿Recomendaria este producto a un amigo? *</label>
+						<div class="btn-group " role="group" aria-label="...">
+							<button type="button" class="btn btn-default btn-lg recomendacion" data-valor="si">Si</button>
+							<button type="button" class="btn btn-default btn-lg recomendacion" data-valor="no">No</button>
+						</div>
+						<div class="enlinea icono_valido"><span class="glyphicon glyphicon-ok"></span></div>	
+					</div>
+					<div class="autenticar_user form-group">
+						<div class="col-md-6">
+							<label for="exampleInputEmail1">Correo Electronico *</label>
+    						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Ejemplo: tucorreo@ejemplo.com">
+    					</div>
+    					<div class="col-md-6">
+    						<label for="exampleInputEmail1">Apodo *</label>
+    						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Ejemplo: jackie27">
+    					</div>    					
+					</div>
+					<div class="form-group terminos">
+					    <p>
+					    	<small class="f_arial ">Puede recibir mensajes de correo electrónico con respecto a esta presentación. Cualquier correo electrónico incluirán la posibilidad de darse de baja de futuras comunicaciones.</small>
+					    </p>
+					    
+					    <div>
+					    	<button class="btn btn-contraste enviar_comentario">Enviar Comentario</button>
+					    </div>
+					</div>
+		     	</div>
+		   </div>
+		 </div>
+	</div>
+
 </script>
 
 <script id="galeriafull_tlp" type="text/template">
@@ -209,10 +259,10 @@
 </script>
 
 <script id="add_to_cart_tlp" type="text/template">
-	<input type="text" name="producto" value="{{producto}}">
-	<input type="text" name="variacion" value="{{variacion}}">
-	<input type="text" name="carro" value="{{carro}}">
-	<input type="text" name="cantidad" value="1">
+	<input type="hidden" name="producto" value="{{producto}}">
+	<input type="hidden" name="variacion" value="{{variacion}}">
+	<input type="hidden" name="carro" value="{{carro}}">
+	<input type="hidden" name="cantidad" value="1">
 	{% if !variacion%}
 	<button class="btn btn-contraste btn-large" type="submit" value="Selecciona una talla" disabled="disabled" >
 		<span>Selecciona una talla</span>
@@ -222,5 +272,102 @@
 		<span>Agregar al Carro</span>
 	</button>
 	{%endif%}
+</script>
+
+<script id="seccion_comentarios" type="text/template">
+	<h2 class="titulo">Comentarios
+		<button class="btn btn-default btn-contraste pull-right"><span>Escribe un Comentario</span></button>
+	</h2>
+
+	{%if num_comentarios%}
+	<div class="rw-control-bar rw-filter">
+		<div class="rw-contador"><span>{{num_comentarios}} Comentarios</span></div>
+		<div class="rw-sort">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Ordernar <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">Mas Relevante</a></li>
+					<li><a href="#">Que mas Ayudo</a></li>
+					<li><a href="#">Mayor Puntuacion</a></li>							    
+					<li><a href="#">Menor Puntuacion</a></li>
+					<li><a href="#">Mas Relevante</a></li>
+				</ul>
+			</div>				        
+		</div>
+		<div class="clear_both"></div>
+	</div>
+	<div class="reviews-lista">
+	</div>
+	{%else%}
+	<div class="sin-comentarios container-fluid">
+		<div class="estrellas">
+			<span class="estrella icon-star"></span>
+			<span class="estrella icon-star"></span>
+			<span class="estrella icon-star"></span>
+			<span class="estrella icon-star"></span>
+			<span class="estrella icon-star"></span>
+		</div>
+		<h5><a href="" class="add_comentario" data-toggle="modal" data-target="#nuevo_comentario">Se el Primero dejar Un cometario</a></h5>
+	</div>
+	{%endif%}
+</script>
+
+<script id="comentario_lista" type="text/template">
+    <div class="col-md-2">
+		      <div class="review_header">
+			      <div class="avatar">
+			      	{%if foto%}
+			      		<img src="{{foto}}" withd="100" height="100">
+			      	{%endif%}
+			      </div>
+			      <div class="estrellas_reviews estrellas">
+			      </div>
+			      <div class="user_name text-center">{{nombre}}</div>
+			      <div class="time text-center">{{creado}}</div>
+			  </div>
+	</div>
+	<div class="col-md-10">
+		<div class="review_body">
+			<div class="review_titulo">
+				<h4 class="rw-titulo">{{titulo_comentario}}</h4>
+			</div>
+			<div class="review_content">
+				<p>{{comentario}}</p>
+			</div>
+		</div>
+		<div class="recomendacion">
+			<p>
+				{%if recomen%}
+				<strong>
+					<span class="glyphicon glyphicon-ok-circle"></span>
+					Si,
+				</strong>
+				yo recomiendo este producto
+				{%else%}
+				<strong>
+					<span class="glyphicon glyphicon-remove-circle"></span>
+					No,
+				</strong>
+				yo no recomiendo este producto
+				{%endif%}
+			</p>
+		</div>
+		<div class="imagenes_comentarios">
+					
+		</div>
+		<div class="ayuda">
+			<h4>Te Ayudo?</h4>
+			<div class="opciones">
+				<div class="btn-group opciones_ayuda" role="group" aria-label="...">				  
+				  <button type="button" class="btn btn-default opt-si">
+				  	Si - <span>{{ayuda_si}}</span></button>
+				  <button type="button" class="btn btn-default opt-no">
+				  	No - <span>{{ayuda_no}}</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
 </script>
 {% endverbatim %}

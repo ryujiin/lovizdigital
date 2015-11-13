@@ -34,9 +34,6 @@ nav .nav-pills a:focus {
   background: none;
   text-decoration: underline;
 }
-ul {
-  list-style: none;
-}
 img {
   width: 100%;
 }
@@ -49,9 +46,15 @@ img {
 p.bg-warning {
   padding: 10px;
 }
-ul {
-  padding: 0px;
-  margin: 0px;
+.clear_both {
+  clear: both;
+}
+.enlinea {
+  display: inline-block;
+}
+.modal-content {
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
 }
 h1,
 h2,
@@ -69,6 +72,9 @@ a {
 }
 p {
   line-height: 1.8;
+}
+.f_arial {
+  font-family: arial;
 }
 .btn {
   font-family: 'BenchNine', sans-serif;
@@ -117,6 +123,15 @@ label .requerido {
 }
 .form-group.error .text-danger {
   display: block;
+}
+.form-group.valido .icono_valido {
+  background-color: #3c763d !important;
+}
+.form-group.valido input {
+  border-color: #3c763d;
+}
+.form-row {
+  margin-bottom: 10px;
 }
 #wrapper {
   background: #fff;
@@ -185,6 +200,71 @@ h2 .linea {
 .breadcrumb {
   background: #fff;
   text-transform: uppercase;
+}
+#footer {
+  background: #f4f4f4;
+  padding-top: 3em;
+}
+#footer .footer-email {
+  width: 360px;
+}
+#footer #submit_form_email {
+  position: relative;
+}
+#footer #submit_form_email .email_input {
+  position: absolute;
+  width: 90%;
+}
+#footer #submit_form_email .email_input input {
+  background: #ececec;
+  border: 1px solid #ccc;
+  padding: 25px 20px;
+  color: #111;
+}
+#footer #submit_form_email .email_submit {
+  position: absolute;
+  right: 0;
+  width: 10%;
+}
+#footer #submit_form_email .email_submit button {
+  background: #111;
+  border: none;
+  color: #fff;
+  line-height: 0px;
+  padding: 18px 20px;
+}
+#footer #submit_form_email .email_submit button:hover {
+  background: rgba(0,0,0,0.6);
+}
+#footer .footer-block-menu .nav li {
+  margin-bottom: 5px;
+}
+#footer .footer-block-menu .nav li a {
+  padding: 0;
+  font-size: 0.9em;
+}
+#footer .footer-block-menu .nav li a:hover {
+  text-decoration: underline;
+  background: none;
+}
+#footer .bloque_social {
+  overflow: hidden;
+}
+#footer .bloque_social ul {
+  float: right;
+}
+#footer .bloque_social li {
+  display: inline-block;
+  margin: 10px 10px;
+}
+#footer .bloque_social li span {
+  font-size: 1.5em;
+}
+#footer .pie_pagina {
+  border-top: #ddd 1px solid;
+  padding-top: 5px;
+  font-size: 0.8em;
+  padding-bottom: 20px;
 }
 #header {
   background: #fff;
@@ -494,13 +574,23 @@ h2 .linea {
   color: #f7727a;
   text-decoration: line-through;
 }
+.producto-single .review_realciones {
+  margin-bottom: 2em;
+}
+#producto-asociado {
+  border-left: 1px solid #f4f4f4;
+  -webkit-box-shadow: 2px 1px 6px rgba(0,0,0,0.5);
+  box-shadow: 2px 1px 6px rgba(0,0,0,0.5);
+}
 #producto_detalles {
   padding-top: 2em;
   margin-top: 2em;
+  padding-bottom: 2em;
   background: #f4f4f4;
+  margin-bottom: 2em;
 }
 .product-long-description {
-  width: 60%;
+  width: 90%;
   padding-right: 30px;
 }
 .imagenes_producto .product-thumbnails {
@@ -509,8 +599,12 @@ h2 .linea {
   float: left;
 }
 .imagenes_producto .product-thumbnails ul {
+  list-style: none;
   padding: 0;
   margin: 0;
+}
+.imagenes_producto .product-thumbnails ul li {
+  cursor: pointer;
 }
 .imagenes_producto #imagen_primary {
   display: inline-block;
@@ -605,6 +699,270 @@ h2 .linea {
   padding-right: 2.1em;
   padding-left: 2.1em;
   margin: 1em 0;
+}
+#recomendation-producto .titulo {
+  font-size: 3em;
+}
+#recomendation-producto .rw-control-bar {
+  padding: 10px;
+  background: #f4f4f4;
+}
+#recomendation-producto .rw-control-bar .rw-contador {
+  float: left;
+  margin: 4px;
+}
+#recomendation-producto .rw-control-bar .rw-sort {
+  float: right;
+}
+.reviews-lista article.review {
+  margin: 10px 0;
+  padding-bottom: 15px;
+}
+.reviews-lista article.review .review_header {
+  font-family: 'BenchNine', sans-serif;
+}
+.reviews-lista article.review .review_header .avatar {
+  width: 100px;
+  height: 100px;
+  background-image: url("../imgs/perfil-face.jpg");
+  -webkit-background-size: 200px;
+  -moz-background-size: 200px;
+  background-size: 200px;
+  background-repeat: none;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  display: block;
+  margin: 0 auto;
+}
+.reviews-lista article.review .review_header .avatar img {
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+}
+.reviews-lista article.review .review_header .estrellas_reviews {
+  width: 100px;
+  margin: 0 auto;
+}
+.reviews-lista article.review .review_header .time {
+  color: #808080;
+}
+.reviews-lista article.review .review_header .user_name {
+  font-size: 0.9;
+  font-weight: 700;
+}
+.reviews-lista article.review .review_body .review_content,
+.reviews-lista article.review .review_body font-size 13px,
+.reviews-lista article.review .review_body .rw-titulo {
+  font-weight: bold;
+  font-size: 1.6em;
+}
+.reviews-lista article.review .recomendacion {
+  font-size: 13px;
+}
+.reviews-lista article.review .recomendacion strong {
+  font-size: 16px;
+}
+.reviews-lista article.review .ayuda {
+  font-family: 'BenchNine', sans-serif;
+}
+.reviews-lista article.review .ayuda h4 {
+  display: inline-block;
+  font-size: 1em;
+  letter-spacing: 1px;
+}
+.reviews-lista article.review .ayuda .opciones {
+  display: inline-block;
+  margin-left: 30px;
+}
+.reviews-lista article.review .ayuda .opciones .opciones_ayuda.votado .opt-si span {
+  color: #008000;
+}
+.reviews-lista article.review .ayuda .opciones .opciones_ayuda.votado .opt-no span {
+  color: #f00;
+}
+.reviews-lista article.review .ayuda .opciones .btn {
+  padding: 3px 15px;
+  font-weight: bold;
+}
+.reviews-lista article.review .ayuda .opciones .btn:hover {
+  background: -webkit-linear-gradient(#808080, #aaa);
+  background: -moz-linear-gradient(#808080, #aaa);
+  background: -o-linear-gradient(#808080, #aaa);
+  background: -ms-linear-gradient(#808080, #aaa);
+  background: linear-gradient(#808080, #aaa);
+  color: #fff;
+}
+.reviews-lista article.review .ayuda .opciones .btn.activo {
+  color: #111;
+  -webkit-box-shadow: inset 2px 2px 10px #aaa;
+  box-shadow: inset 2px 2px 10px #aaa;
+}
+.reviews-lista article.review .ayuda .opciones .btn.opt-si {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.reviews-lista article.review .ayuda .opciones .btn.opt-no {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.estrellas span.estrella {
+  color: #999;
+}
+.estrellas span.estrella.activo {
+  color: #00b3aa;
+}
+.add_comentario {
+  text-decoration: underline;
+  letter-spacing: 1px;
+}
+.add_comentario:hover {
+  color: #000;
+}
+#nuevo_comentario .error-form {
+  display: none;
+}
+#nuevo_comentario .modal-content {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+#nuevo_comentario .imagen {
+  padding: 10px;
+  width: 25%;
+  background: #333;
+}
+#nuevo_comentario .imagen .figura {
+  margin-top: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#nuevo_comentario .imagen .nombre {
+  color: #f4f4f4;
+  font-family: 'BenchNine', sans-serif;
+  font-size: 18px;
+  margin: 10px;
+  text-shadow: 2px 3px 1px #111;
+}
+#nuevo_comentario .formulario {
+  padding: 10px;
+  width: 75%;
+  position: relative;
+}
+#nuevo_comentario .formulario .close {
+  font-size: 40px;
+  margin: 15px;
+}
+#nuevo_comentario .formulario .form-group {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+#nuevo_comentario .formulario .estrellas_form {
+  margin: 0 40px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+#nuevo_comentario .formulario .estrellas_form button {
+  background: #e2e2e2;
+  border-top: 1px solid #fff;
+  border-bottom: none;
+}
+#nuevo_comentario .formulario .estrellas_form button:hover {
+  background-color: #bbb;
+}
+#nuevo_comentario .formulario .estrellas_form button:first-child {
+  border-left: none;
+}
+#nuevo_comentario .formulario .estrellas_form button:last-child {
+  border-right: none;
+}
+#nuevo_comentario .formulario .estrellas_form button.activo {
+  background: #111;
+}
+#nuevo_comentario .formulario .estrellas_form button.hover {
+  background-color: #333;
+}
+#nuevo_comentario .formulario .estrellas_form .glyphicon-star {
+  font-size: 1.5em;
+  margin-top: 5px;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(140,140,140,0.6);
+}
+#nuevo_comentario .formulario .content_coment.error .opinion-content {
+  border: 1px solid #a94442;
+}
+#nuevo_comentario .formulario .content_coment.error .requerido {
+  color: #a94442;
+  border: 1px solid #a94442;
+  padding: 2px 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+#nuevo_comentario .formulario .content_coment.valido .opinion-content {
+  border: 1px solid #3c763d;
+}
+#nuevo_comentario .formulario .content_coment.valido .requerido {
+  color: #3c763d !important;
+}
+#nuevo_comentario .formulario .content_coment .opinion-content {
+  border: 1px solid #ddd;
+}
+#nuevo_comentario .formulario .content_coment .opinion-content:hover {
+  border: 1px solid #111;
+}
+#nuevo_comentario .formulario .content_coment .opinion-content .buton_subir {
+  margin: 10px;
+}
+#nuevo_comentario .formulario .content_coment .requerido {
+  color: #aaa;
+  font-size: 0.8em;
+}
+#nuevo_comentario .formulario .content_coment .buton_subir {
+  position: relative;
+}
+#nuevo_comentario .formulario .content_coment .buton_subir #foto_comentario {
+  position: absolute;
+  height: 100%;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  width: 80px;
+}
+#nuevo_comentario .formulario .autenticar_user {
+  overflow: hidden;
+}
+#nuevo_comentario .formulario .form-group {
+  position: relative;
+}
+#nuevo_comentario .formulario .form-group .icono_valido {
+  position: absolute;
+  right: 30px;
+  top: 45%;
+  line-height: 10px;
+  background-color: #ccc;
+  color: #fff;
+  padding: 5px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+}
+#nuevo_comentario .formulario .recomendaciones button.activo {
+  background-color: #444;
+  color: #fff;
+}
+#nuevo_comentario .formulario .terminos label {
+  text-transform: inherit;
+  font-weight: normal;
+}
+#nuevo_comentario .formulario .terminos strong {
+  cursor: pointer;
+}
+#nuevo_comentario .formulario .terminos small {
+  color: #aaa;
+  font-size: 0.8em;
 }
 .lineas_carro .etiquetas {
   display: -webkit-box;

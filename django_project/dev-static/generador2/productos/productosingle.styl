@@ -42,12 +42,19 @@
 					font-size .8em
 					color rosado
 					text-decoration line-through
+	.review_realciones
+		margin-bottom 2em
+#producto-asociado
+	border-left 1px solid #f4f4f4
+	box-shadow 2px 1px 6px rgba(0,0,0,0.5)
 #producto_detalles
 	padding-top 2em 
 	margin-top 2em
+	padding-bottom 2em
 	background #f4f4f4
+	margin-bottom 2em
 .product-long-description
-	width 60%
+	width 90%
 	padding-right 30px
 .imagenes_producto
 	.product-thumbnails
@@ -55,8 +62,11 @@
 		width 140px
 		float left
 		ul
+			list-style none
 			padding 0
 			margin 0
+			li
+				cursor pointer
 	#imagen_primary
 		display inline-block
 		float left
@@ -129,4 +139,202 @@
 			padding-right 2.1em
 			padding-left 2.1em
 			margin 1em 0
-		
+
+#recomendation-producto
+	.titulo
+		font-size 3em
+	.rw-control-bar
+		padding 10px
+		background #f4f4f4
+		.rw-contador
+			float left
+			margin 4px
+		.rw-sort
+			float right
+
+.reviews-lista
+	article.review
+		margin 10px 0		
+		padding-bottom 15px
+		.review_header
+			font-family f_imprenta
+			.avatar
+				width 100px
+				height 100px
+				background-image url('../imgs/perfil-face.jpg');
+				background-size 200px
+				background-repeat none
+				border-radius 50px
+				display block
+				margin 0 auto
+				img
+					border-radius 50px
+			.estrellas_reviews
+				width 100px
+				margin 0 auto
+			.time
+				color grey				
+			.user_name
+				font-size 0.9
+				font-weight 700
+		.review_body
+			.review_content,
+				font-size 13px
+			.rw-titulo 
+				font-weight bold
+				font-size 1.6em
+		.recomendacion
+			font-size 13px
+			strong
+				font-size 16px
+		.ayuda
+			font-family f_imprenta
+			h4
+				display inline-block
+				font-size 1em
+				letter-spacing 1px
+			.opciones 
+				display inline-block
+				margin-left 30px
+				.opciones_ayuda.votado
+					.opt-si
+						span
+							color green
+					.opt-no
+						span
+							color red											
+				.btn
+					padding 3px 15px
+					font-weight bold					
+					&:hover
+						background: linear-gradient(grey, #aaa)
+						color #fff
+					&.activo
+						color #111
+						box-shadow inset 2px 2px 10px #aaa
+					&.opt-si
+						border-top-left-radius 4px
+						border-bottom-left-radius 4px
+					&.opt-no
+						border-top-right-radius 4px
+						border-bottom-right-radius 4px
+.estrellas
+	span.estrella
+		color #999
+		&.activo
+			color #00b3aa
+.add_comentario
+	text-decoration underline
+	letter-spacing 1px
+	&:hover
+		color #000
+
+#nuevo_comentario
+	.error-form
+		display none
+	.modal-content
+		display flex
+	.imagen
+		padding 10px
+		width 25%
+		background #333
+		.figura
+			margin-top 10px
+			border-radius 10px
+			overflow hidden
+		.nombre
+			color #f4f4f4
+			font-family f_imprenta
+			font-size 18px
+			margin 10px
+			text-shadow 2px 3px 1px #111
+	.formulario
+		padding 10px
+		width 75%
+		position relative
+		.close
+			font-size 40px
+			margin 15px
+		.form-group
+			border-top 1px solid #ddd
+			padding-top 20px
+		.estrellas_form
+			margin 0 40px
+			border 1px solid #ddd
+			border-radius 4px
+			overflow hidden
+			button
+				background: rgba(226,226,226,1);
+				border-top 1px solid #fff
+				border-bottom none
+				&:hover
+					background-color #bbb			
+				&:first-child
+					border-left none
+				&:last-child
+					border-right none
+				&.activo
+					background: #111
+				&.hover
+					background-color #333
+			.glyphicon-star
+				font-size 1.5em
+				margin-top 5px
+				color #fff
+				text-shadow 1px 1px 0 rgba(140,140,140,0.6)
+		.content_coment
+			&.error
+				.opinion-content
+					border #a94442
+				.requerido
+					color #a94442
+					border 1px solid #a94442
+					padding 2px 5px
+					border-radius 5px
+			&.valido
+				.opinion-content
+					border #3c763d
+				.requerido
+					color #3c763d!important
+			.opinion-content
+				border 1px solid #ddd
+				&:hover
+					border 1px solid #111
+				.buton_subir
+					margin 10px				
+			.requerido
+				color #aaa
+				font-size 0.8em
+			.buton_subir
+				position relative
+				#foto_comentario
+					position absolute					
+					height 100%
+					opacity 0
+					width 80px
+		.autenticar_user
+			overflow hidden
+		.form-group
+			position relative
+			.icono_valido
+				position absolute
+				right 30px
+				top 45%
+				line-height 10px
+				background-color #ccc
+				color #fff
+				padding 5px
+				border-radius 30px
+		.recomendaciones
+			button.activo
+				background-color #444
+				color #fff
+		.terminos
+			label
+				text-transform inherit
+				font-weight normal
+			strong
+				cursor pointer
+			small
+				color #aaa
+				font-size 0.8em

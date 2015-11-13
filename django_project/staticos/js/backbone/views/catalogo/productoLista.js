@@ -16,7 +16,7 @@ define([
 
         id: '',
 
-        className: 'productos col-md-4',
+        className: 'productos',
 
         events: {},
 

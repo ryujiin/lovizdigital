@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 from sorl.thumbnail import get_thumbnail
 from django.contrib.auth.models import User as User
 from utiles.models import Color,Talla
-from material.models import Material
+from material.models import Material,PrecioMaterial
 
 # Create your models here.
 class Producto(models.Model):
@@ -124,7 +124,6 @@ class ProductoVariacion(models.Model):
 			self.oferta = 100-int(porcentaje)
 		super(ProductoVariacion, self).save(*args, **kwargs)
 
-
 def url_imagen_pr(self,filename):
 	url = "productos/imagen/%s/%s" % (self.producto.pk, filename)
 	return url
@@ -146,7 +145,6 @@ class ProductoImagen(models.Model):
 		img = get_thumbnail(self.foto, '150x100', quality=80)
 		return img
 
-
 class MaterialProducto(models.Model):
 	producto = models.ForeignKey(Producto,blank=True, related_name='material_producto')
 	material = models.ForeignKey(Material,blank=True)
@@ -155,10 +153,22 @@ class MaterialProducto(models.Model):
 	seccion = models.ForeignKey('SeccionProducto',blank=True)
 	descripcion = models.CharField(max_length=300,blank=True)
 
+	def save(self, *args, **kwargs):
+		if not self.costo:
+			precio = PrecioMaterial.objects.filter(material=self.material).order_by('pk')[0]
+			self.costo = precio.precio/self.cantidad
+		super(MaterialProducto, self).save(*args, **kwargs)
+
 class SeccionProducto(models.Model):
 	nombre = models.CharField(max_length=100)
 	modelo = models.ForeignKey('Modelo',blank=True)
 
+	def __unicode__(self):
+		return self.nombre
+
 class Modelo(models.Model):
 	nombre = models.CharField(max_length=100)
 	descripcion = models.TextField(blank=True)
+
+	def __unicode__(self):
+		return self.nombre

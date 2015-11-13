@@ -7,6 +7,7 @@ from ubigeo.models import *
 class Cliente(models.Model):
 	GENEROS = (('Hombre','hombre'),('Mujer','mujer'),)
 	usuario = models.OneToOneField(User,related_name='cliente', null=True,blank=True,unique=True)
+	foto = models.ImageField(upload_to='perfiles',blank=True,null=True,max_length=250)
 	genero = models.CharField(max_length=100,blank=True,null=True,choices=GENEROS)
 	dni = models.CharField(max_length=10,blank=True,null=True)
 	telefono = models.CharField(max_length=11,blank=True,null=True)
@@ -37,11 +38,17 @@ class Comentario(models.Model):
 	creado = models.DateTimeField(auto_now_add=True)
 	email_invitado = models.CharField(max_length=100,blank=True,null=True)
 	recomendacion = models.CharField(max_length=10,blank=True,null=True,choices=TIPO)
+	ayuda_si = models.PositiveIntegerField(default=0)
+	ayuda_no = models.PositiveIntegerField(default=0)
 
 	def get_usuario_id(self):
 		if self.usuario:
 			return self.usuario.pk
 
+class ComentarioImagen(models.Model):
+	comentario = models.ForeignKey(Comentario,blank=True,null=True,related_name='fotos_coment')
+	foto = models.ImageField(upload_to='comentario',blank=True,null=True,max_length=250)    
+    
 class Suscrito(models.Model):
 	email = models.CharField(max_length=100,blank=True,null=True)
 	suscrito = models.BooleanField(default=True)
@@ -56,3 +63,11 @@ class Favorito(models.Model):
 
 	def __unicode__(self):
 		return "%s - %s" %(self.usuario,self.producto)
+
+class Mayorista(models.Model):
+	nombre = models.CharField(max_length=100)
+	ruc = models.CharField(max_length=11,blank=True)
+	direccion = models.CharField(max_length=40,blank=True)
+
+	def __unicode__(self):
+		return self.nombre

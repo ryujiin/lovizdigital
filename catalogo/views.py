@@ -18,12 +18,35 @@ class CatalogoViewsets(viewsets.ReadOnlyModelViewSet):
 		queryset = Producto.objects.filter(activo=True).order_by('-pk')
 		categoria = self.request.query_params.get('categoria', None)
 		slug = self.request.query_params.get('slug',None)
+		limite = self.request.query_params.get('limite',None)
 		if categoria:
-			queryset = queryset.filter(categorias__slug=categoria)
+			if limite:
+				queryset = queryset.filter(categorias__slug=categoria)[:limite]
+			else:
+				queryset = queryset.filter(categorias__slug=categoria)
 		if slug:
 			queryset = queryset.filter(slug=slug)
 		return queryset
 	
+class CatalogoOficinaViewsets(viewsets.ReadOnlyModelViewSet):
+	serializer_class = ProductoSingleSereializer
+	permission_classes = (IsAdminUser,)
+	
+	def get_queryset(self):
+		queryset = Producto.objects.filter(activo=True).order_by('-pk')
+		categoria = self.request.query_params.get('categoria', None)
+		slug = self.request.query_params.get('slug',None)
+		limite = self.request.query_params.get('limite',None)
+		if categoria:
+			if limite:
+				queryset = queryset.filter(categorias__slug=categoria)[:limite]
+			else:
+				queryset = queryset.filter(categorias__slug=categoria)
+		if slug:
+			queryset = queryset.filter(slug=slug)
+		return queryset
+	
+
 
 # Create your views here.
 class CategoriaViewsets(viewsets.ReadOnlyModelViewSet):

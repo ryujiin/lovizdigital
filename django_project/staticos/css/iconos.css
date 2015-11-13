@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-jcw1ju');
-	src:url('fonts/icomoon.eot?#iefix-jcw1ju') format('embedded-opentype'),
-		url('fonts/icomoon.ttf?-jcw1ju') format('truetype'),
-		url('fonts/icomoon.woff?-jcw1ju') format('woff'),
-		url('fonts/icomoon.svg?-jcw1ju#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?vd4p9c');
+	src:url('fonts/icomoon.eot?vd4p9c#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.ttf?vd4p9c') format('truetype'),
+		url('fonts/icomoon.woff?vd4p9c') format('woff'),
+		url('fonts/icomoon.svg?vd4p9c#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,51 +23,55 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-arrow-up:before {
-	content: "\e096";
+.icon-chevron-small-down:before {
+	content: "\e907";
 }
-.icon-arrow-down:before {
-	content: "\e097";
+.icon-chevron-small-left:before {
+	content: "\e908";
 }
-.icon-arrow-up2:before {
-	content: "\e60b";
+.icon-chevron-small-right:before {
+	content: "\e909";
 }
-.icon-arrow-down2:before {
-	content: "\e60c";
+.icon-chevron-small-up:before {
+	content: "\e90a";
 }
-.icon-trashcan:before {
-	content: "\f0d0";
-}
-.icon-arrow-long-down:before {
-	content: "\e609";
-}
-.icon-arrow-long-up:before {
-	content: "\e60a";
+.icon-check:before {
+	content: "\e900";
 }
 .icon-heart-outlined:before {
-	content: "\e600";
+	content: "\e90b";
 }
 .icon-heart:before {
-	content: "\e601";
-}
-.icon-key:before {
-	content: "\e602";
-}
-.icon-lock-open:before {
-	content: "\e603";
-}
-.icon-lock:before {
-	content: "\e604";
-}
-.icon-mail:before {
-	content: "\e605";
+	content: "\e90c";
 }
 .icon-shopping-cart:before {
-	content: "\e606";
-}
-.icon-star-outlined:before {
-	content: "\e607";
+	content: "\e90d";
 }
 .icon-star:before {
-	content: "\e608";
+	content: "\e90e";
 }
+.icon-heart2:before {
+	content: "\2665";
+}
+.icon-credit-card:before {
+	content: "\e90f";
+}
+.icon-google-plus:before {
+	content: "\e901";
+}
+.icon-facebook:before {
+	content: "\e902";
+}
+.icon-instagram:before {
+	content: "\e903";
+}
+.icon-twitter:before {
+	content: "\e904";
+}
+.icon-youtube3:before {
+	content: "\e905";
+}
+.icon-pinterest:before {
+	content: "\e906";
+}
+

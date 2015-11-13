@@ -1,0 +1,71 @@
+{% load static from staticfiles %}
+{% load require %}
+
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>
+		Loviz DelCarpio :: Oficina
+	</title>
+
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta name="created" content="{% now "jS M Y h:i" %}" />
+    <meta name="description" content="Loviz DelCarpio® , Encontraras lo mejor en pantuflas, sandalias, botas, flats y demas. Envio Gratis para todo el peru por compras mayores a S/.60.00" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="//s3-us-west-2.amazonaws.com/lovizfront/img/logodelcarpio2_1.ico" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Josefin+Sans|Great+Vibes|Pathway+Gothic+One"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=BenchNine:400,700,300"/>
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "css/iconos.css" %}" />
+    <link rel="stylesheet" href="{% static "css/oficina.css" %}" />
+</head>
+<body id="default" class="mobile-layout">
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <a href="/oficina/" class="link">Oficina Loviz DelCarpio</a>
+            </div>
+            <div class="col-md-5">
+                <ul class="list-inline">
+                    <li>
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-user"></span>
+                    </li>
+                    <li>
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="main container-fluid">
+        <div class="row">
+            <div class="aside col-md-2">
+                <nav>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="/oficina/" class="link">Inicio</a></li>
+                        <li><a href="/oficina/catalogo/" class="link">Catalogo</a></li>
+                        <li><a href="/oficina/pedidos/" class="link">Pedidos</a></li>
+                        <li><a href="/oficina/clientes/" class="link">Clientes</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="content" class="content col-md-10">
+            </div> 
+        </div>        
+    </div>
+    <script>
+    var csrf_token = "{{ csrf_token }}";
+    </script>
+    <div class="includes_js">
+      {%include 'oficinatlp/catalogo_tlp.html'%}
+      {%include 'oficinatlp/clientes_tlp.html'%}
+      {%include 'oficinatlp/pedidos_tlp.html'%}
+      {%include 'oficinatlp/resumen_tlp.html'%}
+    </div>    
+    {% require_module 'oficina' %}    
+</body>
+</html>

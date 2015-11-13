@@ -9,7 +9,7 @@ from cmsweb.views import CarruselViewsets
 from utiles.views import ColorViewsets
 from pedido.views import PedidoViewSet
 from ubigeo.views import RegionViewset
-from cliente.views import DireccionViewsets
+from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,ComentarioImagenViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -21,6 +21,10 @@ router.register(r'colores',ColorViewsets,'coleres')
 router.register(r'pedidos',PedidoViewSet,'pedidos')
 router.register(r'ubigeo',RegionViewset,'ubigeo')
 router.register(r'cliente/direcciones',DireccionViewsets,'direcciones')
+router.register(r'comentarios',ComentarioViewSet,'comentarios')
+router.register(r'comentarioimgs',ComentarioImagenViewSet,'comentarios_imagenes')
+router.register(r'oficina/mayoristas',MayoristaViewset,'mayoristas')
+router.register(r'oficina/catalogo',views.CatalogoOficinaViewsets,'Catalogo_oficina')
 
 
 urlpatterns = [
@@ -34,7 +38,9 @@ urlpatterns = [
     url(r'^salir/$','cliente.views.salir',name='salir'),
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     url(r'^pago/stripe/$','pago.views.stripe_paymet',name='pago_stripe'),
+    url(r'^oficina/',include('oficina.urls')),    
     url(r'^',include('cmsweb.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns = [

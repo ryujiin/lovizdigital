@@ -10,7 +10,7 @@ define([
 
     var CarroModel = Backbone.Model.extend({
         //urlRoot : 'http://loviz.herokuapp.com/api/carro/',
-        urlRoot : 'http://localhost:8000/api/carro/',
+        urlRoot : '/api/carro/',
         //url: 'http://apiloviz.herokuapp.com/api/carro/',
         url: function(){
             var base = this.urlRoot;

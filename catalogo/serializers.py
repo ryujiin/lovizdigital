@@ -131,7 +131,7 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 			valor = valor+varia.valoracion
 		if num!=0:
 			valoracion = valor/num
-		valoracion ="%0.1f" %(valoracion)		
+		valoracion ="%0.1f" %(valoracion)
 
 		return valoracion
 

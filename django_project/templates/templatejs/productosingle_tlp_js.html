@@ -100,6 +100,7 @@
 				</div>
 			</div>
 		</div>	
+		{%if detalles%}
 		<div id="producto_detalles" class="">
 			<div class="container">
 				<div class="row">
@@ -121,6 +122,7 @@
 				</div>
 			</div>
 		</div>
+		{%endif%}
 		<div class="container-fluid review_realciones">
 			<div class="row">
 				<div class="col-md-9">
@@ -188,8 +190,11 @@
 						<div class="requerido enlinea pull-right f_arial">0/50</div>
 						<div class="opinion-content">
 							<textarea placeholder="Ejemplo: Compré este hace un mes y estoy muy contento de haberlo hecho ..." class="form-control" id="coment_content"></textarea>
+							<div class="imagenes_subidas">
+								
+							</div>
 							<div class="buton_subir">
-								<input type="file" name="foto_comentario" id="foto_comentario" multiple/>
+								<input type="file" name="foto_comentario" id="foto_comentario"/>
 								<button type="button" class="btn btn-default btn-sm">
 									<span class="glyphicon glyphicon-camera"></span>
 									Añadir Foto usando este producto
@@ -368,6 +373,13 @@
 				</div>
 			</div>
 		</div>
+	</div>
+</script>
+
+<script id="nueva_imagen_tlp" type="text/template">
+	<div id="ajaxloader_img"></div>
+	<div class="laimagen">
+		<img src="{{foto}}">
 	</div>
 </script>
 {% endverbatim %}

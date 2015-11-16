@@ -32,6 +32,7 @@ class CatalogoOficinaViewsets(viewsets.ReadOnlyModelViewSet):
 	serializer_class = ProductoSingleSereializer
 	permission_classes = (IsAdminUser,)
 	
+	
 	def get_queryset(self):
 		queryset = Producto.objects.filter(activo=True).order_by('-pk')
 		categoria = self.request.query_params.get('categoria', None)

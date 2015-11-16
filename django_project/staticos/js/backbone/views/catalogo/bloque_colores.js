@@ -54,6 +54,7 @@ define([
             })
         },
         filtrar_color:function (e) {
+            debugger;
             $(e.target).removeClass('no_activo').addClass('activo');            
             var color = e.target.dataset.valor;
             this.collection.add([

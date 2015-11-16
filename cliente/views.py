@@ -10,6 +10,8 @@ from rest_framework import authentication, permissions, parsers, renderers, stat
 from rest_framework import viewsets, generics
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.parsers import MultiPartParser
+
 #from social.apps.django_app.utils import psa
 
 from django.http import HttpResponse, Http404, HttpResponseRedirect
@@ -52,6 +54,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 class ComentarioImagenViewSet(viewsets.ModelViewSet):
 	serializer_class = ComentarioImagenSerializer
 	queryset = ComentarioImagen.objects.all()
+
 
 class ComentarioViewSet(viewsets.ModelViewSet):
 	serializer_class = ComentairoSerializer

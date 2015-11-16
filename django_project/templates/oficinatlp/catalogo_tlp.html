@@ -53,7 +53,6 @@
 						  				<th>Nombre</th>
 						  				<th>Referencia</th>
 						  				<th>Precio Base</th>
-						  				<th>Cantidad</th>
 						  				<th>Estado</th>
 						  				<th></th>
 					  				</tr>					  				
@@ -95,13 +94,14 @@
 
 <script id="producto_list_tlp" type="text/template">
 	<td></td>
-	<td>1</td>
-	<td><img src="/fmfm/gneg.jpg"> </td>
-	<td>el nombre del producto</td>
+	<td>{{id}}</td>
+	<td>		
+		<img src="{{thum}}">
+	</td>
+	<td>{{nombre}}</td>
 	<td></td>
-	<td>S/. 20.00</td>
-	<td>5</td>
-	<td>Activo</td>
-	<td>Ver</td>
+	<td>S/. {{precio}}</td>	
+	<td>{{activo}}</td>
+	<td><a href="/oficina/catalogo/editar/{{id}}/" class="link">Ver</a></td>
 </script>
 {% endverbatim %}

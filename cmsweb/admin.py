@@ -3,3 +3,4 @@ from models import *
 # Register your models here.
 admin.site.register(Carrusel)
 admin.site.register(SeccionesCMS)
+admin.site.register(Page)

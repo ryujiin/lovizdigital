@@ -7,14 +7,16 @@ define([
     '../views/cliente/page_clientes',    
     '../views/pedido/page_pedidos',    
     '../views/resumen/page_resumen',    
-    '../views/catalogo/add_producto'
-], function ($, Backbone,PageCatalogo,PageClientes,PagePedidos,PageResumen,AddProducto) {
+    '../views/catalogo/add_producto',
+    '../views/catalogo/producto'
+], function ($, Backbone,PageCatalogo,PageClientes,PagePedidos,PageResumen,AddProducto,Producto) {
     'use strict';
 
     var AppRouter = Backbone.Router.extend({
         routes: {
             "oficina/":"root",
             'oficina/catalogo/':'catalogo',
+            'oficina/catalogo/editar/:id':'editar_producto',            
             'oficina/catalogo/add_producto/':'add_producto',
             'oficina/pedidos/':'pedidos',
             'oficina/clientes/':'clientes',
@@ -32,6 +34,9 @@ define([
             PageCatalogo.render();
             console.log('catalogo');
         },
+        editar_producto:function (id) {
+            debugger;
+        }
         add_producto:function () {
             var vista = new AddProducto();
         },

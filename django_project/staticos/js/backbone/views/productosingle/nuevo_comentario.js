@@ -7,7 +7,8 @@ define([
     'swig',
     '../../models/comentario',
     '../../models/user',
-], function ($, _, Backbone, swig,ComentarioModel,UserModel) {
+    '../../views/productosingle/nueva_imagen_coment'
+], function ($, _, Backbone, swig,ComentarioModel,UserModel,NuevaImagen) {
     'use strict';
 
     var NuevoComentarioView = Backbone.View.extend({
@@ -127,12 +128,27 @@ define([
             }
         },
         subio_imagen:function (e) {
+            var nueva_imagen = new NuevaImagen();
+            nueva_imagen.render();
+            this.$('.imagenes_subidas').append(nueva_imagen.$el);
+
             var imagen = $(e.target).val();
             var ext = $(e.target).val().split('.').pop().toLowerCase();
             if (ext ==='jpg' || ext ==='png' || ext === 'jpeg') {
+                
+                var dataform = new FormData();
+                dataform.append('foto',e.target.files[0])
                 $.ajax({
                     url:'/api/comentarioimgs/',
                     type:'POST',
+                    data:dataform,
+                    enctype:'multipart/form-data',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                }).done(function (data) {
+                    var modelo = nueva_imagen.model;
+                    debugger;
                 })
             };
         }

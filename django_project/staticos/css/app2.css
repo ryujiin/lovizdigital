@@ -348,6 +348,7 @@ h2 .linea {
 .breadcrumb {
   background: #fff;
   text-transform: uppercase;
+  margin-bottom: 0px;
 }
 #footer {
   background: #f4f4f4;
@@ -414,6 +415,11 @@ h2 .linea {
   font-size: 0.8em;
   padding-bottom: 20px;
 }
+#footer .pie_pagina ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 #header {
   background: #fff;
   position: fixed;
@@ -452,8 +458,8 @@ h2 .linea {
   position: relative;
   padding: 0 15px 0 0;
   border-bottom: 1px solid #f4f4f4;
-  -webkit-box-shadow: 0 3px 3px -2px rgba(0,0,0,0.05);
-  box-shadow: 0 3px 3px -2px rgba(0,0,0,0.05);
+  -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.2);
   height: 5.4em;
   max-width: 100%;
 }
@@ -632,6 +638,18 @@ h2 .linea {
 .right-nav-btns .nav-sidebar .login-box-content.active {
   height: auto;
   padding: 1em;
+}
+.catalogo .titulo small {
+  display: block;
+  font-size: 0.5em;
+}
+.catalogo .titulo small .icono-triangulo-left,
+.catalogo .titulo small .icono-triangulo-right {
+  display: inline-block;
+  background: #111;
+  height: 3px;
+  width: 20px;
+  margin: 5px;
 }
 .catalogo .section-refinamiento ul {
   list-style: none;

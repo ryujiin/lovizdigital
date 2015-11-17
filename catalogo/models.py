@@ -86,10 +86,11 @@ class Categoria(models.Model):
 	padre = models.ForeignKey('self',blank=True,null=True)
 	seccion = models.CharField(max_length=100,choices=SECCIONES,blank=True,null=True)
 	slug = models.SlugField(max_length=120,unique=True,editable=False)
+	titulo_seo = models.CharField(max_length=100,blank=True,null=True)	
 	descripcion = models.TextField(blank=True,null=True)
 	activo = models.BooleanField(default=True)
 	imagen = models.ImageField(upload_to='categorias',blank=True,null=True,max_length=250)
-	
+
 	def __unicode__(self):
 		return self.slug
 

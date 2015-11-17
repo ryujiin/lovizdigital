@@ -1,9 +1,9 @@
 {% verbatim %}	
 
 <script id="page_catalogo_template" type="text/template">
-	<div class="catalogo container-fluid">
-		<section class="imagen_categoria">
-		</section>
+	<section class="imagen_categoria">
+	</section>
+	<div class="catalogo container-fluid">		
 		<div class="nav-breadcrumb">
 		</div>
 		<div class="row">
@@ -42,9 +42,12 @@
           {%endif%}
         {%endif%}
       </h1>
-      <div class="descripcion">
-      <p>Este seria una pequeña descripcion de la categoria que dictamina q se muestra en la busqueta</p>
-    </div>
+</script>
+
+<script id="imagen_catalogo_tlp" type="text/template">
+	{%if imagen%}
+		<img src="{{imagen}}" >
+	{%endif%}
 </script>
 
 <script id="categoria_bloque_tlp" type="text/template">

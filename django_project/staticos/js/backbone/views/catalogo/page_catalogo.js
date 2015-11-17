@@ -12,7 +12,8 @@ define([
     '../../views/catalogo/bloque_categorias',
     '../../views/catalogo/catalogo',
     '../../views/catalogo/bloque_colores',
-], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque) {
+    '../../views/catalogo/imagen_catalogo'
+], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo) {
     'use strict';
 
     var PageCatalogoView = Backbone.View.extend({
@@ -53,6 +54,10 @@ define([
             var titulo = new TituloCatalogo({
                 model:datos_titulo,
                 el:this.$('.titulo-categoria'),
+            });
+            var imagen = new ImagenCatalogo({
+                model:datos_titulo,
+                el:this.$('.imagen_categoria'),
             });
         },
         get_titulo:function (modelo,Categorias) {
@@ -104,142 +109,3 @@ define([
 
     return vista;
 });
-
-/*
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'templates',
-    'views/categoria_bloque',
-    'views/catalogo',
-    'collections/productos',
-    'collections/filtro',
-    'views/catalogo_bloque_color',
-    'models/filtro',
-], function ($, _, Backbone, JST,CetegoriaBloque,Catalogo,ProductosCollection,Filtros,ColorBloque,FiltroModel) {
-    'use strict';
-
-    var PageCatalogoView = Backbone.View.extend({
-        el:$('#contenido'),
-
-        template: JST['app/scripts/templates/page_catalogo.hbs'],
-
-        tagName: 'div',
-
-        id: '',
-
-        className: '',
-
-        events: {},
-
-        initialize: function () {
-            this.busquedas=[];
-            this.filtros = new Filtros();
-            this.listenTo(this.filtros, 'add', this.add_filtro);
-            this.listenTo(this.filtros, 'remove', this.add_filtro);
-        },
-        render:function (modelo) {
-            this.slug = modelo.toJSON().slug;
-            var datos = this.get_titulo(modelo);
-            this.$el.html(this.template(datos));
-
-            this.crear_bloque_busqueda();            
-            this.crear_bloque_Categoria(modelo);
-            this.crear_bloque_colores();
-        },
-        get_titulo:function (modelo) {
-            if (modelo.toJSON().padre) {
-                var modelo1 = this.collection.findWhere({slug:modelo.toJSON().padre})
-                modelo.set({nombre1:modelo1.toJSON().nombre})
-                if (modelo1.toJSON().padre) {
-                    var modelo2 = this.collection.findWhere({slug:modelo1.toJSON().padre})
-                    modelo.set({nombre2:modelo2.toJSON().nombre})
-                };
-            };
-            return modelo.toJSON();
-        },
-        crear_bloque_Categoria:function (modelo) {            
-            var categoria = new CetegoriaBloque({
-                el:$('#refinamientoCategoria'),
-                model:modelo,
-                collection:this.collection,
-            });
-        },
-        crear_bloque_colores:function () {
-            var bloque_color = new ColorBloque({
-                el:this.$('.refinement.Color'),
-                collection:this.filtros,
-                
-            });
-        },
-        crear_bloque_busqueda:function () {
-            var collection = this.get_productos();
-            this.bloque_productos = new Catalogo({
-                el:this.$('.resultados'),
-                collection: collection,
-            });
-
-            if (collection.length===0) {
-                collection.fetch({
-                    data:$.param({categoria:this.slug})
-                })
-            }else{
-                this.bloque_productos.render();
-            }
-        },
-        get_productos:function () {
-            var productos_categorias = this.by_categoria();
-            return productos_categorias;
-        },
-        by_categoria:function () {
-            var self = this;
-            var encontrado = false;
-            this.busquedas.forEach(function(data){
-                if (self.slug===data.buscado) {
-                    encontrado = data.productos;
-                }
-            })
-            if (encontrado) {
-                return encontrado
-            }else{
-                var productos_categoria = new ProductosCollection();
-                var busqueda = {
-                    buscado : this.slug,
-                    productos : productos_categoria
-                }
-                this.busquedas.push(busqueda);
-                return productos_categoria
-            }
-        },
-        add_filtro:function (modelo) {
-            debugger;
-            var self = this;
-            //invisible todos los productos
-            this.bloque_productos.collection.forEach(function(data){
-                data.set({visible:false});
-            });
-            //recorrer los filtros
-            if (this.filtros.length!==0) {
-                this.filtros.forEach(function(data){
-                    var valor = data.toJSON().valor;
-                    if (data.toJSON().tipo==='color') {
-                        self.bloque_productos.collection.forEach(function(data){
-                            if (data.toJSON().color===valor) {
-                                data.set({visible:true});
-                            };
-                        });
-                    };
-                })
-            }else{
-                this.bloque_productos.collection.forEach(function(data){
-                    data.set({visible:true});
-                }); 
-            }
-        },
-    });
-
-
-    return PageCatalogoView;
-});
-*/

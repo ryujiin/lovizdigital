@@ -6,7 +6,8 @@ define([
     'underscore',
     'backbone',
     'swig',
-], function ($, _, Backbone, swig) {
+    '../views/app/header'
+], function ($, _, Backbone, swig,Head) {
     'use strict';
 
     var PageHomeView = Backbone.View.extend({
@@ -25,8 +26,15 @@ define([
 
         render: function () {            
             this.$el.html(this.template());
+            this.cambiar_header();
         },
-        
+        cambiar_header:function () {
+            var titulo = 'Loviz DelCarpio® | Donde encontras los mejores pantuflas, sandalias y calzado.';
+            var descripcion = 'Loviz DelCarpio® Boutique , Encontraras lo mejor en pantuflas, sandalias, botas, flats y demas. Envio Gratis para todo el peru por compras mayores a S/.50.00';
+            var header = Head;
+            header.render(titulo,descripcion);
+        }
+
     });
 
     var vista = new PageHomeView();

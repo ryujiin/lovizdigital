@@ -19,8 +19,9 @@ define([
     '../../views/productosingle/estrellas',
     '../../views/productosingle/seccion_comentarios',
     '../../views/productosingle/nuevo_comentario',
+    '../../views/app/header',
     'carro',
-], function ($, _, Backbone, swig,ProductoModel,ProductosCollections,ComentariosCollection,ProductosTotal,BreadView,Galeria_full,Galeria_mobil,AddToCart,LineaModel,Relacionados,Estrellas,Comentarios,NuevoComentario,Carro) {
+], function ($, _, Backbone, swig,ProductoModel,ProductosCollections,ComentariosCollection,ProductosTotal,BreadView,Galeria_full,Galeria_mobil,AddToCart,LineaModel,Relacionados,Estrellas,Comentarios,NuevoComentario,Head,Carro) {
     'use strict';
 
     var ProductoSinglesView = Backbone.View.extend({
@@ -45,12 +46,19 @@ define([
 
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
+            this.change_header();
             this.add_bread();
             this.add_galleria();            
             this.add_button_cart();
             this.add_relacionados();
             this.add_estrellas();
             this.add_lista_comentarios();
+        },
+        change_header:function () {
+            var titulo = this.model.toJSON().full_name + ' | Loviz DelCarpio® :: lovizdc.com'
+            var descripcion = this.model.toJSON().descripcion;
+            var header = Head;
+            header.render(titulo,descripcion);
         },
         cambiar_producto:function (slug) {
             var productos = ProductosTotal;

@@ -45,7 +45,7 @@ define([
             var bloque_productos = new Catalogo({
                 el:this.$('.resultados'),
             });
-            bloque_productos.buscar_productos(modelo.toJSON().slug)
+            bloque_productos.buscar_productos(modelo.toJSON().slug);
         },
         crear_titulo:function (modelo,Categorias) {
             var datos_titulo = this.get_titulo(modelo,Categorias);

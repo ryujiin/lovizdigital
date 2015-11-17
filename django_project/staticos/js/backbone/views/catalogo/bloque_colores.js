@@ -5,7 +5,8 @@ define([
     'swig',
     '../../views/catalogo/categorias_link',    
     '../../collections/colores',
-], function ($, _, Backbone, swig,CateLink,ColoresCollection) {
+    '../../collections/catalogo/filtros'
+], function ($, _, Backbone, swig,CateLink,ColoresCollection,FiltrosCollection) {
     'use strict';
 
     var CatalogoBloqueColorView = Backbone.View.extend({
@@ -54,20 +55,18 @@ define([
             })
         },
         filtrar_color:function (e) {
-            debugger;
             $(e.target).removeClass('no_activo').addClass('activo');            
             var color = e.target.dataset.valor;
-            this.collection.add([
+            FiltrosCollection.add([
                 {tipo:'color',valor:color}
             ]);
+
         },
         rm_filtrar_color:function(e){
-            debugger;
             $(e.target).removeClass('activo').addClass('no_activo');            
             var color = e.target.dataset.valor;
-            var modelo = this.collection.findWhere({tipo:'color',valor:color});
-            this.collection.remove(modelo);
-            debugger;
+            var modelo = FiltrosCollection.findWhere({tipo:'color',valor:color});
+            FiltrosCollection.remove(modelo);
         }
     });
 

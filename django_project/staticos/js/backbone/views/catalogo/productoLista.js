@@ -31,9 +31,9 @@ define([
         },
         visibilidad: function () {
             if (this.model.toJSON().visible===false) {
-                this.$el.fadeOut();
+                this.$el.hide();
             }else{
-                this.$el.fadeIn();
+                this.$el.show();
             }
         }
     });

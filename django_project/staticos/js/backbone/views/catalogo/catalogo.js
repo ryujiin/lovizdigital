@@ -45,15 +45,20 @@ define([
                 data:$.param({categoria:this.slug})
             }).always(function(){
                 self.render();
-                bloque_ajax.remove();
+                self.ver_filtros();
+                bloque_ajax.remove();                
             });
+        },
+        ver_filtros:function () {
+            if (FiltrosCollection.length>0) {
+                this.filtrar();
+            }
         },
         filtrar:function () {
             var filtros = FiltrosCollection;
 
             if (filtros.length>0) {
                 this.collection.forEach(function (modelo) {
-                    debugger;
                     modelo.set('visible',false);
                 })
                 var self = this;

@@ -5,8 +5,7 @@ define([
     'underscore',
     'backbone',
     'swig',
-    '../../models/nueva_imagen_comentario'
-], function ($, _, Backbone, swig,ImagenModel) {
+], function ($, _, Backbone, swig) {
     'use strict';
 
     var NuevaImagenComentView = Backbone.View.extend({
@@ -17,9 +16,7 @@ define([
 
         id: '',
 
-        model:new ImagenModel(),
-
-        className: 'imagen',
+        className: 'imagen_coment',
 
         events: {
         },

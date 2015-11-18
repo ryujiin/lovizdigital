@@ -1,7 +1,7 @@
 body {
   font-size: 16px;
   margin: 0;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: Verdana;
   line-height: 1.4;
   color: #333;
 }
@@ -639,6 +639,44 @@ h2 .linea {
   height: auto;
   padding: 1em;
 }
+#error_page {
+  background-image: url("../imgs/error_page.jpg");
+  background-attachment: fixed;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  overflow: hidden;
+  min-height: 600px;
+  position: relative;
+  color: #fff;
+  font-family: 'BenchNine', sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+#error_page .cobertura {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: -1;
+}
+#error_page .errorTitle {
+  font-size: 20px;
+  margin: 15px 0;
+}
+#error_page .errorsenti {
+  font-size: 30px;
+}
+#error_page .reallyLoud {
+  font-size: 80px;
+  line-height: 80px;
+}
+#error_page .explicacion {
+  font-size: 20px;
+}
 .catalogo .titulo small {
   display: block;
   font-size: 0.5em;
@@ -903,6 +941,17 @@ h2 .linea {
   margin: 10px 0;
   padding-bottom: 15px;
 }
+.reviews-lista article.review .imagenes_comentarios {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+.reviews-lista article.review .imagenes_comentarios .imagen_coment {
+  width: 200px;
+}
 .reviews-lista article.review .review_header {
   font-family: 'BenchNine', sans-serif;
 }
@@ -945,6 +994,18 @@ h2 .linea {
 }
 .reviews-lista article.review .recomendacion strong {
   font-size: 16px;
+}
+.reviews-lista article.review .recomendacion .circulo_recomen {
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  height: 20px;
+  line-height: 23px;
+  color: #fff;
+  background: #111;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  font-size: 12px;
 }
 .reviews-lista article.review .ayuda {
   font-family: 'BenchNine', sans-serif;
@@ -1149,10 +1210,21 @@ h2 .linea {
   color: #aaa;
   font-size: 0.8em;
 }
-#nuevo_comentario .formulario .imagenes_subidas .imagen {
+#nuevo_comentario .formulario .imagenes_subidas {
+  margin: 5px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+#nuevo_comentario .formulario .imagenes_subidas .imagen_coment {
   width: 30%;
-  height: 100px;
+  min-height: 100px;
   position: relative;
+  background: #111;
+  color: #fff;
 }
 .lineas_carro .etiquetas {
   display: -webkit-box;

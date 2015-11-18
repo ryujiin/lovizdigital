@@ -28,13 +28,14 @@ class Direccion(models.Model):
 
 class Comentario(models.Model):
 	TIPO = (('si','si'),('no','no'))	
-	producto = models.ForeignKey(Producto)
+	producto = models.ForeignKey(Producto,blank=True,null=True)
+	activo = models.BooleanField(default=False)
 	variacion = models.ForeignKey(ProductoVariacion,blank=True,null=True)
 	usuario = models.ForeignKey(User, null=True,blank=True)
 	verificado = models.BooleanField(default=False)
 	valoracion = models.PositiveIntegerField(default=0)
 	titulo_comentario = models.CharField(max_length=100,blank=True,null=True)
-	comentario = models.TextField()
+	comentario = models.TextField(blank=True)
 	creado = models.DateTimeField(auto_now_add=True)
 	email_invitado = models.CharField(max_length=100,blank=True,null=True)
 	recomendacion = models.CharField(max_length=10,blank=True,null=True,choices=TIPO)

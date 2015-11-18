@@ -145,16 +145,19 @@
 		  		<input type="hidden" id="producto_id_coment" value="{{id}}">
 		     	<div class="imagen">
 		     		<div class="figura">
-		     			{% for img in imagenes_producto%}
-						  	{% if !img.orden%}
-						  	<img src="{{img.imagen}}"/>
-						  	{%endif%}
-						{% endfor%}
+		     			 <img src="{{thum}}"/>						
 		     		</div>
 		     		<div class="nombre">{{full_name}}</div>
 		     	</div>
-		     	<div class="formulario">		     	
-		     		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		     	<div class="formulario">		     		
+		     	</div>
+		   </div>
+		 </div>
+	</div>
+</script>
+
+<script id="form_nuevo_coment_tlp" type="text/template">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		     		<h3>Mi Comentario</h3>
 		     		<div class="error-form">
 		     			<p class="text-warning bg-warning">Faltan campos que son obligatorios</p>
@@ -190,8 +193,7 @@
 						<div class="requerido enlinea pull-right f_arial">0/50</div>
 						<div class="opinion-content">
 							<textarea placeholder="Ejemplo: Compré este hace un mes y estoy muy contento de haberlo hecho ..." class="form-control" id="coment_content"></textarea>
-							<div class="imagenes_subidas">
-								
+							<div class="imagenes_subidas">								
 							</div>
 							<div class="buton_subir">
 								<input type="file" name="foto_comentario" id="foto_comentario"/>
@@ -229,11 +231,6 @@
 					    	<button class="btn btn-contraste enviar_comentario">Enviar Comentario</button>
 					    </div>
 					</div>
-		     	</div>
-		   </div>
-		 </div>
-	</div>
-
 </script>
 
 <script id="galeriafull_tlp" type="text/template">
@@ -346,7 +343,9 @@
 			<p>
 				{%if recomen%}
 				<strong>
-					<span class="glyphicon glyphicon-ok-circle"></span>
+					<span class="circulo_recomen">
+						<span class="icon-check"></span>
+					</span>
 					Si,
 				</strong>
 				yo recomiendo este producto
@@ -360,7 +359,11 @@
 			</p>
 		</div>
 		<div class="imagenes_comentarios">
-					
+			{%for foto in fotos_coment%}
+			<div class="imagen_coment">
+				<img src="{{foto.foto}}">
+			</div>				
+			{%endfor%}	
 		</div>
 		<div class="ayuda">
 			<h4>Te Ayudo?</h4>
@@ -377,9 +380,11 @@
 </script>
 
 <script id="nueva_imagen_tlp" type="text/template">
-	<div id="ajaxloader_img"></div>
-	<div class="laimagen">
+	{%if foto %}
 		<img src="{{foto}}">
-	</div>
+	{%else%}
+		<div id="ajaxloader_img"></div>	
+		<p class="text-center">Subiendo...</p>
+	{%endif%}	
 </script>
 {% endverbatim %}

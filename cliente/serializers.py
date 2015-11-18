@@ -55,7 +55,7 @@ class ComentairoSerializer(serializers.ModelSerializer):
 	img_producto = serializers.SerializerMethodField('get_img')
 	foto = serializers.SerializerMethodField()
 	recomen = serializers.SerializerMethodField()
-	fotos_coment = ComentarioImagenSerializer(many=True)
+	fotos_coment = ComentarioImagenSerializer(many=True,read_only=True)
 	class Meta:
 		model = Comentario
 		fields = ('id','verificado','valoracion','titulo_comentario','comentario','creado','producto','variacion','usuario','nombre',

@@ -9,8 +9,9 @@ define([
     '../views/productosingle/page_producto',
     '../collections/categoria',
     '../views/procesar/page_procesar',
-    '../views/usuario/page_user'
-], function ($, Backbone,CarroPage,HomePage,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser) {
+    '../views/usuario/page_user',
+    '../views/app/page_error'
+], function ($, Backbone,CarroPage,HomePage,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageError) {
     'use strict';
 
     var AppRouter = Backbone.Router.extend({
@@ -22,6 +23,7 @@ define([
             'catalogo/:categoria/':'catalogo',
             'ingresar/':'ingresar',
             'procesar-compra/':'procesar_compra',
+            'felicidades/:pedido/':'pedido',
             '*notFound': 'notFound',
         },
 
@@ -68,6 +70,13 @@ define([
         procesar_compra:function () {
             $('body').removeClass();              
             PageProcesar.verificar_render();
+        },
+        pedido:function (pedido) {
+            if (pedido) {
+
+            }else{
+                this.notFound();
+            }
         },
         notFound:function () {
             $('body').removeClass();            

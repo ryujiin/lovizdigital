@@ -156,6 +156,10 @@
 	article.review
 		margin 10px 0		
 		padding-bottom 15px
+		.imagenes_comentarios
+			display flex
+			.imagen_coment
+				width 200px
 		.review_header
 			font-family f_imprenta
 			.avatar
@@ -187,6 +191,16 @@
 			font-size 13px
 			strong
 				font-size 16px
+			.circulo_recomen
+				display inline-block
+				width 20px
+				text-align center
+				height 20px
+				line-height 23px
+				color #fff
+				background #111
+				border-radius 20px
+				font-size 12px
 		.ayuda
 			font-family f_imprenta
 			h4
@@ -325,7 +339,7 @@
 				color #fff
 				padding 5px
 				border-radius 30px
-		.recomendaciones
+		.recomendaciones		
 			button.activo
 				background-color #444
 				color #fff
@@ -339,7 +353,11 @@
 				color #aaa
 				font-size 0.8em
 		.imagenes_subidas
-			.imagen
+			margin 5px
+			display flex
+			.imagen_coment
 				width 30%
-				height 100px
+				min-height 100px
 				position relative
+				background #111
+				color #fff

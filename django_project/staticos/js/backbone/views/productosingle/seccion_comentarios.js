@@ -37,7 +37,7 @@ define([
             var comentario = new ComentarioLista({
                 model:modelo,
             })
-            this.$('.reviews-lista').append(comentario.$el);
+            this.$('.reviews-lista').prepend(comentario.$el);
         }
     });
 

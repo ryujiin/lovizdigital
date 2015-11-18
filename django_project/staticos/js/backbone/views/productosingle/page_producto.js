@@ -20,8 +20,9 @@ define([
     '../../views/productosingle/seccion_comentarios',
     '../../views/productosingle/nuevo_comentario',
     '../../views/app/header',
+    '../../models/comentario',    
     'carro',
-], function ($, _, Backbone, swig,ProductoModel,ProductosCollections,ComentariosCollection,ProductosTotal,BreadView,Galeria_full,Galeria_mobil,AddToCart,LineaModel,Relacionados,Estrellas,Comentarios,NuevoComentario,Head,Carro) {
+], function ($, _, Backbone, swig,ProductoModel,ProductosCollections,ComentariosCollection,ProductosTotal,BreadView,Galeria_full,Galeria_mobil,AddToCart,LineaModel,Relacionados,Estrellas,Comentarios,NuevoComentario,Head,ComentarioModel,Carro) {
     'use strict';
 
     var ProductoSinglesView = Backbone.View.extend({
@@ -159,6 +160,7 @@ define([
             })
             var new_comentario = new NuevoComentario({
                 el:this.$('#nuevo_comentario'),
+                model:new ComentarioModel(),
                 collection:comentarios_collection,
             })
         },

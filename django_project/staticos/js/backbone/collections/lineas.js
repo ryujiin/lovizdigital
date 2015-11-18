@@ -8,7 +8,7 @@ define([
     'use strict';
 
     var LineaCollection = Backbone.Collection.extend({
-        url: 'http://localhost:8000/api/carro/lineas/',
+        url: '/api/carro/lineas/',
         
         model: LineaModel,
     });

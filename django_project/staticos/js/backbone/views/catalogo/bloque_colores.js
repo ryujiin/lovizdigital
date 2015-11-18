@@ -42,32 +42,30 @@ define([
                     self.collection.forEach(self.addColor,self);
                 })
             }
-            //this.addFiltros();
         },
         addColor:function(modelo){
             modelo.set({valor:'color'});
             var vista = new CateLink({model:modelo});
             this.$('.lista').append(vista.render().el);
         },
-        addFiltros:function () {
-            this.collection.forEach(function (data) {
-                debugger;
-            })
-        },
+
         filtrar_color:function (e) {
-            $(e.target).removeClass('no_activo').addClass('activo');            
+            
             var color = e.target.dataset.valor;
+            var coincidencia = this.collection.findWhere({nombre:color});
+            coincidencia.set('activo',true)
             FiltrosCollection.add([
                 {tipo:'color',valor:color}
             ]);
-
         },
         rm_filtrar_color:function(e){
-            $(e.target).removeClass('activo').addClass('no_activo');            
+            
             var color = e.target.dataset.valor;
+            var coincidencia = this.collection.findWhere({nombre:color});
+            coincidencia.set('activo',false)
             var modelo = FiltrosCollection.findWhere({tipo:'color',valor:color});
             FiltrosCollection.remove(modelo);
-        }
+        },
     });
 
     return CatalogoBloqueColorView;

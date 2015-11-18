@@ -9,7 +9,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 	link  = serializers.SerializerMethodField()
 	class Meta:
 		model = Categoria
-		fields = ('id','nombre','full_name','seccion','slug','descripcion','activo','imagen','padre','link')
+		fields = ('id','nombre','full_name','seccion','slug','descripcion','activo','imagen','padre','link','titulo_seo')
 
 	def get_link(self,obj):
 		link = '/catalogo/%s/' %obj.slug

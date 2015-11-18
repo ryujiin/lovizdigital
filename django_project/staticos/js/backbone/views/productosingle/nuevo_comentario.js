@@ -5,22 +5,22 @@ define([
     'underscore',
     'backbone',
     'swig',
-    '../../models/comentario',
     '../../models/user',
-    '../../views/productosingle/nueva_imagen_coment'
-], function ($, _, Backbone, swig,ComentarioModel,UserModel,NuevaImagen) {
+    '../../views/productosingle/nueva_imagen_coment',
+    '../../collections/nueva_imagen_comentario',
+    '../../models/nueva_imagen_comentario'    
+], function ($, _, Backbone, swig,UserModel,NuevaImagen,ImagenesCollection,ImagenModel) {
     'use strict';
 
     var NuevoComentarioView = Backbone.View.extend({
+
+        template: swig.compile($('#form_nuevo_coment_tlp').html()),        
 
         tagName: 'div',
 
         id: '',
 
         className: '',
-
-        model:new ComentarioModel(),
-
         events: {
             'mouseenter .estrellas_form button':'encima_estrellas',
             'mouseleave .estrellas_form button':'salir_estrellas',
@@ -34,10 +34,12 @@ define([
         },
 
         initialize: function () {
+            this.imagenes = new ImagenesCollection();
             this.render();
         },
 
         render: function () {
+            this.$('.formulario').html(this.template(this.model.toJSON()));
             this.ver_user();
         },
         ver_user:function () {
@@ -48,6 +50,8 @@ define([
             }else{
                 this.model.set('usuario',null)
             }
+            var producto = this.$('#producto_id_coment').val();
+            this.model.set('producto',producto);
         },
         encima_estrellas:function (e) {
             var valor = e.target.dataset.valor;
@@ -116,11 +120,10 @@ define([
         },
         enviar_comentario:function () {
             var self = this;
-            var producto = this.$('#producto_id_coment').val();
-            this.model.set('producto',producto);
             var datos = this.model.toJSON();
             if (datos.valoracion && datos.titulo_comentario && datos.comentario.length>50 && datos.producto && datos.recomendacion) {
-                this.model.save().done(function () {
+                this.model.save().done(function (data) {
+                    self.collection.add(self.model);
                     self.$el.modal('hide');
                 });
             }else{
@@ -128,29 +131,32 @@ define([
             }
         },
         subio_imagen:function (e) {
-            var nueva_imagen = new NuevaImagen();
+            var self = this;
+            var nueva_imagen = new NuevaImagen({model:new ImagenModel()});
             nueva_imagen.render();
-            this.$('.imagenes_subidas').append(nueva_imagen.$el);
+            this.$('.imagenes_subidas').append(nueva_imagen.$el);         
 
             var imagen = $(e.target).val();
             var ext = $(e.target).val().split('.').pop().toLowerCase();
             if (ext ==='jpg' || ext ==='png' || ext === 'jpeg') {
-                
-                var dataform = new FormData();
-                dataform.append('foto',e.target.files[0])
-                $.ajax({
-                    url:'/api/comentarioimgs/',
-                    type:'POST',
-                    data:dataform,
-                    enctype:'multipart/form-data',
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                }).done(function (data) {
-                    var modelo = nueva_imagen.model;
-                    debugger;
+                this.model.save().done(function (data) {
+                    var dataform = new FormData();
+                    dataform.append('foto',e.target.files[0])
+                    dataform.append('comentario',data.id);
+                    $.ajax({
+                        url:'/api/comentarioimgs/',
+                        type:'POST',
+                        data:dataform,
+                        enctype:'multipart/form-data',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                    }).done(function (data) {
+                        var modelo = nueva_imagen.model;
+                        modelo.set(data);
+                    })
                 })
-            };
+            };            
         }
     });
 

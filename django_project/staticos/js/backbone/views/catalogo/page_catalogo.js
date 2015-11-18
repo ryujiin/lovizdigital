@@ -12,8 +12,9 @@ define([
     '../../views/catalogo/bloque_categorias',
     '../../views/catalogo/catalogo',
     '../../views/catalogo/bloque_colores',
-    '../../views/catalogo/imagen_catalogo'
-], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo) {
+    '../../views/catalogo/imagen_catalogo',
+    '../../views/app/header'
+], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo,Head) {
     'use strict';
 
     var PageCatalogoView = Backbone.View.extend({
@@ -59,6 +60,14 @@ define([
                 model:datos_titulo,
                 el:this.$('.imagen_categoria'),
             });
+
+            var header = Head;
+            if (datos_titulo.toJSON().titulo_seo===null) {
+                var titulo = datos_titulo.toJSON().nombre+ ' | Loviz DelCarpio® :: lovizdc.com.';
+            }else{
+                var titulo = datos_titulo.toJSON().titulo_seo + ' | Loviz DelCarpio® :: lovizdc.com.';
+            }
+            header.render(titulo,datos_titulo.toJSON().descripcion)
         },
         get_titulo:function (modelo,Categorias) {
             if (modelo.toJSON().padre) {

@@ -30,6 +30,8 @@ class Pedido(models.Model):
 	metodo_pago = models.ForeignKey('MetodoPago',blank=True,null=True)
 	pago_pedido = models.ForeignKey('Pago',blank=True,null=True)
 	estado_pedido = models.CharField(max_length=120,default=AUTENTICADO,choices=ESTADO_ELECCION)
+	pagado = models.BooleanField(default=False)
+	enviado = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return "%s - %s" %(self.estado_pedido,self.numero_pedido)
@@ -43,6 +45,7 @@ class Pedido(models.Model):
 					self.estado_pedido = self.METODO_ENVIO
 		if self.pago_pedido:
 			self.estado_pedido = self.PAGADO
+			self.pagado = True
 		super(Pedido, self).save(*args, **kwargs)
 		self.add_modificacion()
 

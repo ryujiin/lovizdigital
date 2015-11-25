@@ -17,12 +17,16 @@ require.config({
             deps:['jquery'],
             exports: 'storage',
         },
+        'coockie':{
+            deps:['jquery'],
+            exports: 'coockie',
+        },
         'bootstrap':{
             deps:['jquery'],
         },
         'stripe':{
             exports: 'Stripe',
-        }
+        },
     },
     paths: {
         jquery: 'vendor/bower_components/jquery/dist/jquery',
@@ -33,7 +37,9 @@ require.config({
         owl: 'vendor/owl/owl.carousel',
         zoom: 'vendor/bower_components/jquery-zoom/jquery.zoom',
         storage: 'vendor/bower_components/jQuery-Storage-API/jquery.storageapi',
-        stripe:'//js.stripe.com/v2/?1',
+        coockie: 'vendor/coockie/jquery.cookie',
+        //stripe:'//js.stripe.com/v2/?1',
+        stripe: 'vendor/stripe/stripe'
     }
 });
 
@@ -42,33 +48,20 @@ require([
     '../js/backbone/routers/rutas',
     '../js/backbone/views/app',
     '../js/backbone/collections/categoria',
-], function (Backbone,Rutas,App,Categorias,ProductosTotal) {
+], function (Backbone,Rutas,App,Categorias,ProductosTotal,coockie) {
     var app = new App(Rutas);
 
     /* Views */
+    
     Categorias.fetch().done(function () {
         Backbone.history.start({
             pushState:true,
         });
     })
 
+    
+    debugger;
     $(function(){
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
         $.ajaxSetup({
             crossDomain: true,
             beforeSend: function(xhr, settings) {
@@ -77,6 +70,7 @@ require([
                     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                 };
                 if (!csrfSafeMethod(settings.type)) {
+                    var csrftoken = $.cookie('csrftoken');
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             }

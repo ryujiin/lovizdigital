@@ -10,8 +10,9 @@ define([
     '../collections/categoria',
     '../views/procesar/page_procesar',
     '../views/usuario/page_user',
+    '../views/felicidades/page_felicidades',
     '../views/app/page_error'
-], function ($, Backbone,CarroPage,HomePage,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageError) {
+], function ($, Backbone,CarroPage,HomePage,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageFelicidades,PageError) {
     'use strict';
 
     var AppRouter = Backbone.Router.extend({
@@ -23,7 +24,7 @@ define([
             'catalogo/:categoria/':'catalogo',
             'ingresar/':'ingresar',
             'procesar-compra/':'procesar_compra',
-            'felicidades/:pedido/':'pedido',
+            'felicidades/:pedido/':'felicidades',
             '*notFound': 'notFound',
         },
 
@@ -71,9 +72,9 @@ define([
             $('body').removeClass();              
             PageProcesar.verificar_render();
         },
-        pedido:function (pedido) {
+        felicidades:function (pedido) {
             if (pedido) {
-
+                PageFelicidades.render(pedido);
             }else{
                 this.notFound();
             }
@@ -89,131 +90,3 @@ define([
 
     return rutas;
 });
-
-
-/*
-define([
-    'jquery',
-    'backbone',
-    'carro',
-    'models/user',
-    'views/page_home',
-    'views/page_user',
-    'views/error_404',
-    'views/page_carro',
-    'views/page_catalogo',
-    'views/productoSingles',
-    'collections/productos',
-    'collections/productoSingles',
-    'collections/categoria',
-    'views/page_procesar_compra',
-    'views/page_ingresar',
-], function ($, Backbone,CarroModel,UserModel,PageHome,PageUser,PageError,PageCarro,PageCatalogo,VistaProductoSingle,ProductosCollection,ProductoSingleCollection,CategoriasCollection,Pedidos,PageProcesar,PageIngresar) {
-    'use strict';
-
-    var AppRouter = Backbone.Router.extend({
-        routes: {
-        	"":"root",
-            "usuario/perfil/":"perfil",
-            "producto/:slug/":'productoSingle',
-            'carro/':'carro_page',
-            'catalogo/:categoria/':'catalogo',
-            'ingresar/':'ingresar',
-            'procesar-compra/':'procesar_compra',
-            '*notFound': 'notFound',
-        },
-
-        initialize:function(){
-            this.page_home = new PageHome();
-            this.page_user = new PageUser({
-                model:UserModel
-            });
-            this.page_carro = new PageCarro({
-                model:CarroModel
-            });
-            this.page_catalogo = new PageCatalogo({
-                collection: CategoriasCollection
-            });
-            this.procesar_compra = new PageProcesar({
-                model:CarroModel
-            });
-            this.page_ingresar = new PageIngresar({
-                model:UserModel
-            });
-        },
-        root:function(){
-            $('body').removeClass();
-
-            this.page_home.render()
-        },
-        perfil:function(){
-            $('body').removeClass();            
-            this.page_user.render();
-        },
-        productoSingle:function (slug) {
-            $('body').removeClass();            
-            var coleccion = ProductoSingleCollection;
-            var productoModel = coleccion.findWhere({slug:slug});
-            var self=this;
-
-            if (productoModel !== undefined) {
-                VistaProductoSingle.model.set(productoModel.toJSON());
-            }else{
-                var coleccionProductos = new ProductosCollection();
-                coleccionProductos.fetch({
-                    data:$.param({slug:slug})
-                }).done(function (data) {
-                    ProductoSingleCollection.add(data);
-                    VistaProductoSingle.model.set(data[0]);
-                    
-                })
-            }
-
-            VistaProductoSingle.render();
-        },
-        carro_page:function(){
-            $('body').removeClass();
-
-            console.log('carro');
-            this.page_carro.render();
-        },
-        catalogo:function (slug) {
-            $('body').removeClass();
-            $('body').addClass('catalogo');
-
-            var coincidencia = CategoriasCollection.findWhere({slug:slug});
-            if (coincidencia) {
-                this.page_catalogo.render(coincidencia);
-            }else{
-                this.notFound();
-            }
-        },
-        ingresar:function () {
-            if (UserModel.id===undefined) {
-                this.page_ingresar.render();
-            }else{
-                this.navigate("usuario/perfil/", {trigger: true});
-            }
-        },
-        procesar_compra:function () {
-            if (UserModel.id===undefined) {
-                this,page_ingresar.procesar = true;
-                this.navigate("ingresar/", {trigger: true});
-            }else{
-                if (CarroModel.toJSON().lineas) {
-                    this.procesar_compra.render();
-                }else{
-                    this.root();
-                }
-            }            
-        },
-        notFound:function () {
-            PageError.render();
-        },
-    });
-
-    var rutas = new AppRouter();
-
-    return rutas;
-});
-*/

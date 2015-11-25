@@ -35,11 +35,13 @@
 </script>
 
 <script id="user_formLogin_tlp" type="text/template">
+	<h3>Ingresar a mi cuenta</h3>
 	<fieldset>
 		<div class="error_form"></div>
 	  <div class="login_facebook">
 	    <a href="http://localhost:8000/auth/convert-token/">Ingresar con Facebook</a>
-	  </div>
+	  </div>	  
+	  
 	  <div class="form-group required email_user">
 	    <label>*Correo Electronico</label>
 	    <input type="text" class="form-control input-text email email-input required" data-contenedor="email_user"/>
@@ -57,6 +59,43 @@
 	    <button type="submit" value="ingresar" class="btn btn-default">Ingresar</button>
 	  </div>
 	</fieldset>
+</script>
+
+<script id="user_formCrear" type="text/template">
+	<h3>Crear una cuenta LovizDC.com</h3>
+	<div class="datos_crear">
+		<p>Y aprovéchate de los beneficios de tener una cuenta:</p>
+		<ul>
+			<li>Ahorra tiempo cuando compres</li>
+			<li>Sigue tus pedidos</li>
+			<li>Incluye varias direcciones de envío</li>
+		</ul>
+		<button class="btn btn-contraste boton-crear">Crear una Cuenta</button>
+	</div>
+	<div class="error_form"></div>
+	<form>
+		<div class="form-group campo_nombre">
+			<label class="control-label" for="">*Nombre</label>
+			<input type="text" class="form-control" id="campo_nombre" data-contenedor="campo_nombre">
+			<div class="error"></div>
+		</div>
+		<div class="form-group campo_apellido">
+			<label class="control-label" for="">*Apellido</label>
+			<input type="text" class="form-control" id="campo_apellido" data-contenedor="campo_apellido">
+			<div class="error"></div>			
+		</div>
+		<div class="form-group campo_correo">
+			<label class="control-label" for="">*Correo electronico</label>
+			<input type="email" class="form-control" id="campo_correo" placeholder="" data-contenedor="campo_correo">
+			<div class="error"></div>			
+		</div>
+		<div class="form-group campo_pass">
+			<label class="control-label" for="">*Contraseña</label>
+			<input type="password" class="form-control" id="campo_pass">
+			<div class="error"></div>			
+		</div>
+	    <button type="submit" value="ingresar" class="btn btn-default">Crear Cuenta</button>		
+	</form>
 </script>
 
 <script id="page_user_tlp" type="text/template">

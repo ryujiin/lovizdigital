@@ -28,22 +28,6 @@ define([
         buscar_user:function(){
             this.fetch().done(function (data) {
             })
-            /*
-            var self = this;
-            var token = this.toJSON().token;
-            if (token.length!==0) {
-                this.fetch({
-                    headers:{
-                        'Authorization':token
-                    }
-                }).done(function(){
-                    localStorage.token_user = token;
-                }).fail(function(){
-                    localStorage.removeItem('token_user');
-                    self.set('token', '');
-                })  
-            };
-            */
         },
         logout_user:function(){
             localStorage.removeItem('token_user');
@@ -67,17 +51,6 @@ define([
             }).always(function(){
                 progrecion_bar.remove();
             });
-            /*
-            $.post("http://localhost:8000/api-token-auth/",
-                {username: email,password:pass})
-            .done(function(data){
-                self.set('token','JWT '+data.token);            
-                Backbone.history.navigate('/usuario/perfil/', {trigger:true})
-            }).fail(function(data){
-                vista.error_login();                    
-            }).always(function(){
-                progrecion_bar.remove();
-            });/*/
         },
         crear_user:function (email,pass,nombre,apellido,vista) {
             var self = this;
@@ -98,12 +71,5 @@ define([
     });
 
     var usermodel = new UserModel();
-    /*
-    var token = localStorage.token_user;
-    if (token!==undefined) {
-        usermodel.set('token' , token);
-    };
-    */
-
     return usermodel;
 });

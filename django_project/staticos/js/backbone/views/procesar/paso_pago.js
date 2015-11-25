@@ -26,7 +26,6 @@ define([
         },
 
         initialize: function () {
-            this.render();
             this.$el.addClass('is-activo');
         },
 

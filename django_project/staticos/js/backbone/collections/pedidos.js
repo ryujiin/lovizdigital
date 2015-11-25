@@ -9,11 +9,10 @@ define([
     'use strict';
 
     var PedidoCollection = Backbone.Collection.extend({
-        url: 'http://localhost:8000/api/pedidos/',
+        url: '/api/pedidos/',
         model: PedidoModel,
         initialize: function() {
             //this.buscar_user();
-            this.listenTo(UserModel, 'change', this.buscar_pedidos);
         },
     });
 

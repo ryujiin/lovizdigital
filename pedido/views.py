@@ -17,7 +17,6 @@ class PedidoViewSet(viewsets.ModelViewSet):
 	serializer_class = PedidoSerializer
 
 	def get_queryset(self):
-		queryset = Pedido.objects.all()
 		if self.request.user.is_authenticated:
 			queryset = Pedido.objects.filter(user=self.request.user.pk)
 		return queryset

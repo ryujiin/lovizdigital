@@ -5,13 +5,14 @@ define([
     'backbone',
     '../models/user',
     'storage',
-], function (_, Backbone,UserModel,Storage) {
+    'coockie'
+], function (_, Backbone,UserModel,Storage,coockie) {
     'use strict';
 
     var CarroModel = Backbone.Model.extend({
-        //urlRoot : 'http://loviz.herokuapp.com/api/carro/',
+        
         urlRoot : '/api/carro/',
-        //url: 'http://apiloviz.herokuapp.com/api/carro/',
+        
         url: function(){
             var base = this.urlRoot;
             if (this.isNew()) return base;
@@ -19,9 +20,9 @@ define([
         },
 
         initialize: function() {
-            var modelo_user = UserModel;
-            this.listenTo(modelo_user, "change", this.buscar_carrologin, this);
+            this.listenTo(UserModel, "change", this.buscar_carrologin, this);
             this.buscar_carro();
+            debugger;
         },
 
         defaults: {
@@ -49,6 +50,7 @@ define([
                         self.save().done(function(data){
                         });
                     }else{
+                        debugger;
                     }
                 }).fail(function(){
                     self.set({propietario:UserModel.id});

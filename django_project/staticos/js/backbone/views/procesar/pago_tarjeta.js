@@ -21,7 +21,10 @@ define([
 
         events: {
             'keydown #number':'ver_numero',
-            'keyup #number': 'contar_numero'
+            'keyup #number': 'contar_numero',
+            'blur input':'get_datos',
+            'blur select':'get_datos',
+
         },
 
         initialize: function () {
@@ -37,6 +40,23 @@ define([
             }else{
                 return false;
             }
+        },
+        get_datos:function (e) {
+            var valor = e.target.value;
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+        },
+        validar_vacio:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
         },
         contar_numero:function (e) {
             var valor = this.$('#number').val().length;
@@ -101,6 +121,7 @@ define([
                         carro : $('#carro_pago').val(),
                     }).done(function (data) {
                         if (data.status==='paid') {
+                            
                             window.location="/felicidades/"+data.pedido+"/";
                         };
                     });

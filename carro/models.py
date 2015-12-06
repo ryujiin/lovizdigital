@@ -97,6 +97,7 @@ class LineaCarro(models.Model):
 	variacion = models.ForeignKey(ProductoVariacion,blank=True,null=True)
 	cantidad = models.PositiveIntegerField(default=1)
 	date_created = models.DateTimeField(auto_now_add=True)
+	activo = models.BooleanField(default=True)
 
 	def get_precio(self):
 		precio = self.variacion.precio_minorista
@@ -114,6 +115,8 @@ class LineaCarro(models.Model):
 		return "linea de %s con %s articulos de %s" %(self.carro.propietario,self.cantidad,self.variacion)
 
 	def save(self, *args, **kwargs):
+		if self.cantidad == 0:
+			self.activo = False
 		if self.carro.estado=='Abierto':			
 			try:
 				coincidencias = LineaCarro.objects.get(carro=self.carro,variacion=self.variacion)

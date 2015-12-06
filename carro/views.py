@@ -64,14 +64,14 @@ class CarritoDetailViews(APIView):
 
 
 class LineasViewsets(viewsets.ModelViewSet):
-	queryset = LineaCarro.objects.all()
+	queryset = LineaCarro.objects.filter(activo=True)
 	serializer_class = LineaSerializer
 
 	def list(self,request):
 		carro = request.GET.get('carro')
 		if carro =='':
 			carro = 0
-		queryset = LineaCarro.objects.filter(carro=carro)
+		queryset = LineaCarro.objects.filter(carro=carro,activo=True)
 		serializer = LineaSerializer(queryset,many=True)
 		return Response(serializer.data)
 

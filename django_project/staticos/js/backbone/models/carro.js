@@ -22,7 +22,6 @@ define([
         initialize: function() {
             this.listenTo(UserModel, "change", this.buscar_carrologin, this);
             this.buscar_carro();
-            debugger;
         },
 
         defaults: {

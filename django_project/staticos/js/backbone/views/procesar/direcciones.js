@@ -19,21 +19,31 @@ define([
         events: {},
 
         initialize: function () {
-            this.verificar_numero();
+            this.render();
         },
 
         render: function () {
-            this.$el.empty();
-            this.collection.forEach(this.addDirec,this);
+            var self = this;
+            this.collection.fetch().done(function () {
+                if (self.collection.length>0) {
+                    self.$('.text-warning').hide();
+                    self.collection.forEach(self.addDirec,self);
+                };
+                self.listenTo(self.collection, 'add', self.addDirecSelec);
+            });
         },
         verificar_numero:function () {
-            if (this.collection.length!==0) {
-                this.render();
-            };
+            var self = this;            
         },
         addDirec:function (modelo) {     
             var direccion = new Direccion({model:modelo});
             this.$el.append(direccion.$el);
+        },
+        addDirecSelec:function (modelo) {
+            this.$('.text-warning').hide();
+            var direccion = new Direccion({model:modelo});
+            this.$el.append(direccion.$el);
+            direccion.$('input').prop('checked', true);
         }
     });
 

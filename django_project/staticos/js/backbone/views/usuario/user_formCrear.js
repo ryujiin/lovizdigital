@@ -31,7 +31,7 @@ define([
         },
         get_datos:function (e) {
             var valor = e.target.value;
-            var contenedor = '.'+e.target.id;
+            var contenedor = '.'+e.target.dataset.contenedor;
             var validar_vacio = this.validar_vacio(valor,contenedor);
             if (validar_vacio) {
                 if (contenedor==='.campo_correo') {
@@ -90,10 +90,10 @@ define([
             e.preventDefault();
             var self = this;
             var nombre,apellido,correo,pass,verificado;
-            nombre=$('#campo_nombre');
-            apellido=$('#campo_apellido');
-            correo=$('#campo_correo');
-            pass=$('#campo_pass');
+            nombre=this.$('.campo_nombre input');
+            apellido=this.$('.campo_apellido input');
+            correo=this.$('.campo_correo input');
+            pass=this.$('.campo_pass input');
 
             verificado = this.validar_vacio(nombre.val(),'.campo_nombre');
             if (verificado==true) {
@@ -135,7 +135,7 @@ define([
             var error = '<p class="bg-warning text-danger">Lo sentimos parece que ya existe un usuario usando ese correo electronico</p>';
             this.$('.error_form').append(error);
             this.$('input').each(function () {
-                var contenedor = $('.'+this.id);
+                var contenedor = $('.'+this.dataset.contenedor);                
                 $(this).val('');
                 contenedor.removeClass('has-success has-error');
             })

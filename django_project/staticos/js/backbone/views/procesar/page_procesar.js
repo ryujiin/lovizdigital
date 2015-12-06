@@ -48,9 +48,13 @@ define([
             }
         },
         objtener_model:function () {
+            var self = this;
             var pedido_id = CarroModel.toJSON().pedido;
             if (pedido_id) {
-                debugger;
+                this.model.id= pedido_id;
+                this.model.fetch().done(function () {
+                    self.render();
+                })
             }else{
                 this.render();
             }
@@ -62,14 +66,12 @@ define([
             })
         },
         crear_paso_envio:function () {
-            var direcciones = DireccionesCollection;
+            var direcciones = new DireccionesCollection();
             var paso_envio = new PasoEnvio({
                 el:this.$('.paso_envio'),
-                collection:direcciones,
+                collection: direcciones,
                 model:this.model,
             });
-
-            direcciones.fetch();
         },
         crear_paso_pago:function () {
             var paso_pago = new PasoPago({
@@ -85,6 +87,7 @@ define([
             });
         },
         ver_paso_actual:function () {
+            debugger;
             if (this.model.id===undefined) {
                 this.model.set('paso_actual',1)
             }else if (this.model.toJSON().estado_pedido==='autenticado'){

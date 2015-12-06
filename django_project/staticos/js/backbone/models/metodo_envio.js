@@ -6,15 +6,8 @@ define([
 ], function (_, Backbone) {
     'use strict';
 
-    var PedidoModel = Backbone.Model.extend({
-
-        urlRoot : '/api/pedidos/',
-        
-        url: function(){
-            var base = this.urlRoot;
-            return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id+'/';
-        },
-        name:'pedido',
+    var MetodoEnvioModel = Backbone.Model.extend({
+        urlRoot : '/api/metodos_envio/',
 
         initialize: function() {
         },
@@ -30,5 +23,5 @@ define([
         }
     });
 
-    return PedidoModel;
+    return MetodoEnvioModel;
 });

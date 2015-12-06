@@ -59,8 +59,6 @@ require([
         });
     })
 
-    
-    debugger;
     $(function(){
         $.ajaxSetup({
             crossDomain: true,

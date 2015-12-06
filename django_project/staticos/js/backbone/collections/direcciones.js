@@ -10,8 +10,6 @@ define([
     var DireccionCollection = Backbone.Collection.extend({
         model: DireccionModel,
         url: '/api/cliente/direcciones/',
-    });
-    var direcciones =  new DireccionCollection();
-    
-    return direcciones;
+    });    
+    return DireccionCollection;
 });

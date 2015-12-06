@@ -26,12 +26,23 @@ define([
         },
 
         initialize: function () {
-            this.$el.addClass('is-activo');
+            this.listenTo(this.model, 'change', this.render);                                    
+            this.render();
         },
 
         render: function () {
             this.$el.html(this.template());
-            this.addTarjeta();
+            this.addTarjeta();            
+            this.ver_estado();
+        },
+        ver_estado:function () {
+            var paso = this.model.toJSON().paso_actual;
+            if (paso === 3) {
+                this.$el.addClass('is-activo');
+            }
+            if (paso>3) {
+                this.$el.addClass('is-guardado');
+            };
         },
         siguiente_paso:function () {
             var valor = this.$('input[type=radio]:checked').val();

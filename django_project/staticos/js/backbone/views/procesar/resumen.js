@@ -25,6 +25,7 @@ define([
 
         initialize: function () {
             this.render();
+            this.listenTo(this.model, 'change', this.render);                        
         },
 
         render: function () {
@@ -32,13 +33,6 @@ define([
             this.$el.html(this.template(this.model.toJSON()));
 
             this.addLineas();
-        },
-        siguiente_paso:function () {
-            var valor = this.$('input[type=radio]:checked').val();
-            if (valor!==undefined && valor!=='add_form') {
-            }else{
-                this.$('.error_direccion').fadeIn();
-            }
         },
         addLineas:function () {
             var self = this;

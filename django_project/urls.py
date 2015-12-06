@@ -7,7 +7,7 @@ from catalogo import views
 from carro.views import LineasViewsets,CarroViewsets
 from cmsweb.views import CarruselViewsets
 from utiles.views import ColorViewsets
-from pedido.views import PedidoViewSet
+from pedido.views import PedidoViewSet,MetodoEnvioViewSet
 from ubigeo.views import RegionViewset
 from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,ComentarioImagenViewSet
 from rest_framework.routers import DefaultRouter
@@ -21,6 +21,7 @@ router.register(r'colores',ColorViewsets,'coleres')
 router.register(r'pedidos',PedidoViewSet,'pedidos')
 router.register(r'ubigeo',RegionViewset,'ubigeo')
 router.register(r'cliente/direcciones',DireccionViewsets,'direcciones')
+router.register(r'metodos_envio',MetodoEnvioViewSet,'mentodos_envios')
 router.register(r'comentarios',ComentarioViewSet,'comentarios')
 router.register(r'comentarioimgs',ComentarioImagenViewSet,'comentarios_imagenes')
 router.register(r'oficina/mayoristas',MayoristaViewset,'mayoristas')
@@ -39,6 +40,7 @@ urlpatterns = [
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     url(r'^pago/stripe/$','pago.views.stripe_paymet',name='pago_stripe'),
     url(r'^oficina/',include('oficina.urls')),    
+    #url(r'^checkout/', include('paypal_express_checkout.urls')),
     url(r'^',include('cmsweb.urls')),
 
 ]

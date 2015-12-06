@@ -42,7 +42,11 @@ define([
             .done(function(data){
                 if (data.id!==0) {
                     self.buscar_user();
-                    Backbone.history.navigate('/usuario/perfil/', {trigger:true})
+                    if (vista.model.name==='pedido') {
+                        vista.model.set('paso_actual',2);
+                    }else{
+                        Backbone.history.navigate('/usuario/perfil/', {trigger:true})
+                    }
                 }else{
                     vista.error_login();                       
                 }                

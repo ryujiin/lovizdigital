@@ -10,3 +10,7 @@ class PedidoSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Pedido
 		fields = ('id','numero_pedido','user','gasto_envio','direccion_envio','metodoenvio','fecha_compra','estado_pedido','metodo_pago')
+
+class MetodoEnvioSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = MetodoEnvio

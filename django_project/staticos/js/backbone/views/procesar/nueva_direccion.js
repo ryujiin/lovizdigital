@@ -22,14 +22,15 @@ define([
         className: '',
 
         events: {
-            'click .add_direccion label':'mostrar_formulario',
             'change #departamentos':'add_provincias',
             'change #provincias':'add_distritos',
             'submit #form_nueva_direccion':'verificar_inputs',
+            'blur input':'get_datos',
+            'blur select':'get_datos',
         },
 
         initialize: function () {
-            this.model = new DireccionModel();
+            this.direccion = new DireccionModel();
             this.render();
         },
 
@@ -38,7 +39,7 @@ define([
             this.add_departamentos();
         },
         add_departamentos:function () {
-            var self = this
+            var self = this;
             var ubigeos = new Ubigeos();
             ubigeos.fetch().done(function () {
                 ubigeos.forEach(self.addOneDepa,self)
@@ -46,12 +47,13 @@ define([
         },
         addOneDepa:function (modelo) {
             var datos = modelo.toJSON();
-            var option = "<option value="+datos.id+" data-nombre="+datos.name+">"+datos.name+"</option>";
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
             this.$('#departamentos').append(option);
         },
         add_provincias:function () {
             var self = this;
             var parent = this.$('#departamentos').val();
+            this.$('#provincias').empty();
             var ubigeos = new Ubigeos();
             ubigeos.fetch({
                 data:$.param({region:parent})
@@ -61,12 +63,13 @@ define([
         },
         addOneProvi:function (modelo) {
             var datos = modelo.toJSON();
-            var option = "<option value="+datos.id+" data-nombre="+datos.name+">"+datos.name+"</option>";            
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
             this.$('#provincias').append(option);
         },
         add_distritos:function () {
             var self = this;
             var parent = this.$('#provincias').val();
+            this.$('#distritos').empty();            
             var ubigeos = new Ubigeos();
             ubigeos.fetch({
                 data:$.param({region:parent})
@@ -76,48 +79,60 @@ define([
         },
         addOneDistri:function (modelo) {
             var datos = modelo.toJSON();
-            var option = "<option value="+datos.id+" data-nombre="+datos.name+">"+datos.name+"</option>";            
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
             this.$('#distritos').append(option);            
+        },
+        get_datos:function (e) {
+            var valor = e.target.value;
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+            if (validar_vacio) {
+                if (contenedor==='.campo_correo') {
+                    this.validar_email(valor,contenedor);
+                };
+            };
+        },
+        validar_vacio:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
         },
         verificar_inputs:function (e) {
             var self = this;
             e.preventDefault();
             this.$('input').each(function (e,i) {
-                var dato = self.ver_campo(i);
-                if (dato===false) {
+                var conte = '.'+i.dataset.contenedor;
+                var campo = self.validar_vacio(i.value,conte);
+                if (campo===false) {                    
                     return false
                 };
             })
             this.$('select').each(function (e,i) {
-                var dato = self.ver_campo(i);
-                if (dato===false) {
+                var conte = '.'+i.dataset.contenedor;
+                var campo = self.validar_vacio(i.value,conte);
+                if (campo===false) {                    
                     return false
                 };
             })
             this.crear_nueva_direccion();
         },
-        ver_campo:function (i) {
-            var conte = $('.'+i.dataset.contenedor);
-            var valor = i.value;
-            if (valor==='') {
-                conte.addClass('error')
-                return false
-            }else{
-                conte.removeClass('error')
-                return true
-            }
-        },
         crear_nueva_direccion:function () {
+            self = this;
             var user = UserModel.id;
-            var nombre = this.$('.f_nombre input').val();
             var depa = this.$('.f_depas select option:selected').data('nombre')
             var provi = this.$('.f_provi select option:selected').data('nombre')
             var distrito = this.$('.f_distri select option:selected').data('nombre')
             var ubigeo = this.$('.f_distri select').val();
             var direccion = this.$('.direcciones input').val();
-            if (user && nombre && depa && provi && distrito && ubigeo && direccion) {
-                this.model.set({
-                    "nombre": nombre,
+            if (user && depa && provi && distrito && ubigeo && direccion) {
+                this.direccion.set({
                     "tipo": null,
                     "departamento": depa,
                     "provincia": provi,
@@ -129,8 +144,10 @@ define([
                     "usuario": user,
                     "ubigeo": ubigeo
                 })
-                this.model.save().done(function (data) {
-                    debugger;
+
+                this.direccion.save().done(function (data) {
+                    self.collection.add(self.direccion);
+                    $('.form_addDirec').slideUp();
                 });
             };
             

@@ -5,7 +5,8 @@ define([
     'underscore',
     'backbone',
     'swig',
-], function ($, _, Backbone, swig) {
+    '../../models/user',    
+], function ($, _, Backbone, swig,UserModel) {
     'use strict';
 
     var UserFormLoginView = Backbone.View.extend({
@@ -15,9 +16,8 @@ define([
         id: '',
         className: '',
         events: {
-            'blur .email': 'get_datos_email',
-            'blur .password-input': 'get_datos_pass',
-            'submit':'veriForm',
+            'blur input':'get_datos',
+            'submit form':'antes_enviar',
         },
         initialize: function () {
             this.render();
@@ -25,10 +25,33 @@ define([
         render: function () {
             this.$el.html(this.template());
         },
-        get_datos_email:function(e){
-            var longitud = e.target.value.length;
+        get_datos:function (e) {
+            
             var valor = e.target.value;
-            valor = validarEmail(valor);            
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+            if (validar_vacio) {
+                if (contenedor==='.campo_correo') {
+                    this.validar_email(valor,contenedor);
+                };
+            };
+        },
+        validar_vacio:function (valor,contenedor) {
+
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
+        },
+        validar_email:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
             function validarEmail(valor) {
                 if (/(\w+)(\.?)(\w*)(\@{1})(\w+)(\.?)(\w*)(\.{1})(\w{2,3})/.test(valor)){
                     return true;
@@ -36,91 +59,41 @@ define([
                     return false;
                 }
             }
-            this.verificar_email(valor,$(e.target));
-        },
-        get_datos_pass:function(e){
-            var valor = e.target.value;
-            this.verificar_pass(valor,$(e.target));
-        },
-        verificar_email:function(valor,target){
-            var longitud = valor.length;
-            var validado = false;
-            if (longitud === 0 ) {
-                $(".validador_email").empty();
-                var adevertencia = '<p class="validador_email error text-danger">Porfavor ingrese su email</p>';
-                target.removeClass('valid').addClass('error').after(adevertencia);
-            }else if(valor===false){
-                $(".validador_email").empty();
-                var adevertencia = '<p class="validador_email error text-warning">Porfavor ingrese un email valido</p>';
-                target.removeClass('valid').addClass('error').after(adevertencia);
+            valor = validarEmail(valor);
+            if (valor===false) {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este no es un correo valido *</p>');
+                return false
             }else{
-                $(".validador_email").empty()
-                target.addClass('valid').removeClass('error');
-                validado = true;
+                this.$(contenedor).addClass('has-success').removeClass('has-error');
+                return true;
             }
-            return validado
         },
-        verificar_pass:function(valor,target){
-            var validado = false
-            var longitud = valor.length;
-            if (longitud === 0 ) {
-                $(".validador_pass").empty();
-                var adevertencia = '<p class="validador_pass error text-danger">Porfavor ingrese su contraseña</p>';
-                target.removeClass('valid').addClass('error').after(adevertencia);
-            }else{
-                $(".validador_pass").empty();
-                target.addClass('valid').removeClass('error');
-                validado = true
-            }
-            return validado
-        },
-        verificar_form_enviar:function(e){
-            var self = this;
+        antes_enviar:function (e) {
             e.preventDefault();
-            var target_email = this.$('.email');
-            var target_pass = this.$('.password-input');
+            var self = this;
+            var nombre,apellido,correo,pass,verificado;            
+            correo=this.$('.campo_correo input');
+            pass=this.$('.campo_pass input');
 
-            var validador_email = this.verificar_email(target_email.val(),target_email);
-            var validador_pass = this.verificar_pass(target_pass.val(),target_pass);
-
-            if (validador_email === true && validador_pass === true) {
-                this.model.ingresar_user(target_email.val(),target_pass.val(),this);
+            verificado = this.validar_email(correo.val(),'.campo_correo');
+            if (verificado==true) {
+                verificado = this.validar_vacio(pass.val(),'.campo_pass');
+                if (verificado == true ) {
+                    UserModel.ingresar_user(correo.val(),pass.val(),this);                
+                };
             };
         },
         error_login:function(){
-            var target_email = this.$('.email');
-            var target_pass = this.$('.password-input');
-
-            this.$('.error').empty();
-
-            target_email.val('').removeClass('valid').focus();
-            target_pass.val('').removeClass('valid');
-
-            var adevertencia = '<p class="error bg-warning text-warning">El usuario o contraseña no coiciden, vuelva a intentarlo</p>';
-            this.$('.error_form').html(adevertencia);
-        },
-        veriForm:function (e) {
-            e.preventDefault();
-            var self = this;
-            this.$('input').each(function (e,i) {
-                var dato = self.ver_campo(i);
+            this.$('.error_form').empty();
+            var error = '<p class="bg-warning text-danger">El usuario o contraseña no coiciden, vuelva a intentarlo</p>';
+            this.$('.error_form').append(error);
+            this.$('input').each(function () {
+                var contenedor = $('.'+this.dataset.contenedor);
+                $(this).val('');
+                contenedor.removeClass('has-success has-error');
             })
-            var target_email = this.$('.email').val();
-            var target_pass = this.$('.password-input').val();
-            if (target_email && target_pass) {
-                this.model.ingresar_user(target_email,target_pass,this);                
-            };
         },
-        ver_campo:function (i) {
-            var conte = $('.'+i.dataset.contenedor);
-            var valor = i.value;
-            if (valor==='') {
-                conte.addClass('error')
-            }else{
-                conte.removeClass('error')
-            }
-        },
-
     });
 
     return UserFormLoginView;

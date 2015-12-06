@@ -78,6 +78,9 @@ class MetodoEnvio(models.Model):
 	descripcion = models.TextField(blank=True,null=True)
 	precio = models.DecimalField(decimal_places=2,max_digits=12)
 
+	def __unicode__(self):
+		return "%s - S/.%s" %(self.nombre, self.precio)
+
 class MetodoPago(models.Model):
 	nombre = models.CharField(max_length=100,blank=True,null=True)
 	descripcion =models.TextField(blank=True,null=True)

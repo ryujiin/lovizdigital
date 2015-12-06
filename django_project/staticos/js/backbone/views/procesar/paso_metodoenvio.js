@@ -7,8 +7,10 @@ define([
     'swig',
     '../../views/procesar/direcciones',
     '../../views/procesar/nueva_direccion',
-    '../../collections/ubigeos'
-], function ($, _, Backbone, swig, DireccionesViews,NuevaDireccion,Ubigeos) {
+    '../../collections/ubigeos',
+    '../../collections/metodos_envio',
+    '../../views/procesar/metodos_envio'
+], function ($, _, Backbone, swig, DireccionesViews,NuevaDireccion,Ubigeos,MetodosEnvioCollection,MetodosEnvio) {
     'use strict';
 
     var PasoMetodoEnvioView = Backbone.View.extend({
@@ -22,66 +24,79 @@ define([
         className: '',
 
         events: {
-            'click input[type=radio]':'mostrar_formulario',
+            'change input[name=selecion_direccion]':'mostrar_formulario',
             'change #departamentos':'add_provincias',
             'change #provincias':'add_distritos',
             'click .btn-next':'siguiente_paso',
         },
 
         initialize: function () {
+            this.listenTo(this.model, 'change:paso_actual', this.render);                    
+            this.listenTo(this.model, 'change:direccion_envio', this.mostrar_metodo_envio);
+            this.render();
         },
 
         render: function () {
             this.$el.html(this.template());
+            this.ver_estado();
+        },
+        rellenar:function () {
             var direcciones = new DireccionesViews({
                 el:this.$('.direcciones'),
                 collection:this.collection,
             });
-            var nueva_direccion = new NuevaDireccion({
-                el:this.$('.formulario'),
-                collection:this.collection,
-            })
             this.$('.form_addDirec').hide();
+            this.$('.metodo_envio_form').hide();            
         },
-        ver_render:function () {
-            var dire = this.model.toJSON().direccion_envio;
-            if (dire) {
-                this.render_guardado();
-            }else{
-                this.render();
+        ver_estado:function () {
+            var paso = this.model.toJSON().paso_actual;
+            if (paso === 2) {
+                this.rellenar();
+                this.$el.addClass('is-activo');
             }
+            if (paso>2) {
+                this.$el.addClass('is-guardado');
+            };
         },
-        render_guardado:function () {
-            this.render();
-            this.$el.removeClass('is_activo').addClass('correcto');
-            /*
-            var direccion = this.model.toJSON().direccion_envio;
-            var coincidencia = this.collection.findWhere({id:direccion});
-            if (coincidencia) {
-                this.$el.html(this.template_guardado(coincidencia.toJSON()));
-            }else{
-                this.render();
-            }
-            */
+        mostrar_metodo_envio:function  () {
+            var metodos = new MetodosEnvio({
+                el:this.$('.metodo_envio_form .lista_metodos'),
+                collection:new MetodosEnvioCollection(),
+            });
+            this.$('.metodo_envio_form').slideDown();
+
         },
         mostrar_formulario:function () {
             var valor = this.$('input[type=radio]:checked').val();
             if (valor === 'add_form') {
+                var nueva_direccion = new NuevaDireccion({
+                    el:this.$('.formulario'),
+                    model:this.model,
+                    collection:this.collection,
+                })
                 this.$('.form_addDirec').slideDown();
             }else{                
                 this.$('.form_addDirec').slideUp();
+                this.model.set('direccion_envio',valor);
             }
         },
         siguiente_paso:function () {
             var self = this;
-            var valor = this.$('input[type=radio]:checked').val();
-            if (valor!==undefined && valor!=='add_form') {
-                this.model.set({direccion_envio:valor})
+            var valor = this.$('input[name=selecion_direccion]:checked').val();
+            var metodo = this.$('input[name=selecion_metodo]:checked').val();
+            if (valor!==undefined && valor!=='add_form' && metodo!==undefined) {
+                this.model.set({direccion_envio:valor,metodoenvio:metodo});
                 this.model.save().done(function () {
-                    self.render_guardado();
+                    self.model.set('paso_actual',3);
                 })
             }else{
-                this.$('.error_direccion').fadeIn();
+                if (valor===undefined) {
+                    this.$('.error_direccion').fadeIn();    
+                }
+                if (metodo===undefined) {
+                    this.$('.error_metodo').fadeIn();
+                };
+                
             }
         }
     });

@@ -162,6 +162,8 @@ AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY
 STRIPE_SECRET_KEY=config.STRIPE_SECRET_KEY
 SHOP_CURRENCY = 'PEN'
 
+#Paypal
+
 try:
     from .local import *
 except ImportError:

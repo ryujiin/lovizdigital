@@ -18,8 +18,7 @@
 	      <h2 class="section-header active">Ingresa a cuenta existente</h2>
 	      <div class="login-box-content returning-customers clearfix">
 	        <p>Si usted esta registrada en LovizDelCarpio.com, porfavor ingresa su email y contraseña.</p>
-	        <form id="dwfrm_login" action="form-login" method="post" class="clearfix">
-	        </form>
+	        <div id="dwfrm_login"></div>
 	      </div>
 	    </div>
 	  </div>
@@ -37,27 +36,28 @@
 <script id="user_formLogin_tlp" type="text/template">
 	<h3>Ingresar a mi cuenta</h3>
 	<fieldset>
-		<div class="error_form"></div>
 	  <div class="login_facebook">
 	    <a href="http://localhost:8000/auth/convert-token/">Ingresar con Facebook</a>
 	  </div>	  
-	  
-	  <div class="form-group required email_user">
-	    <label>*Correo Electronico</label>
-	    <input type="text" class="form-control input-text email email-input required" data-contenedor="email_user"/>
-	    <p class="text-danger">Este campo es requerido</p>	    	    
-	  </div>
-	  <div class="form-group required pass_user">
-	    <label>*Contraseña</label>
-	    <input type="password" class="form-control input-text-pw password-input required" data-contenedor="pass_user"/>
-	    <p class="text-danger">Este campo es requerido</p>	    
-	  </div>
-	  <div class="form-group remember-password">
-	    </div><a href="/">¿Olvido su contraseña?</a>
-	  </div>
-	  <div class="form-group form-row-button">
-	    <button type="submit" value="ingresar" class="btn btn-default">Ingresar</button>
-	  </div>
+	<form>
+		  <div class="error_form"></div>
+		  <div class="form-group campo_correo">
+		    <label>*Correo Electronico</label>
+		    <input type="text" class="form-control" data-contenedor="campo_correo"/>	    
+			<div class="error"></div>		    
+		  </div>
+		  <div class="form-group campo_pass">
+		    <label>*Contraseña</label>
+		    <input type="password" class="form-control" data-contenedor="campo_pass"/>
+			<div class="error"></div>		    
+		  </div>
+		  <div class="form-group remember-password">
+		    </div><a href="/">¿Olvido su contraseña?</a>
+		  </div>
+		  <div class="form-group form-row-button">
+		    <button type="submit" value="ingresar" class="btn btn-default">Ingresar</button>
+		  </div>
+	  </form>
 	</fieldset>
 </script>
 
@@ -76,22 +76,22 @@
 	<form>
 		<div class="form-group campo_nombre">
 			<label class="control-label" for="">*Nombre</label>
-			<input type="text" class="form-control" id="campo_nombre" data-contenedor="campo_nombre">
+			<input type="text" class="form-control" data-contenedor="campo_nombre">
 			<div class="error"></div>
 		</div>
 		<div class="form-group campo_apellido">
 			<label class="control-label" for="">*Apellido</label>
-			<input type="text" class="form-control" id="campo_apellido" data-contenedor="campo_apellido">
+			<input type="text" class="form-control"  data-contenedor="campo_apellido">
 			<div class="error"></div>			
 		</div>
 		<div class="form-group campo_correo">
 			<label class="control-label" for="">*Correo electronico</label>
-			<input type="email" class="form-control" id="campo_correo" placeholder="" data-contenedor="campo_correo">
+			<input type="email" class="form-control" placeholder="" data-contenedor="campo_correo">
 			<div class="error"></div>			
 		</div>
 		<div class="form-group campo_pass">
 			<label class="control-label" for="">*Contraseña</label>
-			<input type="password" class="form-control" id="campo_pass">
+			<input type="password" class="form-control"  data-contenedor="campo_pass">
 			<div class="error"></div>			
 		</div>
 	    <button type="submit" value="ingresar" class="btn btn-default">Crear Cuenta</button>		

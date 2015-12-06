@@ -20,3 +20,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
 		if self.request.user.is_authenticated:
 			queryset = Pedido.objects.filter(user=self.request.user.pk)
 		return queryset
+
+class MetodoEnvioViewSet(viewsets.ModelViewSet):
+	serializer_class = MetodoEnvioSerializer
+	queryset = MetodoEnvio.objects.all()

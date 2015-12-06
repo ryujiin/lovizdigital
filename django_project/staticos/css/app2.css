@@ -224,6 +224,9 @@ p {
 .f_arial {
   font-family: arial;
 }
+.red {
+  color: #f00;
+}
 .btn {
   font-family: 'BenchNine', sans-serif;
   text-transform: uppercase;
@@ -258,6 +261,7 @@ p {
 label {
   font-family: 'BenchNine', sans-serif;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 label .requerido {
   font-size: 1.2em;
@@ -1241,6 +1245,10 @@ h2 .linea {
 .crear_user.activo .datos_crear {
   display: none;
 }
+.page_felicidades .titulo {
+  font-size: 4.5em;
+  font-weight: 400;
+}
 .lineas_carro .etiquetas {
   display: -webkit-box;
   display: -moz-box;
@@ -1338,12 +1346,13 @@ h2 .linea {
 }
 .procesar_pago .lista-direccion {
   border-bottom: 1px solid #f4f4f4;
-  padding: 5px 0;
+  padding: 5px 10px;
 }
 .procesar_pago .lista-direccion p {
   margin: 0;
 }
-.procesar_pago .lista-direccion:hover {
+.procesar_pago .lista-direccion:hover,
+.procesar_pago .lista-direccion .activo {
   background: #f4f4f4;
 }
 .procesar_pago h4 {
@@ -1368,6 +1377,15 @@ h2 .linea {
   display: inline-block;
   color: #008000;
 }
+.procesar_pago .columnas_pago .section_panel.is-guardado .panel_header {
+  cursor: pointer;
+}
+.procesar_pago .columnas_pago .section_panel.is-guardado .panel_header h3 .icon-check {
+  display: inline-block;
+}
+.procesar_pago .columnas_pago .section_panel.is-guardado .panel_cuerpo {
+  display: none;
+}
 .procesar_pago .columnas_pago .section_panel.is-activo .panel_header {
   background: #111;
   color: #fff;
@@ -1382,7 +1400,6 @@ h2 .linea {
   display: block;
 }
 .procesar_pago .columnas_pago .section_panel .panel_header {
-  cursor: pointer;
   background: #f4f4f4;
   padding: 18px 30px;
   -webkit-transition: 0.2;
@@ -1395,8 +1412,16 @@ h2 .linea {
   margin: 0;
   font-size: 20px;
 }
-.procesar_pago .columnas_pago .section_panel .panel_header h3 .glyphicon {
+.procesar_pago .columnas_pago .section_panel .panel_header h3 .icon-check {
+  color: #008000;
   display: none;
+}
+.procesar_pago .columnas_pago .section_panel .panel_header h3 .editar {
+  display: none;
+  float: right;
+  text-decoration: underline;
+  color: #008000;
+  font-size: 0.8em;
 }
 .procesar_pago .columnas_pago .section_panel .panel_cuerpo {
   display: none;

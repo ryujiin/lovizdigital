@@ -5,10 +5,10 @@ naranja = #C2A125
 		display none;
 	.lista-direccion
 		border-bottom 1px solid #f4f4f4
-		padding 5px 0
+		padding 5px 10px
 		p
 			margin 0
-		&:hover
+		&:hover,.activo
 			background #F4F4F4;
 	h4
 		font-size 20px
@@ -31,6 +31,14 @@ naranja = #C2A125
 						.glyphicon
 							display inline-block
 							color green
+			&.is-guardado
+				.panel_header
+					cursor pointer
+					h3						
+						.icon-check
+							display inline-block
+				.panel_cuerpo
+					display none
 			&.is-activo
 				.panel_header
 					background #111
@@ -43,15 +51,21 @@ naranja = #C2A125
 				.panel_cuerpo
 					display block
 			.panel_header
-				cursor pointer
 				background #f4f4f4
 				padding 18px 30px
 				transition .2
 				h3
 					margin 0
 					font-size 20px
-					.glyphicon
+					.icon-check
+						color green
 						display none
+					.editar
+						display none
+						float right
+						text-decoration underline
+						color green
+						font-size 0.8em
 			.panel_cuerpo
 				display none
 			.panel_seccion

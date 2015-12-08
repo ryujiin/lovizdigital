@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 
 from rest_framework import viewsets
 
@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from models import * 
 
@@ -24,3 +25,10 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class MetodoEnvioViewSet(viewsets.ModelViewSet):
 	serializer_class = MetodoEnvioSerializer
 	queryset = MetodoEnvio.objects.all()
+
+
+@csrf_exempt
+def felicidades(request):
+	if request.POST:
+		print request.POST
+	return render_to_response('index.html', {"foo": "bar"})

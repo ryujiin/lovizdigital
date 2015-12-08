@@ -20,6 +20,7 @@ define([
         className: '',
 
         events: {
+
         },
 
         initialize: function () {
@@ -34,7 +35,14 @@ define([
             $.get('/pago/paypal/',{'pedido':this.model.toJSON().numero_pedido})
             .done(function(data){
                 self.$('#form_paypal').html(data);
-            });
+                self.$('#form_paypal form').hide();
+                $('.panel_seccion_final .paypal').addClass('paypal_ready');
+            }).fail(function (data) {
+                $('.panel_seccion_final button').removeClass('visto');
+            })
+        },
+        pagar_paypal:function () {
+            this.$('form').submit();
         }
     });
 

@@ -24,6 +24,7 @@ define([
         events: {
             'click .nav-tabs li a':'mostrar_boton',
             'click button.tarjeta':'verificar_card',
+            'click button.paypal.paypal_ready':'pagar_paypal',
         },
 
         initialize: function () {
@@ -73,6 +74,10 @@ define([
         },
         verificar_card:function () {
             this.vistaTarjeta.verificar();
+            debugger;
+        },
+        pagar_paypal:function () {
+            this.vistaPaypal.pagar_paypal();
         }
     });
 

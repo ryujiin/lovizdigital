@@ -94,6 +94,7 @@ class Pago(models.Model):
 	fecha = models.DateTimeField(auto_now_add=True, db_index=True)
 	metodo_pago = models.ForeignKey(MetodoPago,blank=True,null=True)
 	descripcion = models.CharField(max_length=100,blank=True,null=True)
+	transaccion = models.CharField(max_length=100,blank=True,null=True)
 
 	def __unicode__(self):
 		return self.id_pago

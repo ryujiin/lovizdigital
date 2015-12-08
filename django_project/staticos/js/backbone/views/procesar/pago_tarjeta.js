@@ -24,7 +24,6 @@ define([
             'keyup #number': 'contar_numero',
             'blur input':'get_datos',
             'blur select':'get_datos',
-
         },
 
         initialize: function () {
@@ -68,23 +67,23 @@ define([
                 contenedor.removeClass('has-success');
             }
         },
-        verificar:function () {            
+        verificar:function () {
             this.verificar_inputs();
-            this.enviar_form()
+            this.enviar_form();
         },
         verificar_inputs:function () {
             this.$('input').each(function (e,i) {
                 if (i.value.length===0) {
-                    $('.'+i.dataset.contenedor).addClass('error');
+                    $('.'+i.dataset.contenedor).addClass('has-error');
                 }else{
-                    $('.'+i.dataset.contenedor).addClass('has-success').removeClass('error');
+                    $('.'+i.dataset.contenedor).addClass('has-success').removeClass('has-error');
                 }
             });
             this.$('select').each(function (e,i) {
                  if (i.value.length===0) {
-                    $('.'+i.dataset.contenedor).addClass('error');
+                    $('.'+i.dataset.contenedor).addClass('has-error');
                 }else{
-                    $('.'+i.dataset.contenedor).addClass('has-success').removeClass('error');
+                    $('.'+i.dataset.contenedor).addClass('has-success').removeClass('has-error');
                 }
             });
         },
@@ -96,7 +95,7 @@ define([
             var cvc = this.$('#cvc').val();
             if (nombre && tarjeta && mes && year && cvc) {
                 this.pago_Stripe(nombre,tarjeta,mes,year,cvc);
-            };
+            }
         },
         pago_Stripe:function (nombre,tarjeta,mes,year,cvc) {
             var self = this;

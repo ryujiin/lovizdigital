@@ -56,58 +56,38 @@ def stripe_paymet(request):
 	else:
 		raise Http404
 
+def get_tipo_cambio():
+	url = 'https://openexchangerates.org/api/latest.json?app_id=%s' %settings.API_CURRENCY
+	req = urllib2.urlopen(url)
+	content = req.read()
+	data = json.loads(content)
+	data = float(data["rates"]['PEN'])
+	return data
+
+
 def paypal_paymet(request):
-    # What you want the button to do.
-    pedido = request.GET['pedido']
-
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": "1000.00",
-        "item_name": "productos LovizDC",
-        "invoice": pedido,
-        "notify_url": "http://localhost:8000" + reverse('paypal-ipn'),
-        "return_url": "http://localhost:8000/your-return-location/",
-        "cancel_return": "http://localhost:8000/cancelado",
-        "custom": "Upgrade all users!",  # Custom command to correlate to some function later (optional)
-    }
-
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form}
-    return render(request, "payment.html", context)
-
-"""
-def paypal_paymet(request):
-	if request.method == 'GET':
-		api_url = 'https://api-3t.sandbox.paypal.com/nvp'
-
-		data = urllib.urlencode({
-			'USER': settings.PAYPAL_USER, 
-			'PWD': settings.PAYPAL_PWD,
-			'SIGNATURE':settings.PAYPAL_SIGNATURE,
-			'VERSION':109.0,
-			'METHOD':'SetExpressCheckout',
-			'PAYMENTREQUEST_0_AMT':19.00,
-			'PAYMENTREQUEST_0_PAYMENTACTION':'SALE',
-			'PAYMENTREQUEST_0_CURRENCYCODE':'USD',
-			'cancelUrl':settings.CANCER_URL,
-			'returnUrl':settings.RETURN_URL,
-			})
+	pedido = request.GET['pedido']
+	tipo_cambio = round(get_tipo_cambio(),2)
+	if pedido:
 		try:
-			response = urllib2.urlopen(api_url, data=data)
-		except (
-	            urllib2.HTTPError,
-	            urllib2.URLError,
-	            httplib.HTTPException), ex:
-			self.log_error(ex, api_url=api_url, request_data=data,transaction=transaction)
-		else:
-			parsed_response = urlparse.parse_qs(response.read())
-			if parsed_response.get('ACK')[0] == 'Success':
-				token = parsed_response.get('TOKEN')[0]
-
-		return HttpResponse(json.dumps({'token':token}),
-				content_type='application/json;charset=utf8')
+			carro = Carro.objects.get(pedido__numero_pedido = pedido)
+		except Carro, DoesNotExist:
+			raise Http404('No hay pedido en el carro')
+		total_carro = carro.total_carro()
+		total_dolares = round(total_carro/tipo_cambio,2)
+		
+		paypal_dict = {
+			"business": settings.PAYPAL_RECEIVER_EMAIL,
+			"amount": total_dolares,
+			"item_name": "productos LovizDC",
+			"invoice": pedido,
+			"notify_url": "http://localhost:8000" + reverse('paypal-ipn'),
+			"return_url": "http://localhost:8000/felicidades/%s/" %pedido,
+			"cancel_return": "http://localhost:8000/cancelado/%s/" %pedido,
+			"custom": "Comrando los mejores productos!",  # Custom command to correlate to some function later (optional)
+			}
+		form = PayPalPaymentsForm(initial=paypal_dict)
+		context = {"form": form,'total_carro':total_carro,'tipo_cambio':tipo_cambio,'total_dolares':total_dolares}
+		return render(request, "payment.html", context)
 	else:
-		raise Http404("No es una peticion POST")
-
-"""
+		raise Http404("No Hay Pedido")

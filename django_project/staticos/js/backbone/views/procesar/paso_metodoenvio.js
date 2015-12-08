@@ -75,7 +75,8 @@ define([
                     collection:this.collection,
                 })
                 this.$('.form_addDirec').slideDown();
-            }else{                
+            }else{
+                this.$('.lista_metodos').empty();
                 this.$('.form_addDirec').slideUp();
                 this.model.set('direccion_envio',valor);
             }

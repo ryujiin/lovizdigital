@@ -1,2 +1,19 @@
 <!-- writes out the form tag automatically -->
+<p>Paypal solo procesa pagos en Dolares Americanos</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Total en Soles</th>
+			<th>Tipo de Cambio</th>
+			<th>Total en Dolares</th>
+		</tr>
+	</thead>	
+	<tbody>
+		<tr>
+			<td>S/.{{total_carro}}</td>
+			<td>{{tipo_cambio}}</td>
+			<td><strong>${{total_dolares}}</strong></td>
+		</tr>
+	</tbody>
+</table>
 {{ form.render }}

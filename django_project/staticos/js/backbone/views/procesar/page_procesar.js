@@ -87,7 +87,6 @@ define([
             });
         },
         ver_paso_actual:function () {
-            debugger;
             if (this.model.id===undefined) {
                 this.model.set('paso_actual',1)
             }else if (this.model.toJSON().estado_pedido==='autenticado'){

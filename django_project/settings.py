@@ -183,6 +183,10 @@ SHOP_CURRENCY = 'PEN'
 PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
 PAYPAL_TEST = True
 
+#Currency cambio
+
+API_CURRENCY = '8649067b661349a8b2f2f2fa135246cf'
+
 try:
     from .local import *
 except ImportError:

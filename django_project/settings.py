@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'sorl.thumbnail',
+    #'paypal_express_checkout',
+    'paypal.standard.ipn',
     #'storages',
     'carro',
     'catalogo',
@@ -109,7 +111,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-mx'
 
 TIME_ZONE = 'UTC'
 
@@ -163,6 +165,23 @@ STRIPE_SECRET_KEY=config.STRIPE_SECRET_KEY
 SHOP_CURRENCY = 'PEN'
 
 #Paypal
+#HOSTNAME = 'http://localhost:8000'  # without trailing slash
+#PAYPAL_API_URL = 'https://api-3t.sandbox.paypal.com/nvp'
+#PAYPAL_LOGIN_URL = (
+    #'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='
+#)
+#SALE_DESCRIPTION = 'Tu pago a Inversiones Lopez del Carpio E.I.R.L.'
+#
+#PAYPAL_USER = 'lovizempresa_api1.gmail.com'
+#PAYPAL_PWD = '1378765810'
+#PAYPAL_SIGNATURE = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AeEIBVzZGuWPIPzHr25TE7.63Rzv'
+#
+#CANCER_URL = 'http://localhost:8000/cancelado/'
+#RETURN_URL = 'http://localhost:8000/checkout/salioBien'
+
+#Paypal IPN
+PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
+PAYPAL_TEST = True
 
 try:
     from .local import *

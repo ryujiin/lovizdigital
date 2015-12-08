@@ -6,8 +6,9 @@ define([
     'backbone',
     'swig',
     '../../views/procesar/pago_tarjeta',
+    '../../views/procesar/pago_paypal',
     'bootstrap',
-], function ($, _, Backbone, swig,PagoTarjeta) {
+], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal) {
     'use strict';
 
     var PasoPagoView = Backbone.View.extend({
@@ -33,7 +34,9 @@ define([
         render: function () {
             this.$el.html(this.template());
             this.addTarjeta();            
+            this.addPaypal();
             this.ver_estado();
+
         },
         ver_estado:function () {
             var paso = this.model.toJSON().paso_actual;
@@ -61,6 +64,12 @@ define([
                 el:this.$('#tarjeta'),
                 model:this.model,
             });
+        },
+        addPaypal:function () {
+            this.vistaPaypal = new PagoPaypal({
+                el:this.$('#paypal'),
+                model:this.model,
+            })
         },
         verificar_card:function () {
             this.vistaTarjeta.verificar();

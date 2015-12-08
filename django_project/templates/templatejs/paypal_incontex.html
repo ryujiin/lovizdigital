@@ -1,0 +1,35 @@
+ <script src="//www.paypalobjects.com/api/checkout.js" async></script>
+
+ <script>
+      window.paypalCheckoutReady = function() {
+            paypal.checkout.setup("NSGDN2HL8RP4Y", {
+                environment: 'sandbox',
+                click: function(event) {
+                    event.preventDefault();
+
+                    paypal.checkout.initXO();
+                    $.support.cors = true;
+                    $.ajax({
+                        url: "http://localhost:8000/pago/paypal/",
+                        type: "GET",
+                        data: '&ajax=1&onlytoken=1',   
+                        async: true,
+                        crossDomain: true,
+
+                        //Load the minibrowser with the redirection url in the success handler
+                        success: function (data) {                            
+                            var url = paypal.checkout.urlPrefix +data.token;
+                            //Loading Mini browser with redirect url, true for async AJAX calls
+                            paypal.checkout.startFlow(url);
+                        },
+                        error: function (responseData, textStatus, errorThrown) {
+                            alert("Error in ajax post"+responseData.statusText);
+                            //Gracefully Close the minibrowser in case of AJAX errors
+                            paypal.checkout.closeFlow();
+                        }
+                    });
+                },
+                button: ['t1', 't2']
+            });
+        }
+    </script>

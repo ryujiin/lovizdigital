@@ -157,9 +157,6 @@
         </footer>
       </div>
     </div>
-    <script>
-      //var csrf_token = "{{ csrf_token }}";
-    </script>
     <div class="includes_js">
       {%include 'templatejs/page_tlp_js.html'%}
       {%include 'templatejs/catalogo_tlp_js.html'%}
@@ -167,9 +164,9 @@
       {% include 'templatejs/user_tlp_js.html' %}
       {% include 'templatejs/productosingle_tlp_js.html' %}
       {% include 'templatejs/procesar_tlp_js.html' %}
-    </div>    
-    {% require_module 'main' %}   
-    <script src="//www.paypalobjects.com/api/checkout.js" async></script>
+    </div>
 
+
+     {% require_module 'main' %}   
 </body>
 </html>

@@ -39,8 +39,11 @@ urlpatterns = [
     url(r'^salir/$','cliente.views.salir',name='salir'),
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     url(r'^pago/stripe/$','pago.views.stripe_paymet',name='pago_stripe'),
+    url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),    
+    url(r'^hardcode/get/paypal/', include('paypal.standard.ipn.urls')),
+    #url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),
+    #url(r'^pago/get/paypal/', include('paypal_express_checkout.urls')),
     url(r'^oficina/',include('oficina.urls')),    
-    #url(r'^checkout/', include('paypal_express_checkout.urls')),
     url(r'^',include('cmsweb.urls')),
 
 ]

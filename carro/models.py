@@ -28,7 +28,7 @@ class Carro(models.Model):
 	estado = models.CharField(max_length=128,default=ABIERTO,choices=ESTADO_ELECCION)
 	date_created = models.DateTimeField(auto_now_add=True)
 	date_submitted = models.DateTimeField(blank=True,null=True)
-	pedido = models.ForeignKey(Pedido,blank=True,null=True)
+	pedido = models.OneToOneField(Pedido,blank=True,null=True,unique=True)
 	
 	def __unicode__(self):
 		return "Carro de %s - %s" %(self.propietario,self.estado)

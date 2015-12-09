@@ -8,7 +8,7 @@ define([
 
     var LineaModel = Backbone.Model.extend({
         //urlRoot: 'http://loviz.herokuapp.com/api/carro/lineas/',
-        urlRoot: 'http://localhost:8000/api/carro/lineas/',
+        urlRoot: '/carro/lineas/',
         url : function() {
             var base = this.urlRoot;
             if (this.isNew()) return base;

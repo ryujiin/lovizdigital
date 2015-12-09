@@ -181,11 +181,13 @@ SHOP_CURRENCY = 'PEN'
 
 #Paypal IPN
 PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
-PAYPAL_TEST = True
+PAYPAL_TEST = False
 
 #Currency cambio
 
 API_CURRENCY = '8649067b661349a8b2f2f2fa135246cf'
+
+SITE_NAME = 'http://lovizdc.com'
 
 try:
     from .local import *

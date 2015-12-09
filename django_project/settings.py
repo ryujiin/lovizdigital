@@ -136,9 +136,9 @@ STATICFILES_DIRS = (
     location('staticos'),
 )
 
-#STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
+STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
 
-STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
+#STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

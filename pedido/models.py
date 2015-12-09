@@ -108,8 +108,6 @@ def show_me_the_money(sender, **kwargs):
 		print 'Bien'
 		if ipn_obj.custom == "Comprando los mejores productos!":
 			pago = Pago(cantidad = ipn_obj.mc_gross,descripcion=ipn_obj.payment_status,transaccion = ipn_obj.txn_id)
-			metodo = MetodoPago.objects.get(nombre='Paypal')
-			pago.metodo_pago = metodo.id
 			pago.save()
 	else:
 		print 'Salio Mal'

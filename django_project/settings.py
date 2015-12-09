@@ -155,14 +155,14 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-AWS_STORAGE_BUCKET_NAME = "lovizheroku"
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#AWS_STORAGE_BUCKET_NAME = "lovizheroku"
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
-MEDIA_ROOT = ''
-MEDIA_URL = "https://%s.s3.amazonaws.com/" % AWS_STORAGE_BUCKET_NAME
+#MEDIA_ROOT = ''
+#MEDIA_URL = "https://%s.s3.amazonaws.com/" % AWS_STORAGE_BUCKET_NAME
 
-AWS_ACCESS_KEY_ID = config.AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY
+#AWS_ACCESS_KEY_ID = config.AWS_ACCESS_KEY_ID
+#AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY
 
 STRIPE_SECRET_KEY=config.STRIPE_SECRET_KEY
 SHOP_CURRENCY = 'PEN'

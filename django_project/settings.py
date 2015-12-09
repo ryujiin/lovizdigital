@@ -211,9 +211,6 @@ REQUIRE_JS = "require.js"
 # See the section on Standalone Modules, below.
 REQUIRE_STANDALONE_MODULES = {}
 
-# Whether to run django-require in debug mode.
-REQUIRE_DEBUG = settings.DEBUG
-
 # A tuple of files to exclude from the compilation result of r.js.
 REQUIRE_EXCLUDE = ("build.txt",)
 

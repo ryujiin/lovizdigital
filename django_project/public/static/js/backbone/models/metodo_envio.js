@@ -1,0 +1,1 @@
+define(["underscore","backbone"],function(e,n){"use strict";var t=n.Model.extend({urlRoot:"/api/metodos_envio/",initialize:function(){},defaults:{},validate:function(){},parse:function(e){return e}});return t});

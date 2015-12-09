@@ -1,0 +1,1 @@
+define(["underscore","backbone","../models/mayorista"],function(e,o,i){"use strict";var n=o.Collection.extend({model:i,url:"/api/oficina/mayoristas/"});return n});

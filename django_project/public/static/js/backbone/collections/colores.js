@@ -1,0 +1,1 @@
+define(["underscore","backbone","../models/color"],function(e,o,n){"use strict";var r=o.Collection.extend({model:n,url:"/api/colores/"}),c=new r;return c});

@@ -1,0 +1,1 @@
+define(["underscore","backbone","../models/direccion"],function(e,n,c){"use strict";var i=n.Collection.extend({model:c,url:"/api/cliente/direcciones/"});return i});

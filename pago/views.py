@@ -81,9 +81,9 @@ def paypal_paymet(request):
 			"amount": total_dolares,
 			"item_name": "productos LovizDC",
 			"invoice": pedido,
-			"notify_url": "http://localhost:8000" + reverse('paypal-ipn'),
-			"return_url": "http://localhost:8000/felicidades/%s/" %pedido,
-			"cancel_return": "http://localhost:8000/cancelado/%s/" %pedido,
+			"notify_url": settings.SITE_NAME + reverse('paypal-ipn'),
+			"return_url": "%s/felicidades/%s/" %(settings.SITE_NAME,pedido),
+			"cancel_return": "%s/cancelado/%s/" %(settings.SITE_NAME,pedido),
 			"custom": "Comrando los mejores productos!",  # Custom command to correlate to some function later (optional)
 			}
 		form = PayPalPaymentsForm(initial=paypal_dict)

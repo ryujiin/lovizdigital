@@ -184,7 +184,7 @@ SHOP_CURRENCY = 'PEN'
 
 #Paypal IPN
 PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
-PAYPAL_TEST = False
+PAYPAL_TEST = True
 
 #Currency cambio
 

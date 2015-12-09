@@ -74,7 +74,6 @@ define([
         },
         verificar_card:function () {
             this.vistaTarjeta.verificar();
-            debugger;
         },
         pagar_paypal:function () {
             this.vistaPaypal.pagar_paypal();

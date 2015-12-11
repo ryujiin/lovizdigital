@@ -5,8 +5,9 @@ define([
     'underscore',
     'backbone',
     'swig',
-    'stripe'
-], function ($, _, Backbone, swig,Stripe) {
+    'stripe',
+    'carro'
+], function ($, _, Backbone, swig,Stripe,CarroModel) {
     'use strict';
 
     var LineasResumenView = Backbone.View.extend({
@@ -31,6 +32,8 @@ define([
         },
 
         render: function () {
+            var carro = CarroModel;
+            debugger;
             this.$el.html(this.template(this.model.toJSON()));
         },
         ver_numero:function (e) {
@@ -115,12 +118,12 @@ define([
                     // Insert the token into the form so it gets submitted to the server
                     $form.append($('<input type="hidden" name="stripeToken" />').val(token));
                     // and re-submit         
+                    var carro = CarroModel;
                     $.post( "/pago/stripe/", {
                         stripeToken:token,
-                        carro : $('#carro_pago').val(),
+                        carro : carro.id,
                     }).done(function (data) {
                         if (data.status==='paid') {
-                            
                             window.location="/felicidades/"+data.pedido+"/";
                         };
                     });

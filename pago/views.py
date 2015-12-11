@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseBadRequest,Http404,HttpResponse
 from carro.models import Carro
-from pedido.models import Pago
+from pedido.models import Pago,MetodoPago
 import json
 import stripe
 import urllib2
@@ -45,9 +45,11 @@ def stripe_paymet(request):
 		except stripe.error.CardError, e:
 			error = e
 		else:
-			pago = Pago(cantidad = amount/100,id_pago=stripe_result['id'],descripcion=description)
+			metodo = MetodoPago.objects.get(nombre='Stripe')			
+			pago = Pago(cantidad = amount/100,id_pago=stripe_result['id'],descripcion=description,metodo_pago = metodo)
 			pago.save()
 			pedido.pago_pedido = pago
+			pedido.metodo_pago = metodo
 			pedido.save()
 			carro.estado = carro.ENVIADA
 			carro.save()
@@ -84,7 +86,7 @@ def paypal_paymet(request):
 			"notify_url": settings.SITE_NAME + reverse('paypal-ipn'),
 			"return_url": "%s/felicidades/%s/" %(settings.SITE_NAME,pedido),
 			"cancel_return": "%s/cancelado/%s/" %(settings.SITE_NAME,pedido),
-			"custom": "Comrando los mejores productos!",  # Custom command to correlate to some function later (optional)
+			"custom": "Comprando los mejores productos!",  # Custom command to correlate to some function later (optional)
 			}
 		form = PayPalPaymentsForm(initial=paypal_dict)
 		context = {"form": form,'total_carro':total_carro,'tipo_cambio':tipo_cambio,'total_dolares':total_dolares}

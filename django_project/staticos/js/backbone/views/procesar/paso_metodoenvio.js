@@ -55,7 +55,7 @@ define([
                 this.$el.addClass('is-activo');
             }
             if (paso>2) {
-                this.$el.addClass('is-guardado');
+                this.$el.addClass('is-guardado').removeClass('is-activo');
             };
         },
         mostrar_metodo_envio:function  () {

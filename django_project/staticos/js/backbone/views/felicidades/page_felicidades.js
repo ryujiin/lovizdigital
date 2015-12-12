@@ -47,7 +47,7 @@ define([
             })        
         },
         rellenar_pedido:function (pedido) {
-            
+            var detalles_pedido = new DetallesProducto();
         }
     });
 

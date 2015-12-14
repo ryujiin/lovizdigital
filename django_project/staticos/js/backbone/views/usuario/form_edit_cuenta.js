@@ -4,30 +4,26 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'swig'
-], function ($, _, Backbone, swig) {
+    'swig',
+    '../../models/user',    
+], function ($, _, Backbone, swig,UserModel) {
     'use strict';
 
-    var DireccionView = Backbone.View.extend({
+    var UserFormLoginView = Backbone.View.extend({
 
-        template: swig.compile($('#direccion_tlp').html()),                
-
-        tagName: 'div',
+        template: swig.compile($('#usuario_edit_tpl').html()),        
 
         id: '',
-
         className: '',
-
-        events: {},
-
+        events: {
+        },
         initialize: function () {
             this.render();
         },
-
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
         },
     });
 
-    return DireccionView;
+    return UserFormLoginView;
 });

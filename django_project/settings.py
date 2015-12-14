@@ -23,9 +23,9 @@ location = lambda x: os.path.join(
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'sorl.thumbnail',
+    'social.apps.django_app.default',
     #'paypal_express_checkout',
     'paypal.standard.ipn',
     #'storages',
@@ -136,7 +137,7 @@ STATICFILES_DIRS = (
     location('staticos'),
 )
 
-STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
+STATICFILES_STORAGE = "require.storage.OptimizedManifestStaticFilesStorage"
 
 #STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
 
@@ -150,11 +151,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-AUTHENTICATION_BACKENDS = (
-    'cliente.backends.EmailOrUsernameModelBackend',    
-    'django.contrib.auth.backends.ModelBackend',
-)
-
 #AWS_STORAGE_BUCKET_NAME = "lovizheroku"
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
@@ -167,31 +163,31 @@ AUTHENTICATION_BACKENDS = (
 STRIPE_SECRET_KEY=config.STRIPE_SECRET_KEY
 SHOP_CURRENCY = 'PEN'
 
-#Paypal
-#HOSTNAME = 'http://localhost:8000'  # without trailing slash
-#PAYPAL_API_URL = 'https://api-3t.sandbox.paypal.com/nvp'
-#PAYPAL_LOGIN_URL = (
-    #'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='
-#)
-#SALE_DESCRIPTION = 'Tu pago a Inversiones Lopez del Carpio E.I.R.L.'
-#
-#PAYPAL_USER = 'lovizempresa_api1.gmail.com'
-#PAYPAL_PWD = '1378765810'
-#PAYPAL_SIGNATURE = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AeEIBVzZGuWPIPzHr25TE7.63Rzv'
-#
-#CANCER_URL = 'http://localhost:8000/cancelado/'
-#RETURN_URL = 'http://localhost:8000/checkout/salioBien'
-
 #Paypal IPN
 PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
-PAYPAL_TEST = True
+PAYPAL_TEST = False
 
 #Currency cambio
-
 API_CURRENCY = '8649067b661349a8b2f2f2fa135246cf'
-
 SITE_NAME = 'http://lovizdc.com'
 
+#API KEYS LOGIN SOCIAL
+#FACEBOOK
+
+SOCIAL_AUTH_FACEBOOK_KEY = config.SOCIAL_AUTH_FACEBOOK_KEY
+SOCIAL_AUTH_FACEBOOK_SECRET = config.SOCIAL_AUTH_FACEBOOK_SECRET
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/usuario/perfil/'
+SOCIAL_AUTH_LOGIN_URL = '/ingresar/'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.Facebook2AppOAuth2',
+    'social.backends.facebook.Facebook2OAuth2',
+    'cliente.backends.EmailOrUsernameModelBackend',    
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 try:
     from .local import *

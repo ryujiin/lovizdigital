@@ -44,6 +44,7 @@ urlpatterns = [
     #url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),
     #url(r'^pago/get/paypal/', include('paypal_express_checkout.urls')),
     url(r'^oficina/',include('oficina.urls')),    
+    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^',include('cmsweb.urls')),
 
 ]

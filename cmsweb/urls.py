@@ -4,6 +4,7 @@ from views import *
 
 urlpatterns = patterns('',
 	url(r'^$',TiendaView.as_view() , name='index'),
+	url(r'^ingresar/$',TiendaView.as_view() , name='ingresar'),
 	url(r'^catalogo/',TiendaView.as_view() , name='catalogo'),
 	url(r'^producto/',TiendaView.as_view() , name='producto'),
 	url(r'^carro/',TiendaView.as_view() , name='carro'),

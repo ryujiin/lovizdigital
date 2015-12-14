@@ -6,8 +6,8 @@ define([
     'backbone',
     'swig',
     '../../views/app/header',
-    '../../collections/pedidos'
-], function ($, _, Backbone, swig,Head,PedidosCollection) {
+    '../../collections/pedidos',
+], function ($, _, Backbone, swig,Head,PedidosCollection,DetallesProducto) {
     'use strict';
 
     var FelicidadPageView = Backbone.View.extend({

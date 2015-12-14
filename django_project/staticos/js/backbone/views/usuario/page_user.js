@@ -7,8 +7,12 @@ define([
     'swig',
     '../../views/app/breadcrumb',
     '../../models/user',
-    '../../views/app/header'
-], function ($, _, Backbone, swig,BreadView,UserModel,Head) {
+    '../../views/app/header',
+    '../../views/usuario/manage_cuenta',
+    '../../views/usuario/manage_direcciones',
+    '../../views/usuario/manage_pedidos',    
+    '../../views/usuario/manage_deseos',    
+], function ($, _, Backbone, swig,BreadView,UserModel,Head,ManageCuenta,ManageDirecciones,ManagePedidos,ManageDeseos) {
     'use strict';
 
     var PageUserView = Backbone.View.extend({
@@ -29,6 +33,7 @@ define([
             this.$el.removeClass();            
             this.addBread();
             this.change_head();
+            this.crear_modales();
         },
         addBread: function(){
             this.breadVista = new BreadView({el:$('.nav-breadcrumb')});
@@ -45,6 +50,24 @@ define([
             var descripcion = "El area de usuario en Loviz DC";
             var header = Head;
             header.render(titulo,descripcion);
+        },
+        crear_modales:function () {
+            var manage_cuenta = new ManageCuenta({
+                el:this.$('#usuario_edit'),
+                model:this.model
+            });
+            var manage_direccciones = new ManageDirecciones({
+                el:this.$('#usuario_direcciones'),
+                model:this.model
+            });
+            var manage_pedidos = new ManagePedidos({
+                el:this.$('#usuario_pedidos'),
+                model:this.model
+            });
+            var manage_lista_deseos = new ManageDeseos({
+                el:this.$('#usuario_lista_deseos'),
+                model:this.model
+            })
         }
     });
     var page = new PageUserView({model:UserModel})

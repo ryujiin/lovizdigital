@@ -76,6 +76,11 @@ p.bg-warning {
   -ms-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
 }
+ul.no-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
 @-moz-keyframes spin {
   from {
     -webkit-transform: rotate(0deg);
@@ -253,6 +258,13 @@ p {
 }
 .btn.btn-next:hover {
   background: #808080;
+}
+.btn.btn-facebook {
+  border: 1px solid #3b5998;
+  background: #3b5998;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
 }
 .form-control {
   -webkit-border-radius: 0;
@@ -1244,6 +1256,16 @@ h2 .linea {
 }
 .crear_user.activo .datos_crear {
   display: none;
+}
+.pt_account .account-sub-header {
+  display: block;
+  font-size: 0.5em;
+}
+.pt_account .account-logout {
+  font-size: 0.5em;
+}
+.pt_account a {
+  font-size: 0.9em;
 }
 .page_felicidades .titulo {
   font-size: 4.5em;

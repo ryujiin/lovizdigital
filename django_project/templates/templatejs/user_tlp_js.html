@@ -37,7 +37,10 @@
 	<h3>Ingresar a mi cuenta</h3>
 	<fieldset>
 	  <div class="login_facebook">
-	    <a href="http://localhost:8000/auth/convert-token/">Ingresar con Facebook</a>
+	    <a class="btn btn-facebook" href="/login/facebook/">
+	    	<span class="icon-facebook"></span>
+	    	Ingresar con Facebook
+	    </a>
 	  </div>	  
 	<form>
 		  <div class="error_form"></div>
@@ -103,20 +106,22 @@
 	<div class="pt_account Account-Show account-welcome container">
 	  <div id="primary">
 	    <h1 class="current-customer-logout">
-	    	<span class="account-sub-header">
-	    		Bienvenido</span><span class="pipe">|</span>
-	    		<span class="first-name">{{first_name}} </span>
-	    		<span class="last-name">{{last_name}}</span>
+	    	<span class="account-sub-header">Bienvenido</span>
+	    	<span class="first-name">{{first_name}} </span>
+	    	<span class="last-name">{{last_name}}</span>
 	    	<span class="account-logout">(<a href="/salir/" class="salir">Salir</a>)</span></h1>
 	    <div class="account-landing">
 	      <div class="content-asset">
 	        <div id="welcomeInfo" class="margin-bot-20">
 	          <div id="leftInfo">
-	            <h3>Informacion de Cuenta</h3><a href="/" class="acctNavLinks link">Administre su correo electronico y la informacion de inicio de sesion</a><br/><br/>
-	            <h3>Direccion</h3><a href="/" class="acctNavLinks link">Gestiona tus direcciones de facturacion y envio</a><br/><br/>
-	            <h3>Informacion de Pago</h3><a href="/" class="acctNavLinks link">Manejo de pagos y metodos</a><br/><br/>
-	            <h3>Pedidos</h3><a href="/" class="acctNavLinks link">Cpmpruebe el estado de sus pedidos</a><br/><br/>
-	            <h3>Lista de Deseos</h3><a href="/" class="acctNavLinks link">Ver o modificar productos de la lista o invitar amigos.</a>
+	            <h3>Informacion de Cuenta</h3>
+	            <a href="#" class="acctNavLinks" data-toggle="modal" data-target="#usuario_edit">Administre su correo electronico y la informacion de inicio de sesion</a><br/><br/>
+	            <h3>Direccion</h3>
+	            <a href="#" class="acctNavLinks" data-toggle="modal" data-target="#usuario_direcciones">Gestiona tus direcciones de facturacion y envio</a><br/><br/>	           
+	            <h3>Lista de Pedidos</h3>
+	            <a href="#" class="acctNavLinks" data-toggle="modal" data-target="#usuario_pedidos">Comprueba el estado de sus pedidos</a><br/><br/>
+	            <h3>Lista de Deseos</h3>
+	            <a href="#" class="acctNavLinks" data-toggle="modal" data-target="#usuario_lista_deseos">Ver o modificar productos de la lista o invitar amigos.</a>
 	          </div>
 	          <div id="rightInfo"></div>
 	        </div>
@@ -127,14 +132,14 @@
 	    <nav>
 	      <div class="secondary-navigation">
 	        <div class="content-asset">
-	          <ul class="account-nav-top">
+	          <ul class="account-nav-top no-list">
 	            <li>
-	              <ul class="account-logout-nav">
+	              <ul class="account-logout-nav no-list">
 	                <li class="navlink"><a href="/" class="btn btn-default">Salir</a></li>
 	              </ul>
 	            </li>
 	            <li>
-	              <ul class="account-settings-nav">
+	              <ul class="account-settings-nav no-list">
 	                <li>
 	                  <h3>Configuraciones de la Cuenta</h3>
 	                </li>
@@ -144,7 +149,7 @@
 	              </ul>
 	            </li>
 	            <li>
-	              <ul class="order-history-nav">
+	              <ul class="order-history-nav no-list">
 	                <li>
 	                  <h3>Historial de Pedidos</h3>
 	                </li>
@@ -152,7 +157,7 @@
 	              </ul>
 	            </li>
 	            <li>
-	              <ul class="wish-list-nav">
+	              <ul class="wish-list-nav no-list">
 	                <li>
 	                  <h3>Lista de Deseos</h3>
 	                </li>
@@ -165,7 +170,104 @@
 	    </nav>
 	  </div>
 	</div>
+	<div id="usuario_edit" class="modal fade"></div>
+	<div id="usuario_direcciones" class="modal fade"></div>
+	<div id="usuario_pedidos" class="modal fade"></div>
+	<div id="usuario_lista_deseos" class="modal fade"></div>
 </script>
 
+<script type="text/template" id="usuario_edit_tpl">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"></span>
+				</button>
+				<h3>Editar Cuenta</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<legend>Personal:<span>*<em>requerido</em></span></legend>
+					<div class="form-group">
+						<label class="control-label" for="inputSuccess1">*Nombre:</label>
+						<input type="text" class="form-control" name="nombre_user" value="{{first_name}}">						
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="inputSuccess1">*Apellido:</label>
+						<input type="text" class="form-control" name="apellido_user" value="{{last_name}}">						
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="inputSuccess1">Genero:</label>
+						<select class="form-control" name="genero_user">
+							<option>Selecciona</option>
+							<option value="hombre">Hombre</option>
+							<option value="mujer">Mujer</option>
+							<option value="no_espesificar">No Especificar</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="inputSuccess1">*DNI:</label>
+						<input type="text" class="form-control" name="dni_user" value="{{dni}}">
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Informacion de Login:<span>*<em>requerido</em></span></legend>
+					<div class="form-group">
+						<label class="control-label" for="inputSuccess1">*Correo Electronico:</label>
+						<input type="email" class="form-control" name="nombre_user" value="{{email}}">						
+					</div>
+				</fieldset>
+			</div>
+			<div class="modal-footer">
+		      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		      <button type="button" class="btn btn-primary">Guardar Cambios</button>
+		    </div>
+		</div>
+	</div>
+</script>
 
+<script type="text/template" id="usuario_direcciones_tpl">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">			
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"></span>
+				</button>
+				<h3>Lista de direcciones</h3>
+			</div>
+			<div class="modal-body">
+				<div class="">
+					<span>Direcciones Gravadas</span>
+					<a href="#">+ Nueva Direccion</a>					
+				</div>
+				<div class="mis-direccion no-list">
+					<div>
+						<div class="mini-titulo">Mi casa</div>
+						<div class="mini-dirccion">Calle los alamos 349 , la alborada Comas</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="usuario_pedidos_tpl">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4>Historial de Pedidos</h4>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="usuario_lista_deseos_tpl">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4>Mi lista de deseos</h4>
+			</div>
+		</div>
+	</div>
+</script>
 {% endverbatim %}

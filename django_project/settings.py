@@ -23,9 +23,9 @@ location = lambda x: os.path.join(
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -137,7 +137,7 @@ STATICFILES_DIRS = (
     location('staticos'),
 )
 
-STATICFILES_STORAGE = "require.storage.OptimizedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
 
 #STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
 
@@ -165,7 +165,7 @@ SHOP_CURRENCY = 'PEN'
 
 #Paypal IPN
 PAYPAL_RECEIVER_EMAIL = "lovizempresa@gmail.com"
-PAYPAL_TEST = False
+PAYPAL_TEST = True
 
 #Currency cambio
 API_CURRENCY = '8649067b661349a8b2f2f2fa135246cf'

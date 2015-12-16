@@ -121,6 +121,24 @@
 		font-weight 700
 	.variacion_talla
 		margin 10px 0
+		.tallas_elegibles	
+			text-align left		
+			.talla_seleccion
+				display inline-block
+				border 1px solid #f4f4f4
+				padding 10px
+				color #333
+				&.sin_stock
+					color #ccc
+					background url('../imgs/striped-border.jpg')
+					&:hover
+						border-color #ccc
+				&.seleccionado
+					background #333
+					color #f4f4f4
+				&:hover
+					border-color #111
+					cursor pointer
 		.tallas_form
 			margin 10px 0
 			option

@@ -6,16 +6,16 @@ define([
 ], function (_, Backbone) {
     'use strict';
 
-    var LineaModel = Backbone.Model.extend({
-        urlRoot: '/api/carro/lineas/',
-        url : function() {
+    var PageModel = Backbone.Model.extend({
+
+        urlRoot : '/api/cmsweb/pages/',
+        
+        url: function(){
             var base = this.urlRoot;
-            if (this.isNew()) return base;
             return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id+'/';
         },
-        
+
         initialize: function() {
-            
         },
 
         defaults: {
@@ -29,5 +29,5 @@ define([
         }
     });
 
-    return LineaModel;
+    return PageModel;
 });

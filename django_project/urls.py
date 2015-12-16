@@ -5,7 +5,7 @@ import settings
 
 from catalogo import views
 from carro.views import LineasViewsets,CarroViewsets
-from cmsweb.views import CarruselViewsets
+from cmsweb.views import CarruselViewsets,PageViewsets
 from utiles.views import ColorViewsets
 from pedido.views import PedidoViewSet,MetodoEnvioViewSet
 from ubigeo.views import RegionViewset
@@ -17,6 +17,7 @@ router.register(r'catalogo', views.CatalogoViewsets,'catalogo')
 router.register(r'categoria', views.CategoriaViewsets,'categorias')
 router.register(r'carro/lineas',LineasViewsets,'lineas')
 router.register(r'cmsweb/carrusel',CarruselViewsets,'carruseles')
+router.register(r'cmsweb/pages',PageViewsets,'pages')
 router.register(r'colores',ColorViewsets,'coleres')
 router.register(r'pedidos',PedidoViewSet,'pedidos')
 router.register(r'ubigeo',RegionViewset,'ubigeo')
@@ -39,6 +40,7 @@ urlpatterns = [
     url(r'^salir/$','cliente.views.salir',name='salir'),
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     url(r'^pago/stripe/$','pago.views.stripe_paymet',name='pago_stripe'),
+    url(r'^get_stripe_key/$','pago.views.get_stripe_key',name='get_key'),    
     url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),    
     url(r'^hardcode/get/paypal/', include('paypal.standard.ipn.urls')),
     #url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),

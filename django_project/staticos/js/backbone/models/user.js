@@ -45,6 +45,7 @@ define([
                     if (vista.model.name==='pedido') {
                         vista.model.set('paso_actual',2);
                     }else{
+                        vista.loader.remove();
                         Backbone.history.navigate('/usuario/perfil/', {trigger:true})
                     }
                 }else{

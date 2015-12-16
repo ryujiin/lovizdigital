@@ -5,6 +5,32 @@ body {
   line-height: 1.4;
   color: #333;
 }
+.ajax_full {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  background: rgba(255,255,255,0.9);
+  z-index: 2000;
+}
+.ajax_full .fondo_ajax {
+  width: 100px;
+  position: absolute;
+  top: 45%;
+  left: 45%;
+}
+.ajax_full .fondo_ajax .ajax {
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 150px;
+  height: 64px;
+}
+.ajax_full .fondo_ajax .img_ajax {
+  background-image: url("../imgs/ajaxloader.gif");
+}
+.ajax_full .fondo_ajax .text_ajax {
+  background-image: url("../imgs/letrajax.gif");
+}
 .box_contraste {
   background: #111;
   color: #fff;
@@ -723,6 +749,37 @@ h2 .linea {
 .lista-productos .productos figure img {
   width: 100%;
 }
+.lista-productos .productos .imagen_lista {
+  position: relative;
+  height: 175px;
+}
+.lista-productos .productos .imagen_lista img {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+.lista-productos .productos .imagen_lista img:first-child {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.lista-productos .productos .imagen_lista:hover img:first-child {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.lista-productos .productos .imagen_lista:hover img:last-child {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
 .lista-productos .productos .nombre_productos {
   font-family: 'BenchNine', sans-serif;
   font-weight: bold;
@@ -906,6 +963,30 @@ h2 .linea {
 }
 .product-variations .variacion_talla {
   margin: 10px 0;
+}
+.product-variations .variacion_talla .tallas_elegibles {
+  text-align: left;
+}
+.product-variations .variacion_talla .tallas_elegibles .talla_seleccion {
+  display: inline-block;
+  border: 1px solid #f4f4f4;
+  padding: 10px;
+  color: #333;
+}
+.product-variations .variacion_talla .tallas_elegibles .talla_seleccion.sin_stock {
+  color: #ccc;
+  background: url("../imgs/striped-border.jpg");
+}
+.product-variations .variacion_talla .tallas_elegibles .talla_seleccion.sin_stock:hover {
+  border-color: #ccc;
+}
+.product-variations .variacion_talla .tallas_elegibles .talla_seleccion.seleccionado {
+  background: #333;
+  color: #f4f4f4;
+}
+.product-variations .variacion_talla .tallas_elegibles .talla_seleccion:hover {
+  border-color: #111;
+  cursor: pointer;
 }
 .product-variations .variacion_talla .tallas_form {
   margin: 10px 0;

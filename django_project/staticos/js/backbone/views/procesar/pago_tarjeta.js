@@ -32,9 +32,11 @@ define([
         },
 
         render: function () {
-            var carro = CarroModel;
-            debugger;
-            this.$el.html(this.template(this.model.toJSON()));
+            var self = this;
+            $.get('/get_stripe_key/').done(function (data) {
+                self.stripe_key = data.key;
+                self.$el.html(self.template(self.model.toJSON()));
+            })
         },
         ver_numero:function (e) {
             if (e.keyCode>=48 && e.keyCode<=57 || e.keyCode ==8) {
@@ -101,15 +103,17 @@ define([
             }
         },
         pago_Stripe:function (nombre,tarjeta,mes,year,cvc) {
+            var loader = new Loader
             var self = this;
-            var public_key = 'pk_test_1dnWop5afJiTtiGPo2GsJsa4';
-            //comenzamos con stripe
+            var public_key = self.stripe_key
+            //comenzamos con stripe_key
             Stripe.setPublishableKey(public_key);
 
             var stripeResponseHandler = function(status, response) {
                 var $form = $('#pagar_tarjeta');
                 if (response.error) {
                     // Show the errors on the form
+                    debugger;
                     $form.find('.payment-errors').text(response.error.message);
                     $form.find('button').prop('disabled', false);
                 } else {

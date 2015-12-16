@@ -93,3 +93,6 @@ def paypal_paymet(request):
 		return render(request, "payment.html", context)
 	else:
 		raise Http404("No Hay Pedido")
+
+def get_stripe_key(request):
+	return HttpResponse(json.dumps({'key':settings.STRIPE_PUBLIC_KEY}),content_type='application/json;charset=utf8')

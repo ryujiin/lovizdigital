@@ -4,7 +4,7 @@ define([
     'jquery',
     'backbone',
     '../views/carro/page_carro',
-    '../views/page_home',
+    '../views//pages/pages',
     '../views/catalogo/page_catalogo',
     '../views/productosingle/page_producto',
     '../collections/categoria',
@@ -12,7 +12,7 @@ define([
     '../views/usuario/page_user',
     '../views/felicidades/page_felicidades',
     '../views/app/page_error'
-], function ($, Backbone,CarroPage,HomePage,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageFelicidades,PageError) {
+], function ($, Backbone,CarroPage,Pages,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageFelicidades,PageError) {
     'use strict';
 
     var AppRouter = Backbone.Router.extend({
@@ -32,9 +32,7 @@ define([
         },
         root:function(){
             $('body').removeClass();            
-
-            HomePage.render();
-            console.log('root')
+            Pages.render_front();
         },
         perfil:function(){
             $('body').removeClass();            

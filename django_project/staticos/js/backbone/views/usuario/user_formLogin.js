@@ -5,8 +5,9 @@ define([
     'underscore',
     'backbone',
     'swig',
-    '../../models/user',    
-], function ($, _, Backbone, swig,UserModel) {
+    '../../models/user',
+    '../../views/app/loader_full'
+], function ($, _, Backbone, swig,UserModel,LoaderFull) {
     'use strict';
 
     var UserFormLoginView = Backbone.View.extend({
@@ -25,8 +26,7 @@ define([
         render: function () {
             this.$el.html(this.template());
         },
-        get_datos:function (e) {
-            
+        get_datos:function (e) {            
             var valor = e.target.value;
             var contenedor = '.'+e.target.dataset.contenedor;
             var validar_vacio = this.validar_vacio(valor,contenedor);
@@ -80,11 +80,13 @@ define([
             if (verificado==true) {
                 verificado = this.validar_vacio(pass.val(),'.campo_pass');
                 if (verificado == true ) {
+                    this.loader = new LoaderFull();
                     UserModel.ingresar_user(correo.val(),pass.val(),this);                
                 };
             };
         },
         error_login:function(){
+            this.loader.remove();
             this.$('.error_form').empty();
             var error = '<p class="bg-warning text-danger">El usuario o contraseña no coiciden, vuelva a intentarlo</p>';
             this.$('.error_form').append(error);

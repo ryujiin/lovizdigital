@@ -5,8 +5,10 @@ define([
     'underscore',
     'backbone',
     'swig',
-    'carro'
-], function ($, _, Backbone, swig,CarroModel) {
+    'carro',
+    '../../views/app/loader_full',
+    '../../views/productosingle/minicompra',    
+], function ($, _, Backbone, swig,CarroModel,LoaderFull,MiniCompra) {
     'use strict';
 
     var AddToCartView = Backbone.View.extend({
@@ -20,7 +22,6 @@ define([
         className: 'addtocart',
 
         events: {
-            'click #addtocart':'verificar_compra',
         },
 
         initialize: function () {
@@ -31,30 +32,43 @@ define([
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
         },
-        verificar_compra:function () {
-
+        verificar_compra:function (vista) {
             var modeloCarro = CarroModel;
             var self = this;
             var carro = this.model.toJSON().carro;
+
             if (carro) {
-                this.comprar();
+                this.comprar(vista);
             }else{
                 modeloCarro.save().done(function(data){
                     $.localStorage.set({carro:data.id});
                     self.model.set({carro:data.id});
-                    self.comprar();
+                    self.comprar(vista);
                 });
             }
         },
-        comprar:function () {
+        comprar:function (vista) {
+            var self = this;
+            var loader = new LoaderFull();
             var datos = this.model;
             if (CarroModel.id) {
                 this.model.set({cantidad:1});
-                this.model.save().done(function (data) {
+                this.model.save().done(function (data) { 
+                    self.crearMinicompra();
+                    vista.render();
+                    loader.remove();                    
                     CarroModel.fetch();
                 });
             };
+        },
+        crearMinicompra:function () {
+            var minicompra = new MiniCompra({
+                model:this.model,
+                el:$('#mini_compra')
+            })
+            minicompra.mostrar();
         }
+
     });
 
     return AddToCartView;

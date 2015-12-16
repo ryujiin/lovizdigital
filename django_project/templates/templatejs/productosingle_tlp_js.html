@@ -81,16 +81,20 @@
 							</div>
 							<div class="variacion_talla">
 								<div class="sizes-title label">Tallas Disponibles:
-									<select class="tallas_form form-control">
-										<option value="">Seleccina una talla</option>
+									<div class="tallas_elegibles">
 										{% for varia in variaciones %}
-										{%if varia.stock%}
-										<option value="{{varia.id}}">{{varia.talla}}</option>
-										{%else%}
-										<option class="sin_stock" value="{{varia.id}}">{{varia.talla}} -- sin stock --</option>
-										{%endif%}
+											{%if varia.stock%}
+											<div class="talla_seleccion en_stock" data-valor="{{varia.id}}">
+												{{varia.talla}}
+											</div>
+											{%else%}
+											<div class="talla_seleccion sin_stock" data-valor="{{varia.id}}">
+												{{varia.talla}}
+											</div>
+											{%endif%}
 										{%endfor%}
-									</select>
+									</div>
+
 								</div>
 							</div>
 						</div>
@@ -270,10 +274,50 @@
 		<span>Selecciona una talla</span>
 	</button>
 	{%else%}
-	<button id="addtocart" class="btn btn-contraste btn-large" type="submit" value="Enviar">
+	<button id="agregar_alCarro" class="btn btn-contraste btn-large" type="submit" value="Enviar">
 		<span>Agregar al Carro</span>
 	</button>
 	{%endif%}
+</script>
+
+<script id="mini_compra_tlp" type="text/template">
+	<div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<h4>Producto Agregado al Carro de compras</h4>
+    		</div>
+    		<div class="modal-body">
+    			<div class="row">
+    				<div class="col-md-5">
+    					<img src="{{thum}}">
+    				</div>
+	    			<div class="col-md-7">
+	    				<h5>{{full_name}}</h5>
+	    				<div class="fila">
+	    					<span class="label">Color:</span>
+	    					<span>{{color}}</span>
+	    				</div>
+	    				<div class="fila">
+	    					<span class="label">Talla:</span>
+	    					<span>{{talla}}</span>
+	    				</div>
+	    				<div class="fila">
+	    					<span class="label">Cantidad:</span>
+	    					<span>{{cantidad}}</span>
+	    				</div>
+	    				<div class="fila">
+	    					<span class="label">Precio:</span>
+	    					<span>S/.{{precio}}</span>
+	    				</div>
+	    			</div>
+    			</div>    			
+    		</div>
+    		<div class="modal-footer">
+    			<a href="#" class="btn btn-default" data-dismiss="modal">Segir Comprando</a>
+    			<a href="/carro/" class="link btn btn-contraste" data-dismiss="modal">Ir al Carro de compras</a>
+    		</div>
+    	</div>
+    </div>
 </script>
 
 <script id="seccion_comentarios" type="text/template">

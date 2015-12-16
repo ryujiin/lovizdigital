@@ -49,7 +49,6 @@ define([
                         self.save().done(function(data){
                         });
                     }else{
-                        debugger;
                     }
                 }).fail(function(){
                     self.set({propietario:UserModel.id});

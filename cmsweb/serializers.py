@@ -10,3 +10,20 @@ class CarruselSerializer(serializers.ModelSerializer):
 
 	def get_foto(self,obj):
 		return obj.foto.url
+
+class ImagenCarruselSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = ImageCarrusel
+
+class BloqueSerializer(serializers.ModelSerializer):
+	template = serializers.CharField(read_only=True)
+	imagenes_carrusel = ImagenCarruselSerializer(many=True)
+	class Meta:
+		model = Bloque
+
+class PageSerializer(serializers.ModelSerializer):
+	bloques = BloqueSerializer(many=True)
+	class Meta:
+		model = Page
+		fields = ('id','titulo','descripcion','titulo_activo','front','slug','activo','cuerpo','bloques')
+		

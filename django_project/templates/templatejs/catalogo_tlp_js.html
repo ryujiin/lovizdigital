@@ -74,8 +74,12 @@
 
 <script id="productosLista_tlp" type="text/template">
 	<a href="{{link}}" class="link">
-		<figure>
-			<img src="{{thum}}"/>
+		<figure class="imagen_lista">
+			{%for img in imagenes_producto%}
+				{%if img.orden <= 1 %}
+					<img src="{{img.imagen_medium}}">
+				{%endif%}
+			{%endfor%}
 		</figure>
 	    <div class="nombre_productos">
 	    	<span>{{nombre}}</span>

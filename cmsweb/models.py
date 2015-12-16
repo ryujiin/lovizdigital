@@ -15,8 +15,6 @@ class Carrusel(models.Model):
 	creado = models.DateTimeField(auto_now_add=True)
 	activo = models.BooleanField(default=True)
 
-
-
 class SeccionesCMS(models.Model):
 	titulo = models.CharField(max_length=100,blank=True)
 	activo = models.BooleanField(default=True)
@@ -27,13 +25,38 @@ class SeccionesCMS(models.Model):
 class Page(models.Model):
 	titulo = models.CharField(max_length=100,help_text='El titulo de la pagina web')
 	descripcion = models.CharField(max_length=150,help_text='La descripcion que se vera en la pagina para el buscador')
-	slug = models.SlugField(max_length=120,unique=True)
+	titulo_activo = models.BooleanField(default=True)
+	front = models.BooleanField(default=False)
+	slug = models.SlugField(max_length=120,unique=True,blank=True)
 	activo = models.BooleanField(default=True)	
-	cuerpo = models.TextField()
+	cuerpo = models.TextField(blank=True)
 
-	def save(self, *args, **kwargs):
-		self.full_name = "%s (%s)" %(self.nombre,self.color)
-		if not self.slug:
-			self.slug = slugify(self.full_name)
-		super(Pages, self).save(*args, **kwargs)
+	def __unicode__(self):
+		return self.slug
 
+class TemplateBloque(models.Model):
+	nombre=models.CharField(max_length=100,blank=True)
+
+	def __unicode__(self):
+		return self.nombre
+    
+
+class Bloque(models.Model):
+	titulo = models.CharField(max_length=100,blank=True,help_text='El titulo de la pagina web')
+	page = models.ForeignKey(Page,blank=True,null=True,related_name='bloques')
+	estilo = models.CharField(max_length=100,blank=True)
+	cuerpo = models.TextField(blank=True)
+	seccion = models.CharField(max_length=100,blank=True,help_text='El id donde se colocara')
+	template = models.ForeignKey(TemplateBloque,blank=True,null=True)
+	carrusel = models.BooleanField(default=False)
+
+	def __unicode__(self):
+		return "%s de %s " %(self.titulo,self.page)
+
+    
+class ImageCarrusel(models.Model):
+	titulo = models.CharField(max_length=100,blank=True,help_text='Titulo que tendra la imagen en el Alt')
+	estilo = models.CharField(max_length=100,blank=True)
+	bloque = models.ForeignKey(Bloque,blank=True,related_name='imagenes_carrusel')
+	orden = models.PositiveIntegerField(default=0)
+	imagen = models.ImageField(upload_to='bloque/carrusel')

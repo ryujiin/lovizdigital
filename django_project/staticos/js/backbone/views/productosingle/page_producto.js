@@ -20,7 +20,7 @@ define([
     '../../views/productosingle/seccion_comentarios',
     '../../views/productosingle/nuevo_comentario',
     '../../views/app/header',
-    '../../models/comentario',    
+    '../../models/comentario',
     'carro',
 ], function ($, _, Backbone, swig,ProductoModel,ProductosCollections,ComentariosCollection,ProductosTotal,BreadView,Galeria_full,Galeria_mobil,AddToCart,LineaModel,Relacionados,Estrellas,Comentarios,NuevoComentario,Head,ComentarioModel,Carro) {
     'use strict';
@@ -38,7 +38,8 @@ define([
         collection: new ProductosCollections(),
 
         events: {
-            'change .tallas_form':'cambiar_talla'
+            'click .tallas_elegibles .en_stock':'cambiar_talla',
+            'click #agregar_alCarro':'comprar_producto',
         },
 
         initialize: function () {
@@ -64,17 +65,20 @@ define([
         cambiar_producto:function (slug) {
             var productos = ProductosTotal;
             var self = this;
-
-            var coincidencia = productos.findWhere({slug:slug})
-            if (coincidencia) {
-                this.model.set(coincidencia.toJSON())
+            if (slug !== this.model.toJSON().slug) {
+                var coincidencia = productos.findWhere({slug:slug})
+                if (coincidencia) {
+                    this.model.set(coincidencia.toJSON())
+                }else{
+                    this.collection.fetch({
+                        data:$.param({slug:slug})
+                    }).done(function (data) {
+                        productos.add(this.collection);
+                        self.model.set(data[0]);
+                    })
+                }
             }else{
-                this.collection.fetch({
-                    data:$.param({slug:slug})
-                }).done(function (data) {
-                    productos.add(this.collection);
-                    self.model.set(data[0]);
-                })
+                this.render();
             }
         },
         add_bread:function () {
@@ -116,9 +120,11 @@ define([
             })
         },
         cambiar_talla: function (e) {
-            var talla = e.target.value;
+            this.$('.tallas_elegibles .talla_seleccion').removeClass('seleccionado');
+            var talla = e.target.dataset.valor;
             this.$('.precios .precio_variacion.mostrar').removeClass('mostrar');
             this.$('.precios .precio_variacion.'+talla).addClass('mostrar');
+            $(e.target).addClass('seleccionado');
             this.lineamodel.set({variacion:talla});
         },
         add_button_cart:function  () {
@@ -126,10 +132,12 @@ define([
                 producto:this.model.id,
                 carro:Carro.id
             });
-            var button = new AddToCart({
+
+            this.buttonAddCart = new AddToCart({
                 model:this.lineamodel,
                 el:this.$('#addtocart'),
-            })
+            });
+
         },
         add_relacionados:function () {
             var relacionados = new Relacionados({
@@ -164,6 +172,9 @@ define([
                 collection:comentarios_collection,
             })
         },
+        comprar_producto:function () {            
+            this.buttonAddCart.verificar_compra(this)
+        }
     });
     var modelo = new ProductoModel();
 

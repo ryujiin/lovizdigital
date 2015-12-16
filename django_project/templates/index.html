@@ -19,7 +19,11 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=BenchNine:400,700,300"/>
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
     <link rel="stylesheet" href="{% static "css/iconos.css" %}" />
+    <link rel="stylesheet" href="{% static "css/owl.carousel.css" %}" />
+    <link rel="stylesheet" href="{% static "css/owl.theme.css" %}" />
+    <link rel="stylesheet" href="{% static "css/owl.transitions.css" %}" />
     <link rel="stylesheet" href="{% static "css/app2.css" %}" />
+    
 </head>
 <body id="default" class="mobile-layout">
 	<div id="header">
@@ -61,6 +65,7 @@
                 <div id="mini-cart">
                   <div class="mini-cart-total"><span class="icono icon-shopping-cart">#</span><span class="mini-cart-label"></span><span class="mini-cart-empty">(0)</span></div>
                 </div>
+                <div id="mini-Listas"></div>
                 <div id="nav-sidebar-user" class="nav-sidebar top_side">
                   <!--include ../sidebar_user/template.jade-->
                 </div>
@@ -156,6 +161,9 @@
             </div>
         </footer>
       </div>
+    </div>
+    <div class="modales">
+      <div id="mini_compra" class="modal fade"></div>
     </div>
     <div class="includes_js">
       {%include 'templatejs/page_tlp_js.html'%}

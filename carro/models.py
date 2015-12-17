@@ -72,6 +72,7 @@ class Carro(models.Model):
 				pedido = Pedido(user=self.propietario,estado_pedido='autenticado',)
 				pedido.save()
 				self.pedido = pedido
+
 		super(Carro, self).save(*args, **kwargs)		
 		if self.estado!='Fusionada':
 			if self.propietario:

@@ -326,6 +326,9 @@ label .requerido {
 #wrapper #main .container {
   padding: 0;
 }
+#contenido {
+  padding-bottom: 40px;
+}
 .container:after {
   clear: both;
 }
@@ -1352,6 +1355,9 @@ h2 .linea {
   font-size: 4.5em;
   font-weight: 400;
 }
+.lineas_carro {
+  margin-top: 10px;
+}
 .lineas_carro .etiquetas {
   display: -webkit-box;
   display: -moz-box;
@@ -1372,6 +1378,9 @@ h2 .linea {
 .lineas_carro .etiquetas .hiden {
   display: none;
 }
+.lineas_carro .lineas_items {
+  border-bottom: 1px solid rgba(6,20,2,0.52);
+}
 .lineas_carro .lineas_items .linea {
   display: -webkit-box;
   display: -moz-box;
@@ -1388,6 +1397,7 @@ h2 .linea {
 }
 .lineas_carro .detalle_linea {
   width: 30%;
+  padding-left: 60px;
 }
 .lineas_carro .detalle_linea .nombre {
   text-transform: uppercase;
@@ -1398,9 +1408,11 @@ h2 .linea {
 }
 .lineas_carro .precio_linea {
   width: 15%;
+  text-align: center;
 }
 .lineas_carro .cantidad_linea {
   width: 15%;
+  text-align: center;
 }
 .lineas_carro .cantidad_linea .cantidad {
   border: 1px solid #f4f4f4;
@@ -1408,6 +1420,11 @@ h2 .linea {
 }
 .lineas_carro .cantidad_linea .cant {
   cursor: pointer;
+  display: inline-block;
+  color: #ccc;
+}
+.lineas_carro .cantidad_linea .cant:hover {
+  color: #333;
 }
 .lineas_carro .subtotal_linea {
   width: 15%;
@@ -1432,6 +1449,7 @@ h2 .linea {
 }
 .total_carro {
   margin: 30px 0;
+  font-family: 'BenchNine', sans-serif;
 }
 .total_carro table {
   width: 100%;
@@ -1440,6 +1458,9 @@ h2 .linea {
 .total_carro table tr td {
   padding: 8px;
   border-top: 1px solid #f4f4f4;
+}
+.total_carro table tr td.sin-borde {
+  border-top: none;
 }
 .total_carro table .tabla_total_carro {
   font-size: 1.5em;

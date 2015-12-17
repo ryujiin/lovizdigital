@@ -127,3 +127,6 @@ class LineaCarro(models.Model):
 					coincidencias.delete()
 					self.cantidad = coincidencias.cantidad+self.cantidad
 				super(LineaCarro, self).save(*args, **kwargs)
+
+class CuponesDescuentos(models.Model):
+	nombre = models.CharField(max_length=100)

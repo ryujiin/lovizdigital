@@ -4,7 +4,10 @@
 		<div class="nav-breadcrumb"></div>
 		<section class="titulo text-center"></section>
 		<section class="lineas_carro"></section>
-		<section class="total_carro"></section>
+		<div class="row">
+			<section class="cupones_carro col-md-6"></section>
+			<section class="total_carro col-md-6"></section>
+		</div>
 		<div class="boton_checkout"></div>
 	</div>
 </script>
@@ -100,18 +103,18 @@
 <script id="carro_total_tlp" type="text/template">
 	<tbody>
 		<tr>
-			<td>Subtotal</td>
-			<td class="text-right">S./ {{subtotal}}</td>
+			<td class="sin-borde">SubTotal Incluyendo Impuestos</td>
+			<td class="text-right sin-borde">S./ {{subtotal}}</td>
 		</tr>
 		{%if pedido%}
 		<tr>
-			<td>Coste de Envio</td>
-			<td class="text-right">{{envio}}</td>
+			<td>Coste Estimado de Envio</td>
+			<td class="text-right">S/.{{envio}}</td>
 		</tr>
 		{%endif%}
 		<tr>
 			<td>Descuento</td>
-			<td class="text-right">S/. 00</td>
+			<td class="text-right">-S/.0.00</td>
 		</tr>
 		<tr class="tabla_total_carro">
 			<td>Total</td>

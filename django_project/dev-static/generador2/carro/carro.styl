@@ -1,4 +1,5 @@
 .lineas_carro
+	margin-top 10px
 	.etiquetas
 		display flex
 		padding 10px 0
@@ -12,6 +13,7 @@
 		.hiden
 			display none
 	.lineas_items
+		border-bottom 1px solid rgba(6, 20, 2, 0.52)
 		.linea
 			display flex
 			position relative
@@ -21,6 +23,7 @@
 		width 15%
 	.detalle_linea
 		width 30%
+		padding-left 60px
 		.nombre
 			text-transform uppercase
 			font-weight 700
@@ -29,13 +32,19 @@
 			font-size 1.2em
 	.precio_linea
 		width 15%
+		text-align center
 	.cantidad_linea
 		width 15%
+		text-align center
 		.cantidad
 			border 1px solid #f4f4f4
 			padding 8px 20px
 		.cant
 			cursor pointer
+			display inline-block
+			color #ccc
+			&:hover
+				color #333
 	.subtotal_linea
 		width 15%
 	.acciones_linea
@@ -55,6 +64,7 @@
 		left 0
 .total_carro
 	margin 30px 0
+	font-family f_imprenta
 	table
 		width 100%
 		font-size 1.1em
@@ -62,5 +72,7 @@
 			td
 				padding 8px
 				border-top 1px solid #f4f4f4
+				&.sin-borde
+					border-top none
 		.tabla_total_carro
 			font-size 1.5em

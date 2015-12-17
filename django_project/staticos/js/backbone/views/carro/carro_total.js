@@ -28,7 +28,9 @@ define([
             this.$el.html(this.template(this.model.toJSON()));
             if (this.model.toJSON().lineas===0) {
                 this.$el.hide();
-            };
+            }else{
+                this.$el.show();
+            }
         }
     });
 

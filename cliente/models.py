@@ -11,6 +11,20 @@ class Cliente(models.Model):
 	genero = models.CharField(max_length=100,blank=True,null=True,choices=GENEROS)
 	dni = models.CharField(max_length=10,blank=True,null=True)
 	telefono = models.CharField(max_length=11,blank=True,null=True)
+
+class CuponesCliente(models.Model):
+	cliente =models.ForeignKey('Cliente')
+	cupon = models.ForeignKey('CuponesDescuentos')
+	fecha_creacion = models.DateTimeField(auto_now_add=True)
+	fecha_uso = models.DateTimeField(blank=True,null=True)
+
+
+class CuponesDescuentos(models.Model):
+	nombre = models.CharField(max_length=100,help_text='El nombre del Cupon, Ejemplo: 2x1')
+	porcentaje_descuento = models.PositiveIntegerField(default=0)
+	dias_duracion = models.PositiveIntegerField(default=0)
+	activo = models.BooleanField(default=True)
+	fecha_creacion =models.DateTimeField(auto_now_add=True)
     
 class Direccion(models.Model):
 	TIPO = (('envio','Direccion de envio'),('facturacion','Direccion de Facturacion'))

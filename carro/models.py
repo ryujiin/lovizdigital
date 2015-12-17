@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from catalogo.models import *
 from django.contrib.auth.models import User as User
 from pedido.models import Pedido
+from cliente.models import CuponesCliente
 
 from decimal import Decimal
 
@@ -29,6 +30,7 @@ class Carro(models.Model):
 	date_created = models.DateTimeField(auto_now_add=True)
 	date_submitted = models.DateTimeField(blank=True,null=True)
 	pedido = models.OneToOneField(Pedido,blank=True,null=True,unique=True)
+	cupon = models.OneToOneField(CuponesCliente,blank=True,null=True)
 	
 	def __unicode__(self):
 		return "Carro de %s - %s" %(self.propietario,self.estado)
@@ -127,6 +129,3 @@ class LineaCarro(models.Model):
 					coincidencias.delete()
 					self.cantidad = coincidencias.cantidad+self.cantidad
 				super(LineaCarro, self).save(*args, **kwargs)
-
-class CuponesDescuentos(models.Model):
-	nombre = models.CharField(max_length=100)

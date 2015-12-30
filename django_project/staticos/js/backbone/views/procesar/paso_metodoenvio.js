@@ -64,9 +64,9 @@ define([
                 collection:new MetodosEnvioCollection(),
             });
             this.$('.metodo_envio_form').slideDown();
-
         },
         mostrar_formulario:function () {
+            debugger;
             var valor = this.$('input[type=radio]:checked').val();
             if (valor === 'add_form') {
                 var nueva_direccion = new NuevaDireccion({

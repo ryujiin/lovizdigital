@@ -27,7 +27,9 @@ define([
             this.$el.html(this.template());
         },
         mostrar_form:function(){
-            this.$el.addClass('activo')
+            this.$('.datos_crear').hide();
+            this.$('form').slideDown();
+
         },
         get_datos:function (e) {
             var valor = e.target.value;

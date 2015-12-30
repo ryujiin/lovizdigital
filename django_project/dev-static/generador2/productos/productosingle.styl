@@ -57,9 +57,10 @@
 	width 90%
 	padding-right 30px
 .imagenes_producto
+	overflow hidden
 	.product-thumbnails
 		display inline-block		
-		width 80px
+		width 15%
 		float left
 		ul
 			list-style none
@@ -70,7 +71,11 @@
 	#imagen_primary
 		display inline-block
 		float left
-		width 89%
+		width 85%
+	#galeria_full
+		display none
+	#galeria_movil
+		display block
 .product-review-links
 	.pr-snippet-wrapper
 		display flex
@@ -145,8 +150,6 @@
 				color green
 			.sin_stock
 				color red
-#galeria_movil
-	display none!important
 
 .product-add-to-cart
 	.addtocart

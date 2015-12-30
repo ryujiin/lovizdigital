@@ -34,71 +34,87 @@
 </script>
 
 <script id="user_formLogin_tlp" type="text/template">
-	<h3>Ingresar a mi cuenta</h3>
-	<fieldset>
-	  <div class="login_facebook">
-	    <a class="btn btn-facebook" href="/login/facebook/">
-	    	<span class="icon-facebook"></span>
-	    	Ingresar con Facebook
-	    </a>
-	  </div>	  
-	<form>
-		  <div class="error_form"></div>
-		  <div class="form-group campo_correo">
-		    <label>*Correo Electronico</label>
-		    <input type="text" class="form-control" data-contenedor="campo_correo"/>	    
-			<div class="error"></div>		    
-		  </div>
-		  <div class="form-group campo_pass">
-		    <label>*Contraseña</label>
-		    <input type="password" class="form-control" data-contenedor="campo_pass"/>
-			<div class="error"></div>		    
-		  </div>
-		  <div class="form-group remember-password">
-		    </div><a href="/">¿Olvido su contraseña?</a>
-		  </div>
-		  <div class="form-group form-row-button">
-		    <button type="submit" value="ingresar" class="btn btn-default">Ingresar</button>
-		  </div>
-	  </form>
-	</fieldset>
+	<div class="panel panel-default">
+		<div class="panel-heading">Ingresar a mi cuenta</div>
+		<div class="panel-body">
+			<div class="login_facebook">
+				<a class="btn btn-facebook" href="/login/facebook/">
+					<span class="icon-facebook"></span>Ingresar con Facebook
+				</a>
+			</div>	  
+			<form>
+				<div class="error_form"></div>
+				<div class="form-group campo_correo">
+					<label>*Correo Electronico</label>
+					<input type="text" class="form-control" data-contenedor="campo_correo"/>
+					<div class="error"></div>
+				</div>
+				<div class="form-group campo_pass">
+					<label>*Contraseña</label>
+					<input type="password" class="form-control" data-contenedor="campo_pass"/>
+					<div class="error"></div>
+				</div>
+				<a href="/">¿Olvido su contraseña?</a>
+				<div class="form-group form-row-button">
+					<button type="submit" value="ingresar" class="btn btn-contraste btn-default">Ingresar</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </script>
 
 <script id="user_formCrear" type="text/template">
-	<h3>Crear una cuenta LovizDC.com</h3>
-	<div class="datos_crear">
-		<p>Y aprovéchate de los beneficios de tener una cuenta:</p>
-		<ul>
-			<li>Ahorra tiempo cuando compres</li>
-			<li>Sigue tus pedidos</li>
-			<li>Incluye varias direcciones de envío</li>
-		</ul>
-		<button class="btn btn-contraste boton-crear">Crear una Cuenta</button>
+	<div class="panel panel-default form_crear_user">
+		<div class="panel-heading">Crear una cuenta LovizDC.com</div>
+		<div class="panel-body">
+			<div class="datos_crear">
+				<p>Y aprovéchate de los beneficios de tener una cuenta:</p>
+				<ul>
+					<li>Ahorra tiempo cuando compres</li>
+					<li>Sigue tus pedidos</li>
+					<li>Incluye varias direcciones de envío</li>
+				</ul>
+				<button class="btn btn-contraste btn-default boton-crear">Crear una Cuenta</button>
+			</div>
+			<div class="error_form"></div>
+			<form>
+				<div class="form-group campo_nombre">
+					<label class="control-label" for="">*Nombre</label>
+					<input type="text" class="form-control" data-contenedor="campo_nombre">
+					<div class="error"></div>
+				</div>
+				<div class="form-group campo_apellido">
+					<label class="control-label" for="">*Apellido</label>
+					<input type="text" class="form-control"  data-contenedor="campo_apellido">
+					<div class="error"></div>			
+				</div>
+				<div class="form-group campo_correo">
+					<label class="control-label" for="">*Correo electronico</label>
+					<input type="email" class="form-control" placeholder="" data-contenedor="campo_correo">
+					<div class="error"></div>			
+				</div>
+				<div class="form-group campo_pass">
+					<label class="control-label" for="">*Contraseña</label>
+					<input type="password" class="form-control"  data-contenedor="campo_pass">
+					<div class="error"></div>			
+				</div>
+			    <button type="submit" value="ingresar" class="btn btn-default">Crear Cuenta</button>
+			</form>
+		</div>
+	</div>	
+</script>
+
+<script id="page_user_Anonimo" type="text/template">
+	<div class="nav-breadcrumb"></div>
+	<div class="container-fluid">
+		<h1>Bienvenido</h1>
+		<div class="row">
+			<div class="columna1 col-md-6">
+
+			</div>
+			<div class="columna2 col-md-6"></div>
+		</div>
 	</div>
-	<div class="error_form"></div>
-	<form>
-		<div class="form-group campo_nombre">
-			<label class="control-label" for="">*Nombre</label>
-			<input type="text" class="form-control" data-contenedor="campo_nombre">
-			<div class="error"></div>
-		</div>
-		<div class="form-group campo_apellido">
-			<label class="control-label" for="">*Apellido</label>
-			<input type="text" class="form-control"  data-contenedor="campo_apellido">
-			<div class="error"></div>			
-		</div>
-		<div class="form-group campo_correo">
-			<label class="control-label" for="">*Correo electronico</label>
-			<input type="email" class="form-control" placeholder="" data-contenedor="campo_correo">
-			<div class="error"></div>			
-		</div>
-		<div class="form-group campo_pass">
-			<label class="control-label" for="">*Contraseña</label>
-			<input type="password" class="form-control"  data-contenedor="campo_pass">
-			<div class="error"></div>			
-		</div>
-	    <button type="submit" value="ingresar" class="btn btn-default">Crear Cuenta</button>		
-	</form>
 </script>
 
 <script id="page_user_tlp" type="text/template">

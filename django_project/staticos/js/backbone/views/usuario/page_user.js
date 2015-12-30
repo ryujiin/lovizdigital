@@ -11,8 +11,10 @@ define([
     '../../views/usuario/manage_cuenta',
     '../../views/usuario/manage_direcciones',
     '../../views/usuario/manage_pedidos',    
-    '../../views/usuario/manage_deseos',    
-], function ($, _, Backbone, swig,BreadView,UserModel,Head,ManageCuenta,ManageDirecciones,ManagePedidos,ManageDeseos) {
+    '../../views/usuario/manage_deseos',
+    '../../views/usuario/user_formCrear',
+    '../../views/usuario/user_formLogin',
+], function ($, _, Backbone, swig,BreadView,UserModel,Head,ManageCuenta,ManageDirecciones,ManagePedidos,ManageDeseos,FormCrear,FormLogin) {
     'use strict';
 
     var PageUserView = Backbone.View.extend({
@@ -29,11 +31,30 @@ define([
         },
 
         render: function () {
-            this.$el.html(this.template(this.model.toJSON()));
+            this.verificar_login();
             this.$el.removeClass();            
             this.addBread();
             this.change_head();
-            this.crear_modales();
+        },
+        verificar_login:function () {
+            if (this.model.id) {
+                this.$el.html(this.template(this.model.toJSON()));
+                this.crear_modales();
+            }else{
+                this.template = swig.compile($('#page_user_Anonimo').html())
+                this.$el.html(this.template(this.model.toJSON()));
+                this.agregarForms();
+            }
+        },
+        agregarForms:function () {
+            var formlogin = new FormLogin({
+                model:this.model,
+            })
+            var formcrear = new FormCrear({
+                model:this.model,
+            })
+            this.$('.columna1').append(formlogin.$el);
+            this.$('.columna2').append(formcrear.$el);
         },
         addBread: function(){
             this.breadVista = new BreadView({el:$('.nav-breadcrumb')});

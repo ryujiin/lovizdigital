@@ -26,4 +26,12 @@ class PageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Page
 		fields = ('id','titulo','descripcion','titulo_activo','front','slug','activo','cuerpo','bloques')
-		
+
+class LinksMenuSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = LinkMenu
+
+class MenuSerializer(serializers.ModelSerializer):
+	links = LinksMenuSerializer(many=True)
+	class Meta:
+		model = Menu

@@ -4,8 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'swig'
-], function ($, _, Backbone, swig) {
+    'swig',
+    '../../views/productosingle/estrellas',    
+], function ($, _, Backbone, swig,EstrellasViews) {
     'use strict';
 
     var ProductosListaView = Backbone.View.extend({
@@ -28,6 +29,10 @@ define([
 
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
+            var estrellas = new EstrellasViews({
+                el:this.$('.estrellas')
+            })
+            estrellas.render(this.model.toJSON().valoracion);
         },
         visibilidad: function () {
             if (this.model.toJSON().visible===false) {

@@ -11,18 +11,19 @@ rosado = #F7727A
 				width 100%
 		.imagen_lista
 			position relative
-			height 175px
-			img
-				position absolute				
-				left 0
+			img				
 				opacity 0
 				transition all 0.3s linear
 				&:first-child
 					opacity 1
+				&:last-child
+					position absolute				
+					left 0
+					top 0
 			&:hover
 				img:first-child
 					opacity 0
-				img:last-child
+				img:last-child				
 					opacity 1		
 		.nombre_productos
 			font-family f_imprenta

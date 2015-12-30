@@ -60,3 +60,21 @@ class ImageCarrusel(models.Model):
 	bloque = models.ForeignKey(Bloque,blank=True,related_name='imagenes_carrusel')
 	orden = models.PositiveIntegerField(default=0)
 	imagen = models.ImageField(upload_to='bloque/carrusel')
+
+class Menu(models.Model):
+	titulo = models.CharField(max_length=100,blank=True)
+	estilo = models.CharField(max_length=100,blank=True)
+	seccion = models.CharField(max_length=100,blank=True,help_text='El id donde se colocara')
+	paginas = models.ManyToManyField(Page,blank=True)
+	activo = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return self.titulo
+
+class LinkMenu(models.Model):
+	nombre = models.CharField(max_length=100,blank=True)
+	menu = models.ForeignKey(Menu, related_name='links')
+	icono = models.CharField(max_length=100,blank=True)
+	link = models.CharField(max_length=100,blank=True)
+	estilo = models.CharField(max_length=100,blank=True)
+

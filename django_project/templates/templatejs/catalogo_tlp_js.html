@@ -6,15 +6,16 @@
 	<div class="catalogo container-fluid">		
 		<div class="nav-breadcrumb">
 		</div>
-		<div class="row">
-			<div class="section-refinamiento col-md-3">
+		<button class="btn btn-default refinar">Refinar por</button>
+		<div class="row">			
+			<div class="section-refinamiento col-sm-3 ">
 				<aside class="js-panel from-right">
 			      <div id="refinamientoCategoria" class="refinement Categoria"></div>
 			      <div class="refinement Color">
 			      </div>
 			    </aside>
 			</div>
-			<div class="section-main search-result-wrapper col-md-9">
+			<div class="section-main search-result-wrapper col-sm-9">
 				<div class="titulo-categoria text-center">
 			    </div>
 			 	<div class="resultados lista-productos row"></div>	
@@ -91,6 +92,7 @@
 	      {%endif%}
 	      <div class="current_precio"><span>S/. {{precio_venta}}</span></div>
 	    </div>
+	    <div class="estrellas"></div>
 	</a>
 </script>
 

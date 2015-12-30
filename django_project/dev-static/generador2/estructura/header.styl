@@ -22,6 +22,7 @@
 	text-transform uppercase
 	line-height 1.1
 .header-utility
+	display none
 	#header-utility-shipping
 		h6
 			font-size 1em
@@ -37,23 +38,68 @@
 	padding 0 15px 0 0
 	border-bottom 1px solid #f4f4f4
 	box-shadow 3px 3px 5px rgba(0,0,0,0.2)
-	height 5.4em
+	height 0
 	max-width 100%
+	.primary-logo
+		display none
 	.right-nav-btns
+		display none
 		position absolute
 		right 0
 		height 100%
 		top 0
+.header-mobil
+	font-family f_imprenta
+	position relative
+	padding 0 15px
+	text-transform uppercase
+	a
+		padding 19px 10px
+		text-align center
+		display inline-block
+		.texto
+			display none
+		&:hover
+			text-decoration none
+		&.logo-mobil
+			position absolute
+			left 45%
+			h2
+				padding 0
+				margin 0
+		&.cuenta-mobil
+			float right
+		&.carro-mobil
+			float right										
 #navigation
-	font-family f_imprenta	
+	font-family f_imprenta
+	position absolute
+	top 0
+	left 0
+	background #fff
+	width 80%
+	max-width 360px
+	height 100vh
+	padding-bottom 145px
+	overflow-y scroll
+	transition transform .3s
+	transform translate3d(-100%,0,0)
+	padding 0
+	&.is_activo
+		transform translate3d(0,0,0)
 	.primary-nav
 		ul
 			li
+				float none
+				border-bottom 1px solid #f4f4f4
+				&:hover
+					background #f5f5f5
 				a
 					font-size 18px
 					text-transform uppercase
 					color #111
-					padding 28px 15px			
+					padding 10px 15px	
+					letter-spacing 2px		
 #mini-cart
 	float right
 	line-height 5pc

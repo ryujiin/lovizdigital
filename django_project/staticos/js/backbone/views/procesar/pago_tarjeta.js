@@ -6,8 +6,9 @@ define([
     'backbone',
     'swig',
     'stripe',
-    'carro'
-], function ($, _, Backbone, swig,Stripe,CarroModel) {
+    'carro',
+    '../../views/app/loader_full'
+], function ($, _, Backbone, swig,Stripe,CarroModel,LoaderFull) {
     'use strict';
 
     var LineasResumenView = Backbone.View.extend({
@@ -103,7 +104,7 @@ define([
             }
         },
         pago_Stripe:function (nombre,tarjeta,mes,year,cvc) {
-            var loader = new Loader
+            this.loader = new LoaderFull();
             var self = this;
             var public_key = self.stripe_key
             //comenzamos con stripe_key
@@ -113,7 +114,7 @@ define([
                 var $form = $('#pagar_tarjeta');
                 if (response.error) {
                     // Show the errors on the form
-                    debugger;
+                    self.loader.remove()
                     $form.find('.payment-errors').text(response.error.message);
                     $form.find('button').prop('disabled', false);
                 } else {
@@ -126,10 +127,11 @@ define([
                     $.post( "/pago/stripe/", {
                         stripeToken:token,
                         carro : carro.id,
-                    }).done(function (data) {
+                    }).done(function (data) {                        
                         if (data.status==='paid') {
                             window.location="/felicidades/"+data.pedido+"/";
                         };
+                        self.loader.remove();
                     });
                 }
             };

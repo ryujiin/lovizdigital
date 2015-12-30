@@ -29,6 +29,14 @@ class PageViewsets(viewsets.ReadOnlyModelViewSet):
 			queryset = queryset.filter(slug=slug)
 		return queryset
 
+class MenuViewsets(viewsets.ReadOnlyModelViewSet):
+	serializer_class = MenuSerializer
+
+	def get_queryset(self):
+		queryset = Menu.objects.filter(activo=True).order_by('-pk')
+		return queryset
+
+
 class TiendaView(TemplateView):
 	template_name = "index.html"
 

@@ -148,6 +148,8 @@ define([
                 this.direccion.save().done(function (data) {
                     self.collection.add(self.direccion);
                     $('.form_addDirec').slideUp();
+                    $('.metodo_envio_form').slideDown();
+                    self.model.set('direccion_envio',data.id);
                 });
             };
             

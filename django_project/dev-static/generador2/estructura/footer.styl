@@ -2,7 +2,10 @@
 	background #f4f4f4
 	padding-top 3em
 	.footer-email
-		width 360px
+		max-width 360px
+		margin 0 auto
+	#submit_email_wrapper
+		min-height 100px
 	#submit_form_email
 		position relative		
 		.email_input
@@ -15,8 +18,7 @@
 				color #111
 		.email_submit
 			position absolute
-			right 0			
-			width 10%
+			right 0	
 			button
 				background #111
 				border none
@@ -26,7 +28,14 @@
 				&:hover
 					background rgba(0,0,0,.6)
 	.footer-block-menu
+		.titulo-footer-menu
+			font-size 1.1em
+			border-bottom 1px solid #ccc
+			cursor pointer
+			margin 0 0 10px
+			padding 10px 0 5px
 		.nav
+			display none
 			li
 				margin-bottom 5px
 				a
@@ -35,6 +44,8 @@
 					&:hover
 						text-decoration underline
 						background none
+			&.activo
+				display block
 	.bloque_social
 		overflow hidden
 		ul			

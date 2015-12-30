@@ -1,0 +1,1 @@
+define(["jquery","underscore","backbone","swig"],function(e,t,i,n){"use strict";var r=i.View.extend({template:n.compile(e("#loader_min").html()),tagName:"div",id:"",className:"progrecionBar",events:{},initialize:function(){this.render()},render:function(){this.$el.html(this.template()),e("body").append(this.$el),this.$el.fadeIn("fast")}});return r});

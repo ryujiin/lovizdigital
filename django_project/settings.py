@@ -137,7 +137,7 @@ STATICFILES_DIRS = (
     location('staticos'),
 )
 
-STATICFILES_STORAGE = "require.storage.OptimizedStaticFilesStorage"
+STATICFILES_STORAGE = "require.storage.OptimizedManifestStaticFilesStorage"
 
 #STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
 

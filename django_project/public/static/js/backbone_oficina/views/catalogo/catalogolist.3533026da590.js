@@ -1,0 +1,1 @@
+define(["jquery","underscore","backbone","swig","../../views/catalogo/productoLista"],function(e,i,n,t,a){"use strict";var o=n.View.extend({tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){this.collection.forEach(this.addOne,this)},addOne:function(e){var i=new a({model:e});this.$("#catalgo_list").append(i.$el)}});return o});

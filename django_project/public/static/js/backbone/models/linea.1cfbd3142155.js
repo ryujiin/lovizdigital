@@ -1,0 +1,1 @@
+define(["underscore","backbone"],function(t,n){"use strict";var e=n.Model.extend({urlRoot:"/api/carro/lineas/",url:function(){var t=this.urlRoot;return this.isNew()?t:t+("/"==t.charAt(t.length-1)?"":"/")+this.id+"/"},initialize:function(){},defaults:{},validate:function(){},parse:function(t){return t}});return e});

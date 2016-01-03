@@ -7,8 +7,9 @@ define([
     'swig',
     '../../views/procesar/pago_tarjeta',
     '../../views/procesar/pago_paypal',
+    '../../views/procesar/pago_contraentrega',
     'bootstrap',
-], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal) {
+], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal,ContraEntrega) {
     'use strict';
 
     var PasoPagoView = Backbone.View.extend({
@@ -36,8 +37,8 @@ define([
             this.$el.html(this.template());
             this.addTarjeta();            
             this.addPaypal();
+            this.addContraEntrega();
             this.ver_estado();
-
         },
         ver_estado:function () {
             var paso = this.model.toJSON().paso_actual;
@@ -69,6 +70,12 @@ define([
         addPaypal:function () {
             this.vistaPaypal = new PagoPaypal({
                 el:this.$('#paypal'),
+                model:this.model,
+            })
+        },
+        addContraEntrega:function () {
+            this.vistaContraEntrega = new ContraEntrega({
+                el:this.$('#entrega'),
                 model:this.model,
             })
         },

@@ -10,7 +10,7 @@ define([
 ], function ($, _, Backbone, swig,FormLogin,FormCrear) {
     'use strict';
 
-    var PasoIdentificarView = Backbone.View.extend({
+    var PagoContraentregaView = Backbone.View.extend({
 
         template: swig.compile($('#paso_identificar_tlp').html()), 
 
@@ -51,5 +51,5 @@ define([
         },
     });
 
-    return PasoIdentificarView;
+    return PagoContraentregaView;
 });

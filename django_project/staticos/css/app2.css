@@ -597,7 +597,7 @@ h2 .linea {
   border-bottom: 1px solid #f4f4f4;
 }
 #navigation .primary-nav ul li:hover {
-  background: #f5f5f5;
+  background: #f4f4f4;
 }
 #navigation .primary-nav ul li a {
   font-size: 18px;
@@ -1501,10 +1501,30 @@ h2 .linea {
     height: 5.4em;
   }
   header .header-global .primary-logo {
-    display: block;
+    display: inline-block;
+    float: left;
+    margin: 20px;
   }
   header .header-global .right-nav-btns {
     display: block;
+  }
+  header #navigation {
+    -webkit-transform: none;
+    -moz-transform: none;
+    -o-transform: none;
+    -ms-transform: none;
+    transform: none;
+    position: initial;
+    height: initial;
+    overflow: auto;
+    max-width: inherit;
+    display: inline-block;
+    width: inherit;
+  }
+  header #navigation .primary-nav ul li {
+    float: left;
+    border-bottom: none;
+    line-height: 66px;
   }
   #wrapper {
     padding-top: 93pt;

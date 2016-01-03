@@ -39,6 +39,7 @@ define([
             var link = e.currentTarget.pathname;
             Backbone.history.navigate(link, {trigger:true});
             $('#navigation').removeClass('is_activo');
+            $('body').animate({scrollTop:0}, 'slow');
         },
         no_navegar:function (e) {
             e.preventDefault();

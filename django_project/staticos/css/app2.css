@@ -5,6 +5,12 @@ body {
   line-height: 1.4;
   color: #333;
 }
+a {
+  color: #111;
+}
+a:hover {
+  color: #111;
+}
 .ajax_full {
   width: 100%;
   height: 100%;
@@ -319,6 +325,12 @@ label .requerido {
 }
 .form-row {
   margin-bottom: 10px;
+}
+.breadcrumb {
+  font-size: 0.9em;
+}
+.breadcrumb .last {
+  color: #999;
 }
 #wrapper {
   background: #fff;
@@ -864,11 +876,11 @@ h2 .linea {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  -webkit-transition: all 0.3s linear;
-  -moz-transition: all 0.3s linear;
-  -o-transition: all 0.3s linear;
-  -ms-transition: all 0.3s linear;
-  transition: all 0.3s linear;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  -o-transition: all 0.1s linear;
+  -ms-transition: all 0.1s linear;
+  transition: all 0.1s linear;
 }
 .lista-productos .productos .imagen_lista img:first-child {
   opacity: 1;
@@ -903,6 +915,11 @@ h2 .linea {
   text-transform: uppercase;
   font-weight: 400;
 }
+.lista-productos .productos .estrellas {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
 .lista-productos .productos .precios div {
   display: inline-block;
   font-family: 'BenchNine', sans-serif;
@@ -912,6 +929,14 @@ h2 .linea {
   margin: 0 5px;
   text-decoration: line-through;
   color: #f7727a;
+}
+.lista-productos .productos:hover a {
+  text-decoration: none;
+}
+.lista-productos .productos:hover .estrellas {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }
 .producto-single .product-name {
   margin: 5px 0 0;

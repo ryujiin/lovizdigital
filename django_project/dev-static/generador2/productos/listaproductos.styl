@@ -13,7 +13,7 @@ rosado = #F7727A
 			position relative
 			img				
 				opacity 0
-				transition all 0.3s linear
+				transition all 0.1s linear
 				&:first-child
 					opacity 1
 				&:last-child
@@ -35,6 +35,8 @@ rosado = #F7727A
 					font-size .8em
 					text-transform uppercase
 					font-weight 400
+		.estrellas
+			opacity 0
 		.precios
 			div
 				display inline-block
@@ -44,3 +46,8 @@ rosado = #F7727A
 				margin 0 5px
 				text-decoration line-through
 				color rosado
+		&:hover
+			a
+				text-decoration none
+			.estrellas
+				opacity 1

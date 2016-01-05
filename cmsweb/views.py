@@ -40,3 +40,5 @@ class MenuViewsets(viewsets.ReadOnlyModelViewSet):
 class TiendaView(TemplateView):
 	template_name = "index.html"
 
+class VerificarView(TemplateView):
+	template_name = "veri.html"

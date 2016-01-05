@@ -86,7 +86,10 @@ class DireccionViewsets(viewsets.ModelViewSet):
 		
 class SuscritoViewset(viewsets.ModelViewSet):
 	serializer_class = SuscritoSerializer
-	queryset = Suscrito.objects.all()
+
+	def get_queryset(self):
+		queryset = Suscrito.objects.filter(email='enrique@gmail.com')
+		return queryset
 
 class MayoristaViewset(viewsets.ModelViewSet):
 	permission_classes = (IsAdminUser,)

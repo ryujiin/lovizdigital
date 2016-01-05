@@ -26,6 +26,7 @@ define([
         initialize: function () {
             this.render();
             this.poner_zoom();
+            this.primer_thum();
         },
 
         render: function () {
@@ -36,12 +37,17 @@ define([
         },
         cambiar_zoom:function (e) {
             e.preventDefault();
+            this.$('.thumb img').removeClass('viendo');
+            $(e.target).addClass('viendo');
             var url = e.target.dataset.imagen;
             this.$('#imagen_primary').trigger('zoom.destroy');
             this.$('#imagen_primary').empty();
             var img = '<img src="'+url+'" alt="">';
             this.$('#imagen_primary').html(img);
             this.poner_zoom();
+        },
+        primer_thum:function () {
+            this.$('.thumb:first img').addClass('viendo');
         }
     });
 

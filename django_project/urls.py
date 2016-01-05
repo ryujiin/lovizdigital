@@ -5,11 +5,11 @@ import settings
 
 from catalogo import views
 from carro.views import LineasViewsets,CarroViewsets
-from cmsweb.views import CarruselViewsets,PageViewsets,MenuViewsets
+from cmsweb.views import CarruselViewsets,PageViewsets,MenuViewsets,VerificarView
 from utiles.views import ColorViewsets
 from pedido.views import PedidoViewSet,MetodoEnvioViewSet
 from ubigeo.views import RegionViewset
-from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,ComentarioImagenViewSet
+from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,ComentarioImagenViewSet,SuscritoViewset
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -26,6 +26,7 @@ router.register(r'cliente/direcciones',DireccionViewsets,'direcciones')
 router.register(r'metodos_envio',MetodoEnvioViewSet,'mentodos_envios')
 router.register(r'comentarios',ComentarioViewSet,'comentarios')
 router.register(r'comentarioimgs',ComentarioImagenViewSet,'comentarios_imagenes')
+router.register(r'cliente/suscrito',SuscritoViewset,'suscritos')
 router.register(r'oficina/mayoristas',MayoristaViewset,'mayoristas')
 router.register(r'oficina/catalogo',views.CatalogoOficinaViewsets,'Catalogo_oficina')
 
@@ -44,6 +45,7 @@ urlpatterns = [
     url(r'^get_stripe_key/$','pago.views.get_stripe_key',name='get_key'),    
     url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),    
     url(r'^hardcode/get/paypal/', include('paypal.standard.ipn.urls')),
+    url(r'^zohoverify/verifyforzoho.html/$',VerificarView.as_view(),name='verificar'),    
     #url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),
     #url(r'^pago/get/paypal/', include('paypal_express_checkout.urls')),
     url(r'^oficina/',include('oficina.urls')),    

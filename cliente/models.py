@@ -18,7 +18,6 @@ class CuponesCliente(models.Model):
 	fecha_creacion = models.DateTimeField(auto_now_add=True)
 	fecha_uso = models.DateTimeField(blank=True,null=True)
 
-
 class CuponesDescuentos(models.Model):
 	nombre = models.CharField(max_length=100,help_text='El nombre del Cupon, Ejemplo: 2x1')
 	porcentaje_descuento = models.PositiveIntegerField(default=0)
@@ -70,6 +69,7 @@ class Suscrito(models.Model):
 	usuario = models.BooleanField(default=True)
 	cliente = models.ForeignKey(Cliente,blank=True,null=True)
 	user = models.ForeignKey(User,blank=True,null=True)
+	activo = models.BooleanField(default=True)
 
 class Favorito(models.Model):
 	usuario = models.OneToOneField(User,null=True,blank=True,unique=True)

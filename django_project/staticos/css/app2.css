@@ -1489,6 +1489,47 @@ h2 .linea {
 .pt_account a {
   font-size: 0.9em;
 }
+.carrusel_producto {
+  position: relative;
+}
+.carrusel_producto h2 {
+  font: italic 25px Georgia;
+  text-transform: none;
+  text-align: center;
+  position: relative;
+}
+.carrusel_producto h2 .line {
+  height: 2px;
+  background: #111;
+  top: 10px;
+  left: -10px;
+  display: inline-block;
+  width: 10px;
+  margin-bottom: 6px;
+}
+.carrusel_producto h3 {
+  color: #868383;
+  font-size: 2em;
+  text-align: center;
+  margin: 10px;
+}
+.carrusel_producto .carruseles {
+  width: 80%;
+  margin: 0 auto;
+}
+.carrusel_producto .owl-pagination {
+  display: none;
+}
+.carrusel_producto .owl-theme .owl-controls .owl-buttons div {
+  position: absolute;
+  top: 40%;
+}
+.carrusel_producto .owl-buttons .owl-prev {
+  left: -45px;
+}
+.carrusel_producto .owl-buttons .owl-next {
+  right: -45px;
+}
 .page_felicidades .titulo {
   font-size: 4.5em;
   font-weight: 400;

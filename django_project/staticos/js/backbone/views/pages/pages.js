@@ -10,8 +10,11 @@ define([
     '../../../collections/pages',
     '../../../models/page',
     'paginas',
-    '../../pages/bloque'
-], function ($, _, Backbone, swig,Head,PagesCollection,PaginaModel,PaginasTotal,BloqueView) {
+    '../../pages/bloque',
+    '../../pages/carrusel_producto',
+    'productosTotal',
+    '../../../collections/productos'
+], function ($, _, Backbone, swig,Head,PagesCollection,PaginaModel,PaginasTotal,BloqueView,CarruselProducto,ProductosTotal,Productos) {
     'use strict';
 
     var PageView = Backbone.View.extend({
@@ -42,7 +45,8 @@ define([
                 this.rellenar()
             }else{
                 this.buscar_datos();
-            }
+            };
+            this.addTopSeller();
         },
         buscar_datos:function (slug) {
             if (slug) {
@@ -76,8 +80,19 @@ define([
                 className:modelo.estilo,
                 model:modelo,
             })
+        },
+        addTopSeller:function () {
+            var productos = new Productos();            
+            var carrusel_producto = new CarruselProducto({
+                collection : productos,
+            });
+            this.$('#middle').append(carrusel_producto.$el);
+            productos.fetch({
+                data:$.param({limite:10})
+            }).done(function () {
+                carrusel_producto.add_Carrusel();
+            })
         }
-
     });
 
     var vista = new PageView();

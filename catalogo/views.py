@@ -19,11 +19,10 @@ class CatalogoViewsets(viewsets.ReadOnlyModelViewSet):
 		categoria = self.request.query_params.get('categoria', None)
 		slug = self.request.query_params.get('slug',None)
 		limite = self.request.query_params.get('limite',None)
+		if limite:
+			queryset = queryset[:limite]
 		if categoria:
-			if limite:
-				queryset = queryset.filter(categorias__slug=categoria)[:limite]
-			else:
-				queryset = queryset.filter(categorias__slug=categoria)
+			queryset = queryset.filter(categorias__slug=categoria)
 		if slug:
 			queryset = queryset.filter(slug=slug)
 		return queryset

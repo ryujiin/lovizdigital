@@ -35,7 +35,7 @@ define([
         },
         add_Carrusel:function () {
             this.$('.lista-productos').owlCarousel({
-                items : 5,
+                items : 4,
                 autoPlay:true,
                 navigation:true,
             });

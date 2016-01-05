@@ -997,9 +997,11 @@ h2 .linea {
   margin-bottom: 2em;
 }
 #producto-asociado {
-  border-left: 1px solid #f4f4f4;
-  -webkit-box-shadow: 2px 1px 6px rgba(0,0,0,0.5);
-  box-shadow: 2px 1px 6px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+#producto-asociado h3 span {
+  display: block;
+  font-size: 0.6em;
 }
 #producto_detalles {
   padding-top: 2em;

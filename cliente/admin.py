@@ -7,9 +7,13 @@ class ComentarioAdmin(admin.ModelAdmin):
 class DireccionAdmin(admin.ModelAdmin):
 	list_display = ('id','usuario','departamento','provincia','distrito','direccion')
 
+class SuscritoAdmin(admin.ModelAdmin):
+	list_display = ('id', 'email','activo')
+
 # Register your models here.
 admin.site.register(Cliente)
 admin.site.register(Direccion,DireccionAdmin)
 admin.site.register(Comentario,ComentarioAdmin)
 admin.site.register(Favorito)
 admin.site.register(Mayorista)
+admin.site.register(Suscrito,SuscritoAdmin)

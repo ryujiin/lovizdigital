@@ -54,7 +54,6 @@ define([
         catalogo:function (slug) {
             $('body').removeClass();            
             $('body').addClass('catalogo');
-            console.log(slug);
             var coincidencia = Categorias.findWhere({slug:slug});
             if (coincidencia) {
                 CatalogoPage.render(coincidencia,Categorias);

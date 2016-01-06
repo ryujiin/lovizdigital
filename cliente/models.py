@@ -62,7 +62,10 @@ class Comentario(models.Model):
 class ComentarioImagen(models.Model):
 	comentario = models.ForeignKey(Comentario,blank=True,null=True,related_name='fotos_coment')
 	foto = models.ImageField(upload_to='comentario',blank=True,null=True,max_length=250)    
-    
+
+import sendgrid
+from django.conf import settings
+
 class Suscrito(models.Model):
 	email = models.CharField(max_length=100,blank=True,null=True)
 	suscrito = models.BooleanField(default=True)
@@ -70,6 +73,22 @@ class Suscrito(models.Model):
 	cliente = models.ForeignKey(Cliente,blank=True,null=True)
 	user = models.ForeignKey(User,blank=True,null=True)
 	activo = models.BooleanField(default=True)
+
+	def save(self, *args, **kwargs):
+		super(Suscrito, self).save(*args, **kwargs)
+		sg = sendgrid.SendGridClient(settings.SENDGRID_API_KEY)
+		message = sendgrid.Mail()
+		message.add_to(self.email)
+		message.set_subject('Bienvenida a Loviz DelCarpio. Descuento para tu proxima compra')		
+		message.set_text('1')
+		message.set_html('2')
+		message.set_from('Luis Lopez <luis_lopez@lovizdc.com>')
+
+		message.add_filter('templates', 'enable', '1')
+		message.add_filter('templates', 'template_id', '8b156242-0ca1-4f8f-a124-816297cbb2c1')
+
+		status, msg = sg.send(message)
+
 
 class Favorito(models.Model):
 	usuario = models.OneToOneField(User,null=True,blank=True,unique=True)

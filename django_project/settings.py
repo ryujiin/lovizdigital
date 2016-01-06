@@ -191,6 +191,9 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY = config.SENDGRID_API_KEY
+
 try:
     from .local import *
 except ImportError:

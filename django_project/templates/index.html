@@ -22,7 +22,8 @@
     <link rel="stylesheet" href="{% static "css/owl.theme.css" %}" />
     <link rel="stylesheet" href="{% static "css/owl.transitions.css" %}" />
     <link rel="stylesheet" href="{% static "css/app2.css" %}" />
-    
+    <script type='text/javascript' src='//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js' data-shr-siteid='ceb989257c2c2a1e2055719755e1a066' data-cfasync='false' async='async'></script>
+
 </head>
 <body id="default" class="mobile-layout">
 	<div id="header">
@@ -35,14 +36,14 @@
             <span class="icon-menu"></span>
             <span class="texto">Menu</span>
           </a>          
+
+          <a href="/carro/" class="carro-mobil mini-cart">
           
           <a href="/usuario/perfil/" class="cuenta-mobil link" >
             <span class="icon-user"></span>
             <span class="texto">Cuenta</span>
           </a>
-          <a href="/carro/" class="carro-mobil">
-            <span class="icon-shopping-cart"></span>
-            <span class="texto">Carro</span>
+          
           </a>
         </section>
         <section class="header-utility box_contraste container-fluid">
@@ -68,18 +69,19 @@
               <div id="navigation" class="">
                 <nav class="primary-nav">
                   <ul class="nav nav-pills">
-                    <li><a href="/catalogo/mujer/" class="link">Mujer</a></li>
-                    <li><a href="/catalogo/hombre/" class="link">Hombre</a></li>
+                    <li><a href="/catalogo/sandalias-mujer/" class="link">Sandalias</a></li>
+                    <li><a href="/catalogo/pantuflas-mujer/" class="link">Pantuflas</a></li>
+                    <!--
                     <li><a href="/catalogo/nino/" class="link">Niños</a></li>
                     <li><a href="/catalogo/nina/" class="link">Niñas</a></li>
+                  -->
                     <li><a href="/catalogo/ofertas/" class="link">Ofertas</a></li>
                     <li><a href="/catalogo/novedades/" class="link">Novedades</a></li>
                   </ul>
                 </nav>
               </div>
               <div class="right-nav-btns">
-                <div id="mini-cart">
-                  <div class="mini-cart-total"><span class="icono icon-shopping-cart">#</span><span class="mini-cart-label"></span><span class="mini-cart-empty">(0)</span></div>
+                <div class="mini-cart">                  
                 </div>
                 <div id="mini-Listas"></div>
                 <div id="nav-sidebar-user" class="nav-sidebar top_side">

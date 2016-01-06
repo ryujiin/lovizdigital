@@ -4,12 +4,19 @@
 			a
 				.texto
 					display inline
+	.mini-cart
+		padding-right 20px!important
+		.mini-cart-label-movil
+			display inline-block
+		.mini-cart-items
+			top 18px		
 	.producto-single
 		.imagenes_producto
 			#galeria_full
 				display block
 			#galeria_movil
 				display none!important
+	
 @media (min-width: 768px)
 	.catalogo
 		.refinar
@@ -52,6 +59,38 @@
 						float left
 						border-bottom none
 						line-height 66px
+	.mini-cart
+		float right
+		line-height 5pc
+		z-index 200
+		padding 0 25px
+		height 100%
+		font-family f_imprenta
+		color #000
+		letter-spacing 1px
+		&:hover
+			opacity 0.7
+			cursor pointer
+			background #f4f4f4
+		.mini-cart-label
+			display inline-block
+		.mini-cart-label-movil		
+			display none
+		.mini-cart-container .icon-cart-stripe
+			font-size 1.4em
+			vertical-align text-bottom
+		.mini-cart-items
+			color #fff
+			width: 20px;
+			display: inline-block;
+			line-height: 20px;
+			text-align: center;
+			border-radius: 10px;
+			position: absolute;
+			right: 10px;
+			top: 20px;
+			font-weight: 700;
+			font-size: .8em;
 	.lista-productos 
 		.productos 
 			figure

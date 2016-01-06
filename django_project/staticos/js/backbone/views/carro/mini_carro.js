@@ -9,7 +9,7 @@ define([
     'use strict';
 
     var MiniCarroView = Backbone.View.extend({
-        el:$("#mini-cart"),
+        el:$(".mini-cart"),
         template: swig.compile($('#mini_carro_template').html()),
 
         tagName: 'div',

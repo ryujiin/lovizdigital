@@ -24,9 +24,9 @@ require.config({
         'bootstrap':{
             deps:['jquery'],
         },
-        'stripe':{
-            exports: 'Stripe',
-        },
+        //'stripe':{
+          //  exports: 'Stripe',
+       // },
     },
     paths: {
         jquery: 'vendor/bower_components/jquery/dist/jquery',

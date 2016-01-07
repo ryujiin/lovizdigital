@@ -38,8 +38,7 @@ require.config({
         zoom: 'vendor/bower_components/jquery-zoom/jquery.zoom',
         storage: 'vendor/bower_components/jQuery-Storage-API/jquery.storageapi',
         coockie: 'vendor/coockie/jquery.cookie',
-        //stripe:'//js.stripe.com/v2/?1',
-        stripe: 'vendor/stripe/stripe'
+        stripe:'//js.stripe.com/v2/?1',
     }
 });
 

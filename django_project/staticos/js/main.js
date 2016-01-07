@@ -24,9 +24,9 @@ require.config({
         'bootstrap':{
             deps:['jquery'],
         },
-        //'stripe':{
-          //  exports: 'Stripe',
-       // },
+        'stripe':{
+            exports: 'Stripe',
+        },
     },
     paths: {
         jquery: 'vendor/bower_components/jquery/dist/jquery',
@@ -38,7 +38,7 @@ require.config({
         zoom: 'vendor/bower_components/jquery-zoom/jquery.zoom',
         storage: 'vendor/bower_components/jQuery-Storage-API/jquery.storageapi',
         coockie: 'vendor/coockie/jquery.cookie',
-        //stripe:'//js.stripe.com/v2/?1',
+        stripe:'//js.stripe.com/v2/?1',
         //stripe: 'vendor/stripe/stripe'
     }
 });

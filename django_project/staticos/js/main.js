@@ -58,7 +58,19 @@ require([
         });
     })
 
+    function fixDiv() {
+        if ($(window).scrollTop()> 34) {
+            $('#header').addClass('fijo');
+        }else{
+            $('#header').removeClass('fijo');
+        };
+
+    }
+    $(window).scroll(fixDiv);
+    fixDiv();
+
     $(function(){
+
         $.ajaxSetup({
             crossDomain: true,
             beforeSend: function(xhr, settings) {

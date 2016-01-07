@@ -23,8 +23,13 @@ define([
 
         render: function (titulo,descripcion) {
             this.$('title').empty().append(titulo);
-            this.$('meta[name=description]').remove();
-            this.$el.append('<meta name="description" content="'+descripcion+'">')
+            if (descripcion) {
+                this.$('meta[name=description]').remove();
+                this.$el.append('<meta name="description" content="'+descripcion+'">')    
+            }else{
+                this.$('meta[name=description]').remove();
+                this.$el.append('<meta name="description" content="'+descripcion+'">')
+            }                        
         },
     });
 

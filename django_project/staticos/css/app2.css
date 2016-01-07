@@ -1583,6 +1583,15 @@ h2 .linea {
   #footer .footer-block-menu .nav {
     display: block;
   }
+  #header {
+    position: absolute;
+  }
+  #header.fijo {
+    position: fixed !important;
+  }
+  #header.fijo .header-utility {
+    display: none;
+  }
   header .header-mobil {
     display: none;
   }

@@ -23,7 +23,7 @@ location = lambda x: os.path.join(
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -209,6 +209,7 @@ AUTHENTICATION_BACKENDS = (
 
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY = config.SENDGRID_API_KEY
+
 
 try:
     from .local import *

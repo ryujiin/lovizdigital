@@ -184,6 +184,21 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/usuario/perfil/'
 SOCIAL_AUTH_LOGIN_URL = '/ingresar/'
 
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.social_auth.associate_by_email', 
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+    'cliente.pipeline.save_profile_picture', #save facebook profile image,
+)
+
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.Facebook2AppOAuth2',
     'social.backends.facebook.Facebook2OAuth2',

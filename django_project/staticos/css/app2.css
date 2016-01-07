@@ -563,7 +563,9 @@ h2 .linea {
 }
 .header-mobil a.logo-mobil {
   position: absolute;
-  left: 45%;
+  left: 0;
+  padding: 14px;
+  width: 100%;
 }
 .header-mobil a.logo-mobil h2 {
   padding: 0;

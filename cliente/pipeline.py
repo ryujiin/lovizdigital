@@ -12,7 +12,10 @@ def save_profile_picture(strategy, user, response, details,is_new=False,*args,**
 		except HTTPError:
 			pass
 		else:
-			profile = Cliente.objects.get(usuario=user)
+			try:
+				profile = Cliente.objects.get(usuario=user)
+			except Cliente.DoesNotExist:
+				profile = Cliente(usuario=user)
 			profile.foto.save('{0}_social.jpg'.format(user.username),
 									ContentFile(response.content))
 			profile.save()

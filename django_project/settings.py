@@ -175,16 +175,6 @@ SITE_NAME = 'http://lovizdc.com'
 
 #API KEYS LOGIN SOCIAL
 #FACEBOOK
-
-SOCIAL_AUTH_FACEBOOK_KEY = config.SOCIAL_AUTH_FACEBOOK_KEY
-SOCIAL_AUTH_FACEBOOK_SECRET = config.SOCIAL_AUTH_FACEBOOK_SECRET
-
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/usuario/perfil/'
-SOCIAL_AUTH_LOGIN_URL = '/ingresar/'
-
-
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
     'social.pipeline.social_auth.social_uid',
@@ -198,6 +188,17 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details',
     'cliente.pipeline.save_profile_picture', #save facebook profile image,
 )
+
+SOCIAL_AUTH_FACEBOOK_KEY = config.SOCIAL_AUTH_FACEBOOK_KEY
+SOCIAL_AUTH_FACEBOOK_SECRET = config.SOCIAL_AUTH_FACEBOOK_SECRET
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/usuario/perfil/'
+SOCIAL_AUTH_LOGIN_URL = '/ingresar/'
+
+
+
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.Facebook2AppOAuth2',

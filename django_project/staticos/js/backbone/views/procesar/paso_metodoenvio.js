@@ -27,12 +27,14 @@ define([
             'change input[name=selecion_direccion]':'mostrar_formulario',
             'change #departamentos':'add_provincias',
             'change #provincias':'add_distritos',
+            'click input[name=selecion_metodo]':'agregar_metodo',
             'click .btn-next':'siguiente_paso',
         },
 
         initialize: function () {
             this.listenTo(this.model, 'change:paso_actual', this.render);                    
             this.listenTo(this.model, 'change:direccion_envio', this.mostrar_metodo_envio);
+            this.listenTo(this.model, 'change', this.verificar_next);
             this.render();
         },
 
@@ -53,6 +55,7 @@ define([
             if (paso === 2) {
                 this.rellenar();
                 this.$el.addClass('is-activo');
+                this.$('.btn-next').addClass('btn-disban')
             }
             if (paso>2) {
                 this.$el.addClass('is-guardado').removeClass('is-activo');
@@ -66,7 +69,6 @@ define([
             this.$('.metodo_envio_form').slideDown();
         },
         mostrar_formulario:function () {
-            debugger;
             var valor = this.$('input[type=radio]:checked').val();
             if (valor === 'add_form') {
                 var nueva_direccion = new NuevaDireccion({
@@ -78,15 +80,23 @@ define([
             }else{
                 this.$('.lista_metodos').empty();
                 this.$('.form_addDirec').slideUp();
-                this.model.set('direccion_envio',valor);
+                this.model.set({'direccion_envio':valor,'metodoenvio':null});
             }
+        },
+        agregar_metodo:function () {
+
+            var metodo = this.$('input[name=selecion_metodo]:checked').val();
+            this.model.set({metodoenvio:metodo});
+        },
+        verificar_next:function () {
+            var datos = this.model.toJSON();
+            if (datos.direccion_envio!==null && datos.metodoenvio!==null) {
+                this.$('.btn-next').removeClass('btn-disban');
+            };
         },
         siguiente_paso:function () {
             var self = this;
-            var valor = this.$('input[name=selecion_direccion]:checked').val();
-            var metodo = this.$('input[name=selecion_metodo]:checked').val();
-            if (valor!==undefined && valor!=='add_form' && metodo!==undefined) {
-                this.model.set({direccion_envio:valor,metodoenvio:metodo});
+            if (this.model.toJSON().direccion_envio!==null && this.model.toJSON().metodoenvio!==null) {
                 this.model.save().done(function () {
                     self.model.set('paso_actual',3);
                 })

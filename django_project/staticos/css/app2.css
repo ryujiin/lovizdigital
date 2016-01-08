@@ -310,6 +310,12 @@ p {
   font-size: 16px;
   font-weight: bold;
 }
+.btn.btn-disban {
+  background: #999;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
 .form-control {
   -webkit-border-radius: 0;
   border-radius: 0;

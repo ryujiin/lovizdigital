@@ -7,6 +7,7 @@ from cliente.models import Comentario
 class CategoriaSerializer(serializers.ModelSerializer):
 	padre = serializers.CharField(read_only=True)
 	link  = serializers.SerializerMethodField()
+	imagen = serializers.SerializerMethodField()
 	class Meta:
 		model = Categoria
 		fields = ('id','nombre','full_name','seccion','slug','descripcion','activo','imagen','padre','link','titulo_seo')
@@ -14,6 +15,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
 	def get_link(self,obj):
 		link = '/catalogo/%s/' %obj.slug
 		return link
+
+	def get_imagen(self,obj):
+		if obj.imagen:
+			return obj.imagen.url
+		else:
+			return None
 
 class ProductoVariacionSerializer(serializers.ModelSerializer):
 	talla = serializers.CharField(read_only=True)

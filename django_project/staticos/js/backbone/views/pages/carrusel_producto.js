@@ -20,6 +20,7 @@ define([
         events: {},
 
         initialize: function () {
+            debugger;
             this.render();
             this.listenTo(this.collection,'add',this.addOne)
         },

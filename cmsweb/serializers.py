@@ -12,8 +12,14 @@ class CarruselSerializer(serializers.ModelSerializer):
 		return obj.foto.url
 
 class ImagenCarruselSerializer(serializers.ModelSerializer):
+	imagen = serializers.SerializerMethodField()
 	class Meta:
 		model = ImageCarrusel
+		fields = ('id','titulo','estilo','bloque','orden','imagen')
+
+	def get_imagen(self,obj):
+		url = obj.imagen.url
+		return url
 
 class BloqueSerializer(serializers.ModelSerializer):
 	template = serializers.CharField(read_only=True)

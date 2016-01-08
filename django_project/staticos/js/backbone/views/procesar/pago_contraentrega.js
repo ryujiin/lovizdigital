@@ -23,7 +23,7 @@ define([
         },
 
         initialize: function () {
-            debugger;
+            console.log('inicio has algo')
         },
 
         render: function () {

@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^get_stripe_key/$','pago.views.get_stripe_key',name='get_key'),    
     url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),    
     url(r'^hardcode/get/paypal/', include('paypal.standard.ipn.urls')),
-    url(r'^zohoverify/verifyforzoho.html/$',VerificarView.as_view(),name='verificar'),    
+    url(r'^google66059436e2b166a0.html/$',VerificarView.as_view(),name='verificar'),    
     #url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),
     #url(r'^pago/get/paypal/', include('paypal_express_checkout.urls')),
     url(r'^oficina/',include('oficina.urls')),    

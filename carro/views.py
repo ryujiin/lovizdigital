@@ -17,10 +17,14 @@ from models import *
 class CarritoViewsApi(APIView):
 	def get_object(self):
 		if self.request.user.is_authenticated():
-			try:
-				return Carro.objects.get(propietario=self.request.user,estado="Abierto")
-			except Carro.DoesNotExist:
-				raise Http404
+			carro_fijo = self.request.GET.get('c_f')
+			if carro_fijo:
+				return Carro.objects.get(pk=carro_fijo,estado="Abierto")
+			else:				
+				try:
+					return Carro.objects.get(propietario=self.request.user,estado="Abierto")
+				except Carro.DoesNotExist:
+					raise Http404
 		else:
 			coockie_carro = self.request.GET.get('session')
 			try:

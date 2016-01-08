@@ -1,1 +1,80 @@
-define(["underscore","backbone","storage","../views/app/bloque_ajax"],function(e,r,o,n){"use strict";var a=r.Model.extend({url:"/api/user/perfil/",initialize:function(){this.buscar_user()},defaults:{fristname:"Anonimo"},validate:function(){},parse:function(e){return e},buscar_user:function(){this.fetch().done(function(){})},logout_user:function(){localStorage.removeItem("token_user"),window.location="/"},ingresar_user:function(e,o,a){var i=this,s=new n;$.post("/login/",{username:e,password:o}).done(function(e){0!==e.id?(i.buscar_user(),"pedido"===a.model.name?a.model.set("paso_actual",2):(a.loader.remove(),r.history.navigate("/usuario/perfil/",{trigger:!0}))):a.error_login()}).fail(function(){a.error_login()}).always(function(){s.remove()})},crear_user:function(e,r,o,n,a){var i=this,s=new ProgrecionBar;i.email=e,i.pass=r,$.post("http://localhost:8000/ajax/crear/",{username:e,password:r,nombre:o,apellido:n}).done(function(e){e.creado===!0&&i.ingresar_user(i.email,i.pass)}).fail(function(){a.error_crear()}).always(function(){s.remove()})}}),i=new a;return i});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    'storage',
+    '../views/app/bloque_ajax'
+], function (_, Backbone,storage,Bloque_ajax) {
+    'use strict';
+
+    var UserModel = Backbone.Model.extend({
+        url: '/api/user/perfil/',
+
+        initialize: function() {
+            this.buscar_user();
+            //this.listenTo(this, 'change', this.buscar_user);
+        },
+        defaults: {
+            fristname:'Anonimo',
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
+        },
+        buscar_user:function(){
+            this.fetch().done(function (data) {
+            })
+        },
+        logout_user:function(){
+            localStorage.removeItem('token_user');
+            window.location="/";
+        },
+        ingresar_user:function (email,pass,vista) {
+            var self = this;
+            var progrecion_bar = new Bloque_ajax();
+            //http://apiloviz.herokuapp.com/api-token-auth/
+            $.post("/login/",
+                {username: email,password:pass})
+            .done(function(data){
+                if (data.id!==0) {
+                    self.buscar_user();
+                    if (vista.model.name==='pedido') {
+                        vista.model.set('paso_actual',2);
+                    }else{
+                        vista.loader.remove();
+                        Backbone.history.navigate('/usuario/perfil/', {trigger:true})
+                    }
+                }else{
+                    vista.error_login();                       
+                }                
+            }).fail(function(data){
+                vista.error_login();                    
+            }).always(function(){
+                progrecion_bar.remove();
+            });
+        },
+        crear_user:function (email,pass,nombre,apellido,vista) {
+            var self = this;
+            var progrecion_bar = new ProgrecionBar();
+            self.email = email;
+            self.pass = pass;
+            $.post('http://localhost:8000/ajax/crear/',{username:email,password:pass,nombre:nombre,apellido:apellido})
+            .done(function (data) {
+                if (data.creado===true) {
+                    self.ingresar_user(self.email,self.pass);
+                };
+            }).fail(function (data) {
+                vista.error_crear()
+            }).always(function(){
+                progrecion_bar.remove();
+            });
+        }
+    });
+
+    var usermodel = new UserModel();
+    return usermodel;
+});

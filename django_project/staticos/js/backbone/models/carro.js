@@ -41,29 +41,45 @@ define([
             return response;
         },
         buscar_carrologin:function () {
+            
             var self = this;
-            if (UserModel.id) {
-                this.fetch().done(function(data){
-                    if (data.propietario===null) {
+            //condicional si existe carro con login facebook
+            var facebook = $.localStorage.get('facebook');            
+            $.localStorage.remove('facebook');
+            if (UserModel.id) {            
+                if (facebook ===true) {
+                    var carro = $.localStorage.get('carro');                    
+                    this.fetch({
+                        data:$.param({c_f:carro})
+                    }).done(function (data) {
                         self.set({propietario:UserModel.id});
-                        self.save().done(function(data){
-                        });
-                    }else{
-                    }
-                }).fail(function(){
-                    self.set({propietario:UserModel.id});
-                })
+                        self.save()
+                    })                    
+                }else{
+                    this.fetch().done(function(data){            
+                        
+                        if (data.propietario===null) {
+                            self.set({propietario:UserModel.id});
+                            self.save().done(function(data){
+                            });
+                        }else{
+                        }
+                    }).fail(function(){
+                        self.set({propietario:UserModel.id});                        
+                    })
+                }
             }
         },
         buscar_carro:function () {
             var self = this;
             if (UserModel.id) {
+                
                 this.buscar_carrologin();
             }else{
                 var galleta = this.get_session();
                 this.fetch({
                     data:$.param({session:galleta})
-                });    
+                });
             }
         },
         get_session:function () {

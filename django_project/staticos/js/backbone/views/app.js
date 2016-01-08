@@ -23,6 +23,7 @@ define([
             'click .link': 'navegar',
             'click .no-link': 'no_navegar',
             'click .menu-mobil-icono': 'mostrar_navegador_mobil',
+            'click .btn-facebook':'salvar_carro',
         },
 
         initialize: function (rutas) {
@@ -67,6 +68,13 @@ define([
                 });
             })
         },
+        salvar_carro:function (e) {
+            e.preventDefault();
+            if (CarroModel.toJSON().lineas>0) {
+                $.localStorage.set('facebook',true);
+                window.location.href="/login/facebook/";
+            };            
+        }
 
     });
 

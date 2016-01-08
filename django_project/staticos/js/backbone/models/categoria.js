@@ -7,7 +7,7 @@ define([
     'use strict';
 
     var CategoriaModel = Backbone.Model.extend({
-        urlRoot : 'http://localhost:8000/api/categoria/',
+        urlRoot : '/api/categoria/',
         
 
         initialize: function() {

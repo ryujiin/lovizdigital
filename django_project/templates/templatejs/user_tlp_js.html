@@ -1,8 +1,8 @@
 {% verbatim %}	
 
 <script id="user_links_template" type="text/template">
-	{%if email%}
-		<li><a href="/usuario/perfil/" class="link">{{email}}</a></li>
+	{%if id %}
+		<li><a href="/usuario/perfil/" class="link">Bienvenido! {{first_name}} {{last_name}}</a></li>
 		<li><a href="/salir/" class="">(Salir)</a></li>
 	{%else%}
 		<li><a href="#" class="ingresar_user mostrar">Ingresar</a></li>

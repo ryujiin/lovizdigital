@@ -24,12 +24,14 @@ define([
             'click .unirme_user': 'visible_register',
         },
         initialize: function () {
+            debugger;
             this.user_sidebar = new UserSidebar({model:this.model});
 
             this.listenTo(this.model, 'change', this.render);
             this.render();
         },
         render: function () {
+            debugger;
             this.$el.html(this.template(this.model.toJSON()));
         },
         mostrar_menu_user:function(e){

@@ -1,1 +1,28 @@
-define(["underscore","backbone"],function(t,e){"use strict";var n=e.Model.extend({urlRoot:"http://localhost:8000/api/categoria/",initialize:function(){},defaults:{},validate:function(){},parse:function(t){return t}});return n});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
+    'use strict';
+
+    var CategoriaModel = Backbone.Model.extend({
+        urlRoot : '/api/categoria/',
+        
+
+        initialize: function() {
+        },
+
+        defaults: {
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
+        }
+    });
+
+    return CategoriaModel;
+});

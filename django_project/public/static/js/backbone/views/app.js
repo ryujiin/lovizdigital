@@ -73,7 +73,9 @@ define([
             if (CarroModel.toJSON().lineas>0) {
                 $.localStorage.set('facebook',true);
                 window.location.href="/login/facebook/";
-            };            
+            }else{
+                window.location.href="/login/facebook/";
+            }   
         }
 
     });

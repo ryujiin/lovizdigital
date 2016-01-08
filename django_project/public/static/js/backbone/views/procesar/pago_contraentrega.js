@@ -1,1 +1,35 @@
-define(["jquery","underscore","backbone","swig"],function(e,n,i){"use strict";var t=i.View.extend({tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){}});return t});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+], function ($, _, Backbone, swig) {
+    'use strict';
+
+    var LineasResumenView = Backbone.View.extend({
+
+        //template: swig.compile($('#pago_tarjeta_tlp').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {
+
+        },
+
+        initialize: function () {
+            debugger;
+        },
+
+        render: function () {
+            
+        },
+    });
+
+    return LineasResumenView;
+});

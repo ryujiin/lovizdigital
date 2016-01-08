@@ -123,10 +123,6 @@
 			    <li role="presentation">
 			    	<a href="#paypal" aria-controls="paypal" role="tab" data-toggle="tab" data-selector="paypal">Paypal</a>
 			    </li>
-			    <!--
-			    <li role="presentation">
-			    	<a href="#pagoefectivo" aria-controls="pagoefectivo" role="tab" data-toggle="tab" data-selector="pagoefectivo">PagoEfectivo</a>
-			    </li>-->
 			    <li role="presentation">
 			    	<a href="#entrega" aria-controls="entrega" role="tab" data-toggle="tab" data-selector="contraentrega">Contra entrega</a>
 			    </li>
@@ -139,12 +135,7 @@
 			    	<p>Si deseas pagar con tarjetas VISA, MASTERCARD, AMERCIAN EXPRESS, DINERS, o cualquier otra internacional puedes usar <span class="card_paypal"></span>.</p>
 			    	<p>Si cuentas con una cuenta paypal puedes utilizarla en nuestra tienda online. Si no la tienes, también puedes crearla para realizar pagos en diferentes tipos de tarjeta de crédito. Una vez conforme serás re dirigido a la página oficial de paypal para concretar tu transacción.</p>
 			    	<div id="form_paypal"></div>
-			    </div>
-			    <!--
-			    <div role="tabpanel" class="tab-pane" id="pagoefectivo">
-			    	<p>Compra con PagoEfectivo y paga a través de internet o en cualquier oficina del BCP, BBVA, Interbank, Scotiabank, en Agencias de Pago de Servicios Western Union y en establecimientos autorizados que tengan el logo de PagoEfectivo y/o FullCarga.</p>
-			    </div>
-			-->
+			    </div>			
 			    <div role="tabpanel" class="tab-pane" id="entrega">
 			    	<p>Si desea pagar cuando su producto llega asu casa.</p>
 			    	<p>Recuerda que puedes poner la direccion de tu centro de trabajo y recibirlos ahi mismo.</p>
@@ -280,7 +271,7 @@
 				<li class="card_american"></li>
 			</ul>
 		</div>
-		<div class="col-xs-4 form-group mes_tarjeta">
+		<div class="col-xs-5 form-group mes_tarjeta">
 			<label class="control-label">Mes<span class="requerido">*</span></label>			    	
 			<select class="form-control" id="mes" data-contenedor="mes_tarjeta">
 				<option value="">Mes</option>			
@@ -299,7 +290,7 @@
 			</select>
 			<div class="error"></div>			
 		</div>
-		<div class="col-xs-3 form-group year_tarjeta">
+		<div class="col-xs-4 form-group year_tarjeta">
 			<label class="control-label">Año<span class="requerido">*</span></label>
 			<select class="form-control" id="year" data-contenedor="year_tarjeta">
 				<option value="">Año</option>
@@ -317,7 +308,7 @@
 			</select>
 			<div class="error"></div>			
 		</div>
-		<div class="col-xs-2 form-group cvc_tarjeta">
+		<div class="col-xs-3 form-group cvc_tarjeta">
 			<label class="control-label">CVC<span class="requerido">*</span></label>
 			<input type="text" class="form-control" id="cvc" placeholder="Codigo" data-contenedor="cvc_tarjeta" maxlength="4">			    		
 			<div class="error"></div>			

@@ -1,6 +1,6 @@
 {% verbatim %}
 <script id="page_carro_template" type="text/template">
-	<div class="container">
+	<div class="container carro_page">
 		<div class="nav-breadcrumb"></div>
 		<section class="titulo text-center"></section>
 		<section class="lineas_carro"></section>
@@ -29,7 +29,7 @@
 	{%if lineas%}
 
 	<div class="overflow">
-		<h1 class="titulo">Carro de compras</h1>	
+		<h1 class="titulo_page">Carro de compras</h1>	
 	</div>
 	<div class="overflow">
 		<a href="/procesar-compra/" class="btn btn-contraste pull-right btn-large btn-fancy link">Procesar mi compra</a>
@@ -67,20 +67,24 @@
 
 <script id="lineas_linea_tlp" type="text/template">
 	{%if cantidad%}
+	
 	<div class="img_linea">
 		<img src="{{thum}}">
 	</div>
 	<div class="detalle_linea">
 		<div class="nombre">{{nombre}}</div>
-		<div class="genero">{{categoria}}</div>
+		<div class="genero">{{genero}}</div>
 		<div class="color">{{color}}</div>
-		<div class="talla">{{talla}}</div>
+		<div class="talla">Talla: {{talla}}</div>
 	</div>
+	
 	<div class="precio_linea">
+		<span class="etiqueta_mobil">Precio</span>
 		<span>S/. {{precio}}</span>
 	</div>
 
 	<div class="cantidad_linea">
+		<span class="etiqueta_mobil">Cant</span>
 		<span class="mas_produ cant">
 			<span class="icon-arrow-up icono"></span>
 		</span>
@@ -90,11 +94,12 @@
 		</span>
 	</div>
 	<div class="subtotal_linea">
+		<span class="etiqueta_mobil">Precio Total</span>
 		<span>S/.{{subtotal}}</span>
 	</div>
 	<div class="acciones_linea">
 		<div class="text-center eliminar">
-			<span class="icon-trashcan"></span>
+			<span class="glyphicon glyphicon-trash"></span>
 			<span>Eliminar</span>
 		</div>
 	</div>
@@ -105,7 +110,7 @@
 <script id="carro_total_tlp" type="text/template">
 	<tbody>
 		<tr>
-			<td class="sin-borde">SubTotal Incluyendo Impuestos</td>
+			<td class="sin-borde">SubTotal + Impuestos</td>
 			<td class="text-right sin-borde">S./ {{subtotal}}</td>
 		</tr>
 		{%if pedido%}

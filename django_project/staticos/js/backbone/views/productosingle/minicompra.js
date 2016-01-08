@@ -29,9 +29,7 @@ define([
             this.$el.html(this.template(this.model.toJSON()));
         },
         mostrar:function () {
-            debugger;
             this.$el.modal('show');
-            debugger;
         }
     });
 

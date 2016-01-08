@@ -114,6 +114,14 @@ class LineaCarro(models.Model):
 		subtotal = precio * self.cantidad
 		return subtotal
 
+	def get_genero(self):
+		categorias = self.producto.categorias.all()
+		genero = None
+		for cate in categorias:
+			if cate.seccion=='genero':
+				genero = cate.nombre
+		return genero
+
 	def __unicode__(self):
 		return "linea de %s con %s articulos de %s" %(self.carro.propietario,self.cantidad,self.variacion)
 

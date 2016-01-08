@@ -40,10 +40,11 @@ class LineaSerializer(serializers.ModelSerializer):
 	precio = serializers.SerializerMethodField()
 	subtotal = serializers.SerializerMethodField()
 	oferta = serializers.SerializerMethodField()
-	thum = serializers.SerializerMethodField()	
+	thum = serializers.SerializerMethodField()
+	genero = serializers.SerializerMethodField()
 	class Meta:
 		model = LineaCarro
-		fields = ('id','carro','producto','variacion','thum','cantidad','nombre','talla','precio','subtotal','oferta','color','full_name')
+		fields = ('id','carro','producto','variacion','thum','cantidad','nombre','talla','precio','subtotal','oferta','color','full_name','genero')
 	def get_nombre(self,obj):
 		return obj.producto.nombre
 
@@ -52,6 +53,9 @@ class LineaSerializer(serializers.ModelSerializer):
 
 	def get_talla(self,obj):
 		return obj.variacion.talla.nombre
+
+	def get_genero(self,obj):
+		return obj.get_genero()
 
 	def get_precio(self,obj):
 		precio = obj.variacion.get_precio_venta()

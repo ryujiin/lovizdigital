@@ -5,8 +5,7 @@ define([
     'underscore',
     'backbone',
     'swig',
-    'stripe'
-], function ($, _, Backbone, swig,Stripe) {
+], function ($, _, Backbone, swig) {
     'use strict';
 
     var LineasResumenView = Backbone.View.extend({

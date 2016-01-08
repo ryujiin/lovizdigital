@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #apps terceros
-    'require',
     'rest_framework',
     'rest_framework.authtoken',
     'sorl.thumbnail',
@@ -136,8 +135,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     location('staticos'),
 )
-
-STATICFILES_STORAGE = "require.storage.OptimizedManifestStaticFilesStorage"
 
 #STATICFILES_STORAGE = "require_s3.storage.OptimizedStaticFilesStorage"
 

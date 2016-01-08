@@ -5,10 +5,9 @@ define([
     'underscore',
     'backbone',
     'swig',
-    'stripe',
     'carro',
     '../../views/app/loader_full'
-], function ($, _, Backbone, swig,Stripe,CarroModel,LoaderFull) {
+], function ($, _, Backbone, swig,CarroModel,LoaderFull) {
     'use strict';
 
     var LineasResumenView = Backbone.View.extend({

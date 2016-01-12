@@ -27,7 +27,6 @@ define([
         className: '',
 
         events: {
-            'click .section_panel.is-guardado':'mostrar_editar',
         },
 
         initialize: function () {
@@ -62,6 +61,7 @@ define([
             }
         },
         crear_paso_identificar:function () {
+
             this.paso_identificar = new PasoIdentificar({
                 el:this.$('.paso_identificar'),
                 model:this.model,
@@ -76,6 +76,7 @@ define([
             });
         },
         crear_paso_pago:function () {
+            debugger;
             this.paso_pago = new PasoPago({
                 el:this.$('.paso_pago'),
                 model:this.model,
@@ -97,9 +98,6 @@ define([
                 this.model.set('paso_actual',3)
             };
         },
-        mostrar_editar:function () {
-            this.$('.section_panel').removeClass('is-activo');
-        }
     });
     var page = new PageProcesarCompraView({
         model: new PedidoModel()

@@ -40,8 +40,7 @@ define([
             this.render();
         },
 
-        render: function () {
-            
+        render: function () {          
             this.$el.html(this.template());
             this.ver_estado();
         },
@@ -55,7 +54,7 @@ define([
             this.$('.metodo_envio_form').hide();            
         },
         ver_estado:function () {
-            
+         
             var paso = this.model.toJSON().paso_actual;
             if (paso === 2) {
                 this.rellenar();
@@ -67,15 +66,13 @@ define([
             };
         },
         mostrar_metodo_envio:function  () {
-            
             var metodos = new MetodosEnvio({
                 el:this.$('.metodo_envio_form .lista_metodos'),
                 collection:new MetodosEnvioCollection(),
             });
             this.$('.metodo_envio_form').slideDown();
         },
-        mostrar_formulario:function () {
-            
+        mostrar_formulario:function () {            
             var valor = this.$('input[type=radio]:checked').val();
             if (valor === 'add_form') {
                 var nueva_direccion = new NuevaDireccion({
@@ -96,12 +93,11 @@ define([
             }
         },
         agregar_metodo:function () {
-            
             var metodo = this.$('input[name=selecion_metodo]:checked').val();
             this.model.set({metodoenvio:metodo});
         },
         verificar_next:function () {
-            
+           
             var datos = this.model.toJSON();
             if (datos.direccion_envio!==null && datos.metodoenvio!==null) {
                 this.$('.btn-next').removeClass('btn-disban');

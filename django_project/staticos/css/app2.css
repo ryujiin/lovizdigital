@@ -1660,6 +1660,9 @@ h2 .linea {
   .carro_page .lineas_carro .acciones_linea {
     width: 15%;
   }
+  .paso_pago .panel_seccion .nav.nav-tabs li {
+    width: initial !important;
+  }
 }
 @media (min-width: 992px) {
   #footer .footer-block-menu .nav {

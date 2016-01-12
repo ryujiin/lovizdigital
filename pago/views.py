@@ -2,12 +2,15 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseBadRequest,Http404,HttpResponse
 from carro.models import Carro
+from utiles.models import TipoCambio
 from pedido.models import Pago,MetodoPago,Pedido
 import json
 import stripe
 import urllib2
 import urllib
 import urlparse
+
+from datetime import datetime, timedelta, time
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -69,13 +72,21 @@ def stripe_paymet(request):
 		raise Http404
 
 def get_tipo_cambio():
-	url = 'https://openexchangerates.org/api/latest.json?app_id=%s' %settings.API_CURRENCY
-	req = urllib2.urlopen(url)
-	content = req.read()
-	data = json.loads(content)
-	data = float(data["rates"]['PEN'])
-	return data
-
+	tipo_cambio = 0
+	today = datetime.now().date()
+	tipos_cambio = TipoCambio.objects.filter(fecha=today)
+	for tipo in tipos_cambio:
+		tipo_cambio = tipo.cambio
+	if tipo_cambio==0:
+		url = 'https://openexchangerates.org/api/latest.json?app_id=%s' %settings.API_CURRENCY
+		req = urllib2.urlopen(url)
+		content = req.read()
+		data = json.loads(content)
+		data = float(data["rates"]['PEN'])
+		modelo = TipoCambio(cambio=data)
+		modelo.save()
+		tipo_cambio = data
+	return tipo_cambio
 
 def paypal_paymet(request):
 	pedido = request.GET['pedido']

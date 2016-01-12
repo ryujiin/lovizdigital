@@ -28,7 +28,9 @@ define([
         },
 
         render: function () {
-            this.collection.forEach(this.addOne,this);
+            
+            var chocolateado = this.collection.shuffle();
+            chocolateado.forEach(this.addOne,this);
             var productos = ProductosTotal;
             productos.add([this.collection]);
         },
@@ -41,7 +43,7 @@ define([
         buscar_productos:function (slug) {
             var self=this;
             var bloque_ajax = new Bloque_Ajax();
-            
+
             this.collection.fetch({
                 data:$.param({categoria:slug})
             }).always(function(){

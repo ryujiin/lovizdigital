@@ -113,6 +113,7 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 		return thum
 
 	def get_oferta(self,obj):
+		obj.guardar_oferta()
 		return obj.get_en_oferta()
 
 	def get_link(self,obj):

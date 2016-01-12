@@ -27,7 +27,6 @@ class Producto(models.Model):
 		return self.full_name
 
 	def save(self, *args, **kwargs):
-		self.guardar_oferta()
 		self.full_name = "%s (%s)" %(self.nombre,self.color)
 		if not self.slug:
 			self.slug = slugify(self.full_name)
@@ -44,6 +43,7 @@ class Producto(models.Model):
 			self.is_ofert = True
 		else:
 			self.is_ofert = False
+		self.save()
 
 	def get_en_oferta(self):
 		variaciones = self.get_variaciones()

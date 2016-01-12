@@ -18,12 +18,16 @@ class Producto(models.Model):
 	descripcion = models.TextField(blank=True,null=True)
 	detalles = models.TextField(blank=True,null=True)
 	creado = models.DateTimeField(auto_now_add=True)
+	actualizado = models.DateTimeField(auto_now=True)
+	is_ofert = models.BooleanField(default=False)
+	is_nuevo = models.BooleanField(default=False)
 	video = models.CharField(max_length=120, blank=True,null=True)
 
 	def __unicode__(self):
 		return self.full_name
 
 	def save(self, *args, **kwargs):
+		self.guardar_oferta()
 		self.full_name = "%s (%s)" %(self.nombre,self.color)
 		if not self.slug:
 			self.slug = slugify(self.full_name)
@@ -33,6 +37,13 @@ class Producto(models.Model):
 		img = ProductoImagen.objects.filter(producto=self).order_by('pk')[0]
 		img = get_thumbnail(img.foto, '450x350', quality=80)
 		return img
+
+	def guardar_oferta(self):
+		oferta = self.get_en_oferta()
+		if oferta>0:
+			self.is_ofert = True
+		else:
+			self.is_ofert = False
 
 	def get_en_oferta(self):
 		variaciones = self.get_variaciones()

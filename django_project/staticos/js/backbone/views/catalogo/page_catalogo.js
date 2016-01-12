@@ -63,7 +63,7 @@ define([
 
             var header = Head;
             if (datos_titulo.toJSON().titulo_seo===null) {
-                var titulo = datos_titulo.toJSON().nombre+ ' | Loviz DelCarpio® :: lovizdc.com.';
+                var titulo = datos_titulo.toJSON().nombre+ ' | Loviz DelCarpio® :: lovizdc.com. encontraras desde sandalias , pantuflas, alpargatas. todo con un estilo moderno.';
             }else{
                 var titulo = datos_titulo.toJSON().titulo_seo + ' | Loviz DelCarpio® :: lovizdc.com.';
             }
@@ -111,7 +111,7 @@ define([
             var bloque_color = new ColoresBloque({
                 el:this.$('.refinement.Color'),
             });
-        }
+        },
     });
 
     var vista = new PageCatalogoView();

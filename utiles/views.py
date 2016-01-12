@@ -7,3 +7,7 @@ from serializers import *
 class ColorViewsets(viewsets.ReadOnlyModelViewSet):
 	serializer_class = ColorSerializer
 	queryset = Color.objects.all();
+
+def tipo_cambio(request):
+	if request.POST:
+		pass

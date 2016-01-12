@@ -15,7 +15,9 @@ class MaterialInline(admin.TabularInline):
 class ProductoAdmin(admin.ModelAdmin):
 	inlines = [ProductoImagenInline,VariacionInline,MaterialInline,]
 	filter_horizontal = ('relaciones','categorias')
-	list_display = ('id','full_name','nombre','slug','activo')
+	list_display = ('id','full_name','nombre','slug','activo','creado','actualizado')
+
+
 
 class CategoriaAdmin(admin.ModelAdmin):
 	list_display=('nombre','full_name','slug','nombre')

@@ -41,6 +41,7 @@ define([
         buscar_productos:function (slug) {
             var self=this;
             var bloque_ajax = new Bloque_Ajax();
+            
             this.collection.fetch({
                 data:$.param({categoria:slug})
             }).always(function(){

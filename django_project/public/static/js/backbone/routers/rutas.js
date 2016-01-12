@@ -53,12 +53,13 @@ define([
         catalogo:function (slug) {
             $('body').removeClass();            
             $('body').addClass('catalogo');
+            debugger;
             var coincidencia = Categorias.findWhere({slug:slug});
             if (coincidencia) {
                 CatalogoPage.render(coincidencia,Categorias);
             }else{
                 this.notFound();
-            }
+            }           
         },
         ingresar:function () {
             $('body').removeClass();            

@@ -1,1 +1,86 @@
-define(["jquery","underscore","backbone","../../collections/productos","productosTotal","../../views/catalogo/productoLista","../../views/app/bloque_ajax","../../collections/catalogo/filtros"],function(o,t,i,e,c,l,n,r){"use strict";var s=i.View.extend({id:"",className:"",collection:new e,events:{},initialize:function(){this.listenTo(r,"add",this.filtrar),this.listenTo(r,"remove",this.filtrar)},render:function(){this.collection.forEach(this.addOne,this);var o=c;o.add([this.collection])},addOne:function(o){o.set({visible:!0});var t=new l({model:o});this.$el.append(t.$el),t.$el.addClass("col-md-4 col-sm-6 col-xs-6")},buscar_productos:function(t){var i=this,e=new n;this.collection.fetch({data:o.param({categoria:t})}).always(function(){i.render(),i.ver_filtros(),e.remove()})},ver_filtros:function(){r.length>0&&this.filtrar()},filtrar:function(){var o=r;if(o.length>0){this.collection.forEach(function(o){o.set("visible",!1)});var t=this;o.forEach(function(o){"color"===o.toJSON().tipo&&t.filtrar_color(o.toJSON().valor)})}else this.collection.forEach(function(o){o.set("visible",!0)})},filtrar_color:function(o){this.collection.where({color:o}).forEach(function(o){o.set("visible",!0)})}});return s});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    '../../collections/productos',
+    'productosTotal',    
+    '../../views/catalogo/productoLista',
+    '../../views/app/bloque_ajax',
+    '../../collections/catalogo/filtros'
+], function ($, _, Backbone,Productos,ProductosTotal,ProductoLista,Bloque_Ajax,FiltrosCollection) {
+    'use strict';
+
+    var CatalogoView = Backbone.View.extend({
+
+        id: '',
+
+        className: '',
+
+        collection:new Productos(),
+
+        events: {},
+
+        initialize: function () {
+            this.listenTo(FiltrosCollection, 'add', this.filtrar);
+            this.listenTo(FiltrosCollection, 'remove', this.filtrar);
+        },
+
+        render: function () {
+            this.collection.forEach(this.addOne,this);
+            var productos = ProductosTotal;
+            productos.add([this.collection]);
+        },
+        addOne:function (modelo) {
+            modelo.set({visible:true});
+            var producto = new ProductoLista({model:modelo});
+            this.$el.append(producto.$el);
+            producto.$el.addClass('col-md-4 col-sm-6 col-xs-6')
+        },
+        buscar_productos:function (slug) {
+            var self=this;
+            var bloque_ajax = new Bloque_Ajax();
+            
+            this.collection.fetch({
+                data:$.param({categoria:slug})
+            }).always(function(){
+                self.render();
+                self.ver_filtros();
+                bloque_ajax.remove();                
+            });
+        },
+        ver_filtros:function () {
+            if (FiltrosCollection.length>0) {
+                this.filtrar();
+            }
+        },
+        filtrar:function () {
+            var filtros = FiltrosCollection;
+
+            if (filtros.length>0) {
+                this.collection.forEach(function (modelo) {
+                    modelo.set('visible',false);
+                })
+                var self = this;
+
+                filtros.forEach(function (e,i) {
+                    if (e.toJSON().tipo==='color') {
+                        self.filtrar_color(e.toJSON().valor);
+                    };
+                })
+            }else{
+                this.collection.forEach(function (modelo) {
+                    modelo.set('visible',true);
+                })
+            }
+        },
+        filtrar_color:function (color) {
+            this.collection.where({color:color}).forEach(function (e) {
+                e.set('visible',true)
+            })
+        }
+    });
+
+    return CatalogoView;
+});

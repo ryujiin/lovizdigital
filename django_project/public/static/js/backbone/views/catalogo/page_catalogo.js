@@ -1,1 +1,120 @@
-define(["jquery","underscore","backbone","swig","../../views/catalogo/titulo_catalogo","../../views/app/breadcrumb","../../views/catalogo/bloque_categorias","../../views/catalogo/catalogo","../../views/catalogo/bloque_colores","../../views/catalogo/imagen_catalogo","../../views/app/header"],function(e,o,t,a,r,i,l,n,c,s,d){"use strict";var u=t.View.extend({el:e("#contenido"),template:a.compile(e("#page_catalogo_template").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(e,o){this.$el.html(this.template()),this.slug=e.toJSON().slug,this.crear_titulo(e,o),this.crear_bloque_busqueda(e),this.addBread(e,o),this.crear_bloque_Categoria(e,o),this.crear_bloque_colores()},crear_bloque_busqueda:function(e){var o=new n({el:this.$(".resultados")});o.buscar_productos(e.toJSON().slug)},crear_titulo:function(e,o){var t=this.get_titulo(e,o),a=new r({model:t,el:this.$(".titulo-categoria")}),i=(new s({model:t,el:this.$(".imagen_categoria")}),d);if(null===t.toJSON().titulo_seo)var a=t.toJSON().nombre+" | Loviz DelCarpio® :: lovizdc.com.";else var a=t.toJSON().titulo_seo+" | Loviz DelCarpio® :: lovizdc.com.";i.render(a,t.toJSON().descripcion)},get_titulo:function(e,o){if(e.toJSON().padre){var t=o.findWhere({slug:e.toJSON().padre});if(e.set({nombre1:t.toJSON().nombre}),t.toJSON().padre){var a=o.findWhere({slug:t.toJSON().padre});e.set({nombre2:a.toJSON().nombre})}}return e},addBread:function(o,t){var a=new i({el:e(".nav-breadcrumb")});if(a.collection.add([{nombre:"Home",link:"/"}]),o.toJSON().padre){var r=t.findWhere({slug:o.toJSON().padre});if(r.toJSON().padre)var l=t.findWhere({slug:r.toJSON().padre})}l&&a.collection.add([{nombre:l.toJSON().nombre,link:l.toJSON().link}]),r&&a.collection.add([{nombre:r.toJSON().nombre,link:r.toJSON().link}]),a.collection.add([{nombre:o.toJSON().nombre}]),a.render()},crear_bloque_Categoria:function(o,t){new l({el:e("#refinamientoCategoria"),model:o,collection:t})},crear_bloque_colores:function(){new c({el:this.$(".refinement.Color")})}}),m=new u;return m});
+/*global define*/
+
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../views/catalogo/titulo_catalogo',
+    '../../views/app/breadcrumb',
+    '../../views/catalogo/bloque_categorias',
+    '../../views/catalogo/catalogo',
+    '../../views/catalogo/bloque_colores',
+    '../../views/catalogo/imagen_catalogo',
+    '../../views/app/header'
+], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo,Head) {
+    'use strict';
+
+    var PageCatalogoView = Backbone.View.extend({
+        el:$('#contenido'),
+        template: swig.compile($('#page_catalogo_template').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+        },
+        render:function (modelo,Categorias) {
+            this.$el.html(this.template());
+
+            this.slug = modelo.toJSON().slug;
+
+            this.crear_titulo(modelo,Categorias);            
+            this.crear_bloque_busqueda(modelo);            
+
+            this.addBread(modelo,Categorias);
+            this.crear_bloque_Categoria(modelo,Categorias);
+            this.crear_bloque_colores();
+        },
+        crear_bloque_busqueda:function (modelo) {
+            var bloque_productos = new Catalogo({
+                el:this.$('.resultados'),
+            });
+            bloque_productos.buscar_productos(modelo.toJSON().slug);
+        },
+        crear_titulo:function (modelo,Categorias) {
+            var datos_titulo = this.get_titulo(modelo,Categorias);
+
+            var titulo = new TituloCatalogo({
+                model:datos_titulo,
+                el:this.$('.titulo-categoria'),
+            });
+            var imagen = new ImagenCatalogo({
+                model:datos_titulo,
+                el:this.$('.imagen_categoria'),
+            });
+
+            var header = Head;
+            if (datos_titulo.toJSON().titulo_seo===null) {
+                var titulo = datos_titulo.toJSON().nombre+ ' | Loviz DelCarpio® :: lovizdc.com. encontraras desde sandalias , pantuflas, alpargatas. todo con un estilo moderno.';
+            }else{
+                var titulo = datos_titulo.toJSON().titulo_seo + ' | Loviz DelCarpio® :: lovizdc.com.';
+            }
+            header.render(titulo,datos_titulo.toJSON().descripcion)
+        },
+        get_titulo:function (modelo,Categorias) {
+            if (modelo.toJSON().padre) {
+                var modelo1 = Categorias.findWhere({slug:modelo.toJSON().padre})
+                modelo.set({nombre1:modelo1.toJSON().nombre})
+                if (modelo1.toJSON().padre) {
+                    var modelo2 = Categorias.findWhere({slug:modelo1.toJSON().padre})
+                    modelo.set({nombre2:modelo2.toJSON().nombre})
+                };
+            };
+            return modelo;
+        },
+        addBread:function (modelo,Categorias) {
+            
+            var breadVista = new Breadcrumb({el:$('.nav-breadcrumb')});
+
+            breadVista.collection.add([{nombre:'Home', link:'/'}]);
+            if (modelo.toJSON().padre) {
+                var cate1 = Categorias.findWhere({slug:modelo.toJSON().padre})
+                if (cate1.toJSON().padre) {
+                    var cate2 = Categorias.findWhere({slug:cate1.toJSON().padre})
+                };
+            };
+            if (cate2) {
+                breadVista.collection.add([{nombre:cate2.toJSON().nombre, link:cate2.toJSON().link}]);
+            };
+            if (cate1) {
+                breadVista.collection.add([{nombre:cate1.toJSON().nombre, link:cate1.toJSON().link}]);
+            };
+            breadVista.collection.add([{nombre:modelo.toJSON().nombre}])
+            breadVista.render();
+        },
+        crear_bloque_Categoria:function (modelo,Categorias) {            
+            var categoria = new CetegoriaBloque({
+                el:$('#refinamientoCategoria'),
+                model:modelo,
+                collection:Categorias,
+            });
+        },
+        crear_bloque_colores:function () {
+            var bloque_color = new ColoresBloque({
+                el:this.$('.refinement.Color'),
+            });
+        },
+    });
+
+    var vista = new PageCatalogoView();
+
+    return vista;
+});

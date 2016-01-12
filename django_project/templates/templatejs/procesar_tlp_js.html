@@ -8,11 +8,11 @@
 			</div>
 			<div class="columnas_pago ">
 				<div class="pasos col-md-8">
-					<div class="section_panel paso_identificar">
+					<div class="section_panel paso_identificar" data-paso="1">
 					</div>
-					<div class="section_panel paso_envio">
+					<div class="section_panel paso_envio" data-paso="2">
 					</div>
-					<div class="section_panel paso_pago">
+					<div class="section_panel paso_pago" data-paso="3">
 					</div>
 				</div>
 				<div class="resumen col-md-4">
@@ -139,6 +139,12 @@
 			    <div role="tabpanel" class="tab-pane" id="entrega">
 			    	<p>Si desea pagar cuando su producto llega asu casa.</p>
 			    	<p>Recuerda que puedes poner la direccion de tu centro de trabajo y recibirlos ahi mismo.</p>
+			    	<div class="col-xs-6 form-group telefono_contacto">
+						<label class="control-label">Telefono:<span class="requerido">*</span></label>
+						<input type="text" class="form-control" id="telefono_contacto" placeholder="555-5555" data-contenedor="telefono_contacto">			    		
+						<p class="text-muted">*El telefono para poder coordinar la fecha y hora de entrega</p>
+						<div class="error"></div>			
+					</div>
 			    </div>
 			  </div>
 			</div>
@@ -253,7 +259,7 @@
 		<div class="col-md-12">
 			<input id="carro_pago" value="{{id}}" disabled type="hidden">
 		</div>
-		<span class="payment-errors"></span>
+		<span class="payment-errors text-danger bg-danger"></span>
 		<div class="form-group col-xs-12 nombre_tarjeta">
 			<label class="control-label">Nombre del Titular <span class="requerido">*</span></label>
 			<input type="text" class="form-control" data-contenedor="nombre_tarjeta" id="name" placeholder="Ingresa el nombre del Titular" >
@@ -271,7 +277,17 @@
 				<li class="card_american"></li>
 			</ul>
 		</div>
-		<div class="col-xs-5 form-group mes_tarjeta">
+		<div class="col-xs-12">
+			<div class="form-group cvc_tarjeta">
+				<label class="control-label">CVC<span class="requerido">*</span></label>
+				<input type="text" class="form-control" id="cvc" placeholder="Codigo" data-contenedor="cvc_tarjeta" maxlength="4">			    		
+				<div class="error"></div>			
+			</div>
+			<div class="img_cvc">
+				<span class="sprite-cvc"></span>
+			</div>
+		</div>
+		<div class="col-xs-6 form-group mes_tarjeta">
 			<label class="control-label">Mes<span class="requerido">*</span></label>			    	
 			<select class="form-control" id="mes" data-contenedor="mes_tarjeta">
 				<option value="">Mes</option>			
@@ -290,11 +306,10 @@
 			</select>
 			<div class="error"></div>			
 		</div>
-		<div class="col-xs-4 form-group year_tarjeta">
+		<div class="col-xs-6 form-group year_tarjeta">
 			<label class="control-label">Año<span class="requerido">*</span></label>
 			<select class="form-control" id="year" data-contenedor="year_tarjeta">
-				<option value="">Año</option>
-				<option>2015</option>
+				<option value="">Año</option>				
 				<option>2016</option>
 				<option>2017</option>
 				<option>2018</option>
@@ -308,11 +323,7 @@
 			</select>
 			<div class="error"></div>			
 		</div>
-		<div class="col-xs-3 form-group cvc_tarjeta">
-			<label class="control-label">CVC<span class="requerido">*</span></label>
-			<input type="text" class="form-control" id="cvc" placeholder="Codigo" data-contenedor="cvc_tarjeta" maxlength="4">			    		
-			<div class="error"></div>			
-		</div>
+		
 	</form>
 </script>
 {% endverbatim %}

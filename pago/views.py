@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseBadRequest,Http404,HttpResponse
 from carro.models import Carro
-from pedido.models import Pago,MetodoPago
+from pedido.models import Pago,MetodoPago,Pedido
 import json
 import stripe
 import urllib2
@@ -10,9 +10,12 @@ import urllib
 import urlparse
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 from paypal.standard.forms import PayPalPaymentsForm
 from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 def stripe_paymet(request):
 	stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -44,15 +47,22 @@ def stripe_paymet(request):
 			stripe_result = stripe.Charge.create(**stripe_dict)
 		except stripe.error.CardError, e:
 			error = e
+			return HttpResponse(json.dumps({'error',error}),
+			content_type='application/json;charset=utf8')
 		else:
 			metodo = MetodoPago.objects.get(nombre='Stripe')			
-			pago = Pago(cantidad = amount/100,id_pago=stripe_result['id'],descripcion=description,metodo_pago = metodo)
+			pago = Pago(cantidad = amount/100,
+						id_pago=stripe_result['id'],
+						descripcion=description,
+						metodo_pago = metodo,
+						transaccion = card_token)
 			pago.save()
 			pedido.pago_pedido = pago
 			pedido.metodo_pago = metodo
 			pedido.save()
 			carro.estado = carro.ENVIADA
 			carro.save()
+			request.session['pedido'] = pedido.numero_pedido
 		return HttpResponse(json.dumps({'status': stripe_result['status'],'pedido': pedido.numero_pedido}),
 			content_type='application/json;charset=utf8')
 	else:
@@ -84,8 +94,8 @@ def paypal_paymet(request):
 			"item_name": "productos LovizDC",
 			"invoice": pedido,
 			"notify_url": settings.SITE_NAME + reverse('paypal-ipn'),
-			"return_url": "%s/felicidades/%s/" %(settings.SITE_NAME,pedido),
-			"cancel_return": "%s/cancelado/%s/" %(settings.SITE_NAME,pedido),
+			"return_url": "%s/retorno_paypal/%s/" %(settings.SITE_NAME,pedido),
+			"cancel_return": "%s/cancelado_paypal/%s/" %(settings.SITE_NAME,pedido),
 			"custom": "Comprando los mejores productos!",  # Custom command to correlate to some function later (optional)
 			}
 		form = PayPalPaymentsForm(initial=paypal_dict)
@@ -93,6 +103,63 @@ def paypal_paymet(request):
 		return render(request, "payment.html", context)
 	else:
 		raise Http404("No Hay Pedido")
+
+
+from django.shortcuts import redirect
+
+@csrf_exempt
+def retorn_paypal(request):
+	if request.POST:
+		metodo = MetodoPago.objects.get(nombre='Paypal')
+		pedido = Pedido.objects.get(numero_pedido=request.POST['invoice'])
+		carro = Carro.objects.get(pedido=pedido.pk) 
+
+		pago = Pago(cantidad=request.POST['payment_gross'],
+				id_pago = request.POST['invoice'],
+				metodo_pago = metodo,
+				descripcion = request.POST['payment_status'],
+				transaccion = request.POST['txn_id'])			
+		pago.save()
+
+		pedido.pago_pedido = pago
+		pedido.metodo_pago = metodo
+		pedido.save()
+		
+		carro.estado = carro.ENVIADA
+		carro.save()
+		
+		request.session['pedido'] = request.POST['invoice'];
+
+		return HttpResponseRedirect(reverse('felicidades'))
+
+def get_pago_contraentrega(request):
+	if request.POST:
+		metodo = MetodoPago.objects.get(nombre='Contra entrega')
+		pedido = Pedido.objects.get(numero_pedido=request.POST.get('id_pago'))
+		carro = Carro.objects.get(pedido=pedido.pk) 
+
+		total = carro.total_carro()
+
+		pago = Pago(cantidad= total,
+				id_pago = pedido.numero_pedido,
+				metodo_pago = metodo,
+				descripcion = 'Pago contra entrega, esperando el pago cuando se envia',
+				transaccion = request.POST['transaccion'])			
+		pago.save()
+
+		pedido.pago_pedido = pago
+		pedido.metodo_pago = metodo
+		pedido.save()
+		
+		carro.estado = carro.ENVIADA
+		carro.save()
+		
+		request.session['pedido'] = pedido.numero_pedido;
+		return HttpResponse(json.dumps({'status':'ok'}),content_type='application/json;charset=utf8')
+	else:
+		raise Http404("No Hay Pedido")
+
+
 
 def get_stripe_key(request):
 	return HttpResponse(json.dumps({'key':settings.STRIPE_PUBLIC_KEY}),content_type='application/json;charset=utf8')

@@ -26,6 +26,7 @@ define([
             'click .nav-tabs li a':'mostrar_boton',
             'click button.tarjeta':'verificar_card',
             'click button.paypal.paypal_ready':'pagar_paypal',
+            'click button.contraentrega.contra_ready':'pagar_contra_entrega',
         },
 
         initialize: function () {
@@ -84,6 +85,9 @@ define([
         },
         pagar_paypal:function () {
             this.vistaPaypal.pagar_paypal();
+        },
+        pagar_contra_entrega:function () {
+            this.vistaContraEntrega.enviar_pago();
         }
     });
 

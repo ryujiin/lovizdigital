@@ -11,9 +11,7 @@ define([
     'use strict';
 
     var FelicidadPageView = Backbone.View.extend({
-        el:$('#contenido'),
-
-        template: swig.compile($('#page_felicidades_template').html()),        
+        el:$('#contenido'),   
 
         tagName: 'div',
 

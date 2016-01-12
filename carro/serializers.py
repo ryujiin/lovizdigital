@@ -28,8 +28,8 @@ class CarroSerializer(serializers.ModelSerializer):
 		return "%0.2f" %(subtotal)
 
 	def get_envio(self,obj):
-		envio =obj.envio_carro()
-		return envio
+		envio =obj.envio_carro();
+		return "%0.2f" %(envio)
 
 class LineaSerializer(serializers.ModelSerializer):
 

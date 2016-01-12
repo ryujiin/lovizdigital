@@ -125,7 +125,6 @@ def ingresar(request):
 @login_required(login_url='/cliente/cuenta/')
 def salir(request):
 	logout(request)
-	print 'k'
 	return HttpResponseRedirect('/')
 
 @csrf_exempt

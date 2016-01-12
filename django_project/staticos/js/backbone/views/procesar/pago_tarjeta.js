@@ -115,7 +115,7 @@ define([
                     // Show the errors on the form
                     self.loader.remove()
                     $form.find('.payment-errors').text(response.error.message);
-                    $form.find('button').prop('disabled', false);
+                    $('#pagar_tarjeta input').val('')
                 } else {
                     // token contains id, last4, and card type
                     var token = response.id;
@@ -126,9 +126,9 @@ define([
                     $.post( "/pago/stripe/", {
                         stripeToken:token,
                         carro : carro.id,
-                    }).done(function (data) {                        
-                        if (data.status==='paid') {
-                            window.location="/felicidades/"+data.pedido+"/";
+                    }).done(function (data) {            
+                        if (data.status==='paid') {                        
+                            window.location="/felicidades/";
                         };
                         self.loader.remove();
                     });

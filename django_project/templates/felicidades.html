@@ -1,0 +1,83 @@
+{%extends 'index.html'%}
+
+{%block contenido%}
+	<div class="container page_felicidades">
+		<h1 class="text-center titulo">¡Gracias por su compra!</h1>
+		<div class="row">
+			<div class="col-md-7">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3>Detalles del pago</h3></div>
+	  				<table class="table">	    				
+						<tbody>
+							<tr>
+								<td>Codigo de Transaccion:</td>
+								<td><strong>{{pedido.numero_pedido}}</strong></td>
+							</tr>
+							<tr>
+								<td>Fecha de transaccion:</td>
+								<td>{{pedido.pago_pedido.fecha|date:"d/m/Y" }}</td>
+							</tr>
+							<tr>
+								<td>Hora de transaccion:</td>
+								<td>{{pedido.pago_pedido.fecha|date:"h:i a" }}</td>						
+							</tr>
+							<tr>
+								<td>Metodo de pago:</td>
+								<td>{{pedido.metodo_pago}}</td>
+							</tr>
+							<tr>
+								<td>Monto Total:</td>
+								<td>
+									{%if pedido.metodo_pago.nombre == 'Paypal'%}
+										$.{{pedido.pago_pedido.cantidad}}
+									{%else%}
+										S/.{{pedido.pago_pedido.cantidad}}
+									{%endif%}
+								</td>
+							</tr>
+							<tr>
+								<td>Nombre:</td>
+								<td>{{pedido.user.first_name}} {{pedido.user.last_name}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>				
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3>Detalles del Pedido:</h3></div>	  				
+					<div class="table-responsive">
+						<table class="table">	    				
+		    				<thead>
+		    					<th></th>
+		    					<th>Producto</th>
+		    					<th>Color</th>
+		    					<th>Talla</th>
+		    					<th>Precio</th>
+		    					<th>Cantidad</th>
+		    					<th>Total</th>
+		    				</thead>
+							<tbody>
+								{% for linea in lineas%}
+								<tr>
+									<td width="120" class="img_felicidad">
+										<img src="{{linea.producto.get_thum.url}}"></td>	
+									<td class="tb_td"><h4>{{linea.producto.nombre}}</h4></td>
+									<td >{{linea.producto.color}}</td>
+									<td>{{linea.variacion.talla}}</td>
+									<td>S/. {{linea.variacion.get_precio_venta}}</td>
+									<td class="text-center">{{linea.cantidad}}</td>
+									<td>S/. {{linea.get_subtotal}}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>		
+					</div>	    			
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="bloque_imagen_felicidad">
+					<img src="/media/tienda/bloque/feliz.jpg">
+				</div>
+			</div>
+		</div>
+	</div>	
+{%endblock%}

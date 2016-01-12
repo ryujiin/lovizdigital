@@ -27,3 +27,7 @@ class Talla(models.Model):
 		if not self.slug:
 			self.slug = slugify(self.nombre)
 		super(Talla, self).save(*args, **kwargs)
+
+class TipoCambio(models.Model):
+	fecha = models.DateField(auto_now_add=True)
+	cambio = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)

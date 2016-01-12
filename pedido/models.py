@@ -10,12 +10,13 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Pedido(models.Model):
-	AUTENTICADO, METODO_ENVIO, METODO_PAGO, PAGADO, ERROR_PAGO, ESPERANDO_ENVIO, ENVIADO, DEVUELTO = (
-        "autenticado", "metodo_envio", "metodo_pago", "pagado", "error_pago", "esperando_envio", "enviado", "devuelto")
+	AUTENTICADO, METODO_ENVIO, METODO_PAGO,ESPERANDO_PAGO, PAGADO, ERROR_PAGO, ESPERANDO_ENVIO, ENVIADO, DEVUELTO = (
+        "autenticado", "metodo_envio", "metodo_pago",'esperando_pago', "pagado", "error_pago", "esperando_envio", "enviado", "devuelto")
 	ESTADO_ELECCION = (
         (AUTENTICADO, _("Autenticado - El usuario se encuentra autenticado y el pedido le pertenece")),
         (METODO_ENVIO, _("Metodo de Envio - Ya coloco el metodo de envio, esperando metodo de pago")),
         (METODO_PAGO, _("Metodo de Pago - Ya selecciono el metodo de pago")),
+        (ESPERANDO_PAGO, _("Esperando Pago - Ya selecciono el metodo de pago, pero aun esta esperandose el pago")),
         (PAGADO, _("Pagado - El pago se realizo correctamente, espere el envio del producto")),
         (ERROR_PAGO, _("Error en Pago - Ocurrio un error al pagar")),
         (ENVIADO, _("Enviado - El producto fue enviado")),
@@ -28,10 +29,11 @@ class Pedido(models.Model):
 	metodoenvio = models.ForeignKey('MetodoEnvio',blank=True,null=True)
 	fecha_compra = models.DateTimeField(auto_now_add=True, db_index=True)
 	metodo_pago = models.ForeignKey('MetodoPago',blank=True,null=True)
-	pago_pedido = models.ForeignKey('Pago',blank=True,null=True)
+	pago_pedido = models.OneToOneField('Pago',blank=True,null=True)
 	estado_pedido = models.CharField(max_length=120,default=AUTENTICADO,choices=ESTADO_ELECCION)
 	pagado = models.BooleanField(default=False)
 	enviado = models.BooleanField(default=False)
+	telefono_pedido = models.CharField(max_length=100,blank=True)
 
 	def __unicode__(self):
 		return "%s - %s" %(self.estado_pedido,self.numero_pedido)
@@ -46,6 +48,7 @@ class Pedido(models.Model):
 		if self.pago_pedido:
 			self.estado_pedido = self.PAGADO
 			self.pagado = True
+		
 		super(Pedido, self).save(*args, **kwargs)
 		self.add_modificacion()
 
@@ -98,6 +101,8 @@ class Pago(models.Model):
 
 	def __unicode__(self):
 		return self.id_pago
+
+
 
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received,payment_was_successful

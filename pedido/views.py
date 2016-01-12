@@ -3,6 +3,8 @@ from django.shortcuts import render,render_to_response
 from rest_framework import viewsets
 
 from django.http import HttpResponse, Http404
+from django.shortcuts import redirect
+
 from serializers import *
 
 from rest_framework.views import APIView
@@ -13,7 +15,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from models import * 
-from carro.models import Carro
+from carro.models import Carro,LineaCarro
 
 class PedidoViewSet(viewsets.ModelViewSet):
 	serializer_class = PedidoSerializer
@@ -30,24 +32,13 @@ class MetodoEnvioViewSet(viewsets.ModelViewSet):
 
 @csrf_exempt
 def felicidades(request):
-	if request.POST:
-		#print request.POST
-		metodo = MetodoPago.objects.get(nombre='Paypal')
-		pedido = Pedido.objects.get(numero_pedido=request.POST['invoice'])
-		carro = Carro.objects.get(pedido=pedido.pk)		
-		pago = Pago(cantidad=request.POST['payment_gross'],
-			id_pago = request.POST['invoice'],
-			metodo_pago = metodo,
-			descripcion = request.POST['payment_status'],
-			transaccion = request.POST['txn_id'])
-		pago.save()
-
-		pedido.pago_pedido = pago
-		pedido.metodo_pago = metodo
-		pedido.save()
+	if 'pedido' in request.session:
 		
-		carro.estado = carro.ENVIADA
-		carro.save()
-		
-		
-	return render_to_response('index.html', {"foo": "bar"})
+		pedido = request.session['pedido'];
+		pedido = get_object_or_404(Pedido,numero_pedido=pedido)
+		carro = get_object_or_404(Carro,pedido=pedido)
+		lineas = LineaCarro.objects.filter(carro=carro)
+		request.session['pedido'] = ''
+		return render_to_response('felicidades.html', {"pedido": pedido,'lineas':lineas})
+	else:
+		return redirect ('/')

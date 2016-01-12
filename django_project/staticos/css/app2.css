@@ -2013,6 +2013,22 @@ h2 .linea {
   background-image: url("../imgs/payment.png");
   background-position: -161px 0;
 }
+.paso_pago .cvc_tarjeta {
+  width: 30%;
+  display: inline-block;
+}
+.paso_pago .img_cvc {
+  display: inline-block;
+  width: 50%;
+  margin-left: 20px;
+}
+.paso_pago .img_cvc .sprite-cvc {
+  background-image: url("../imgs/sprite.pay.png");
+  width: 68px;
+  height: 46px;
+  display: inline-block;
+  background-position: 0 -290px;
+}
 .paso_pago .panel_seccion .nav.nav-tabs {
   border: none;
 }

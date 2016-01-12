@@ -26,7 +26,9 @@ define([
 
         className: '',
 
-        events: {},
+        events: {
+            'click .section_panel.is-guardado':'mostrar_editar',
+        },
 
         initialize: function () {
         },
@@ -60,28 +62,28 @@ define([
             }
         },
         crear_paso_identificar:function () {
-            var paso_identificar = new PasoIdentificar({
+            this.paso_identificar = new PasoIdentificar({
                 el:this.$('.paso_identificar'),
                 model:this.model,
             })
         },
         crear_paso_envio:function () {
             var direcciones = new DireccionesCollection();
-            var paso_envio = new PasoEnvio({
+            this.paso_envio = new PasoEnvio({
                 el:this.$('.paso_envio'),
                 collection: direcciones,
                 model:this.model,
             });
         },
         crear_paso_pago:function () {
-            var paso_pago = new PasoPago({
+            this.paso_pago = new PasoPago({
                 el:this.$('.paso_pago'),
                 model:this.model,
             });
         },
         crear_resumen:function () {
             var carro = CarroModel;
-            var resumen = new Resumen({
+            this.resumen = new Resumen({
                 el:this.$('.orden_sumary'),
                 model:CarroModel,
             });
@@ -94,6 +96,9 @@ define([
             }else if (this.model.toJSON().estado_pedido==='metodo_envio') {
                 this.model.set('paso_actual',3)
             };
+        },
+        mostrar_editar:function () {
+            this.$('.section_panel').removeClass('is-activo');
         }
     });
     var page = new PageProcesarCompraView({

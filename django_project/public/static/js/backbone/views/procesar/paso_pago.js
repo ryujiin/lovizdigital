@@ -1,1 +1,95 @@
-define(["jquery","underscore","backbone","swig","../../views/procesar/pago_tarjeta","../../views/procesar/pago_paypal","../../views/procesar/pago_contraentrega","bootstrap"],function(a,t,e,i,s,r,o){"use strict";var n=e.View.extend({template:i.compile(a("#paso_pago_tlp").html()),tagName:"div",id:"",className:"",events:{"click .nav-tabs li a":"mostrar_boton","click button.tarjeta":"verificar_card","click button.paypal.paypal_ready":"pagar_paypal"},initialize:function(){this.listenTo(this.model,"change",this.render),this.render()},render:function(){this.$el.html(this.template()),this.addTarjeta(),this.addPaypal(),this.addContraEntrega(),this.ver_estado()},ver_estado:function(){var a=this.model.toJSON().paso_actual;3===a&&this.$el.addClass("is-activo"),a>3&&this.$el.addClass("is-guardado")},siguiente_paso:function(){var a=this.$("input[type=radio]:checked").val();void 0!==a&&"add_form"!==a||this.$(".error_direccion").fadeIn()},mostrar_boton:function(t){var e=a("."+t.currentTarget.dataset.selector);a(".panel_seccion_final button").removeClass("visto"),e.addClass("visto")},addTarjeta:function(){this.vistaTarjeta=new s({el:this.$("#tarjeta"),model:this.model})},addPaypal:function(){this.vistaPaypal=new r({el:this.$("#paypal"),model:this.model})},addContraEntrega:function(){this.vistaContraEntrega=new o({el:this.$("#entrega"),model:this.model})},verificar_card:function(){this.vistaTarjeta.verificar()},pagar_paypal:function(){this.vistaPaypal.pagar_paypal()}});return n});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../views/procesar/pago_tarjeta',
+    '../../views/procesar/pago_paypal',
+    '../../views/procesar/pago_contraentrega',
+    'bootstrap',
+], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal,ContraEntrega) {
+    'use strict';
+
+    var PasoPagoView = Backbone.View.extend({
+
+        template: swig.compile($('#paso_pago_tlp').html()), 
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {
+            'click .nav-tabs li a':'mostrar_boton',
+            'click button.tarjeta':'verificar_card',
+            'click button.paypal.paypal_ready':'pagar_paypal',
+            'click button.contraentrega.contra_ready':'pagar_contra_entrega',
+        },
+
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);                                    
+            this.render();
+        },
+
+        render: function () {
+            this.$el.html(this.template());
+            this.addTarjeta();            
+            this.addPaypal();
+            this.addContraEntrega();
+            this.ver_estado();
+        },
+        ver_estado:function () {
+            var paso = this.model.toJSON().paso_actual;
+            if (paso === 3) {
+                this.$el.addClass('is-activo');
+            }
+            if (paso>3) {
+                this.$el.addClass('is-guardado');
+            };
+        },
+        siguiente_paso:function () {
+            var valor = this.$('input[type=radio]:checked').val();
+            if (valor!==undefined && valor!=='add_form') {
+            }else{
+                this.$('.error_direccion').fadeIn();
+            }
+        },
+        mostrar_boton:function (e) {
+            var button = $('.'+e.currentTarget.dataset.selector);
+            $('.panel_seccion_final button').removeClass('visto');
+            button.addClass('visto');
+        },
+        addTarjeta:function () {
+            this.vistaTarjeta = new PagoTarjeta({
+                el:this.$('#tarjeta'),
+                model:this.model,
+            });
+        },
+        addPaypal:function () {
+            this.vistaPaypal = new PagoPaypal({
+                el:this.$('#paypal'),
+                model:this.model,
+            })
+        },
+        addContraEntrega:function () {
+            this.vistaContraEntrega = new ContraEntrega({
+                el:this.$('#entrega'),
+                model:this.model,
+            })
+        },
+        verificar_card:function () {
+            this.vistaTarjeta.verificar();
+        },
+        pagar_paypal:function () {
+            this.vistaPaypal.pagar_paypal();
+        },
+        pagar_contra_entrega:function () {
+            this.vistaContraEntrega.enviar_pago();
+        }
+    });
+
+    return PasoPagoView;
+});

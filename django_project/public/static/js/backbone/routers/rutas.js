@@ -1,1 +1,84 @@
-define(["jquery","backbone","../views/carro/page_carro","../views//pages/pages","../views/catalogo/page_catalogo","../views/productosingle/page_producto","../collections/categoria","../views/procesar/page_procesar","../views/usuario/page_user","../views/felicidades/page_felicidades","../views/app/page_error"],function(e,o,r,a,n,i,s,c,d,t,l){"use strict";var u=o.Router.extend({routes:{"":"root","usuario/perfil/":"perfil","producto/:slug/":"productoSingle","carro/":"carro_page","catalogo/:categoria/":"catalogo","ingresar/":"ingresar","procesar-compra/":"procesar_compra","felicidades/:pedido/":"felicidades","*notFound":"notFound"},initialize:function(){},root:function(){e("body").removeClass(),a.render_front()},perfil:function(){e("body").removeClass(),d.render()},productoSingle:function(o){e("body").removeClass(),i.cambiar_producto(o),console.log(o)},carro_page:function(){e("body").removeClass(),console.log("carro"),r.render()},catalogo:function(o){e("body").removeClass(),e("body").addClass("catalogo");var r=s.findWhere({slug:o});r?n.render(r,s):this.notFound()},ingresar:function(){e("body").removeClass(),d.render()},procesar_compra:function(){e("body").removeClass(),c.verificar_render()},felicidades:function(e){e?t.render(e):this.notFound()},notFound:function(){e("body").removeClass(),l.render()}}),p=new u;return p});
+/*global define*/
+
+define([
+    'jquery',
+    'backbone',
+    '../views/carro/page_carro',
+    '../views//pages/pages',
+    '../views/catalogo/page_catalogo',
+    '../views/productosingle/page_producto',
+    '../collections/categoria',
+    '../views/procesar/page_procesar',
+    '../views/usuario/page_user',
+    '../views/app/page_error'
+], function ($, Backbone,CarroPage,Pages,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageError) {
+    'use strict';
+
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+            "":"root",
+            "usuario/perfil/":"perfil",
+            "producto/:slug/":'productoSingle',
+            'carro/':'carro_page',
+            'catalogo/:categoria/':'catalogo',
+            'ingresar/':'ingresar',
+            'procesar-compra/':'procesar_compra',
+            'felicidades/':'felicidades',
+            '*notFound': 'notFound',
+        },
+
+        initialize:function(){
+        },
+        root:function(){
+            $('body').removeClass();            
+            Pages.render_front();
+        },
+        perfil:function(){
+            $('body').removeClass();            
+            PageUser.render();
+        },
+        productoSingle:function (slug) {
+            $('body').removeClass();   
+
+            ProductoSingle.cambiar_producto(slug);
+
+            console.log(slug)            
+        },
+        carro_page:function(){
+            $('body').removeClass();            
+
+            console.log('carro');
+            CarroPage.render();
+        },
+        catalogo:function (slug) {
+            $('body').removeClass();            
+            $('body').addClass('catalogo');
+            var coincidencia = Categorias.findWhere({slug:slug});
+            if (coincidencia) {
+                CatalogoPage.render(coincidencia,Categorias);
+            }else{
+                this.notFound();
+            }
+        },
+        ingresar:function () {
+            $('body').removeClass();            
+            PageUser.render();
+        },
+        procesar_compra:function () {
+            $('body').removeClass();              
+            PageProcesar.verificar_render();
+        },
+        felicidades:function () {
+            
+        },
+        notFound:function () {
+            $('body').removeClass();            
+
+            PageError.render();
+        },
+    });
+
+    var rutas = new AppRouter();
+
+    return rutas;
+});

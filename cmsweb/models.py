@@ -57,6 +57,7 @@ class Bloque(models.Model):
 class ImageCarrusel(models.Model):
 	titulo = models.CharField(max_length=100,blank=True,help_text='Titulo que tendra la imagen en el Alt')
 	estilo = models.CharField(max_length=100,blank=True)
+	link = models.CharField(max_length=100,blank=True)
 	bloque = models.ForeignKey(Bloque,blank=True,related_name='imagenes_carrusel')
 	orden = models.PositiveIntegerField(default=0)
 	imagen = models.ImageField(upload_to='bloque/carrusel')

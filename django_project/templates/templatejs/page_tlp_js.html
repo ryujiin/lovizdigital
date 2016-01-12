@@ -30,8 +30,11 @@
 
 <script id="bloque_carrusel_img" type="text/template">
 	{%for img in imagenes_carrusel%}
+	
 		<div class="item">
-			<img src="{{img.imagen}}" alt="{{img.titulo}}">
+			<a href="{{img.link}}" class="link {{img.estilo}}">
+				<img src="{{img.imagen}}" alt="{{img.titulo}}">
+			</a>
 		</div>		
 	{%endfor%}
 </script>

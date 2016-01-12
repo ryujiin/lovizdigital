@@ -15,7 +15,7 @@ class ImagenCarruselSerializer(serializers.ModelSerializer):
 	imagen = serializers.SerializerMethodField()
 	class Meta:
 		model = ImageCarrusel
-		fields = ('id','titulo','estilo','bloque','orden','imagen')
+		fields = ('id','titulo','estilo','bloque','orden','imagen','link')
 
 	def get_imagen(self,obj):
 		url = obj.imagen.url

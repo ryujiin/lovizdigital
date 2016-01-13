@@ -32,7 +32,7 @@ define([
         },
         root:function(){
             $('body').removeClass();            
-            Pages.render_front();
+            Pages.buscar_page('front');
         },
         perfil:function(){
             $('body').removeClass();            
@@ -54,7 +54,6 @@ define([
         catalogo:function (slug) {
             $('body').removeClass();            
             $('body').addClass('catalogo');
-            debugger;
             var coincidencia = Categorias.findWhere({slug:slug});
             if (coincidencia) {
                 CatalogoPage.render(coincidencia,Categorias);
@@ -71,7 +70,7 @@ define([
             PageProcesar.verificar_render();
         },
         pagina_statica:function (page_slug) {
-            Pages.buscar_datos(page_slug);
+            Pages.buscar_page(page_slug);
         },
         felicidades:function () {
             

@@ -32,68 +32,65 @@ define([
         events: {},
 
         initialize: function () {
-            this.listenTo(this.model, 'change', this.rellenar);
-            this.listenTo(this.model, 'change:cuerpo', this.render);
+            //this.listenTo(this.model, 'change', this.rellenar);
+            //this.listenTo(this.model, 'change:cuerpo', this.render);
             this.paginas = PaginasTotal;
         },
 
-        render: function (slug) {            
+        render: function (slug) {        
             this.$el.html(this.template(this.model.toJSON()));
+            this.rellenar_page();
         },
-        render_front:function () {
-            this.$el.html(this.template());
-            if (this.model.toJSON().front===true) {
-                this.rellenar()
+        buscar_page:function (slug) {
+            var coincidencia,busqueda;
+            if (slug==='front') {
+                busqueda = {front:true}
             }else{
-                this.buscar_datos();
-            };
-            this.addTopSeller();
-        },
-        buscar_datos:function (slug) {
-            if (slug) {
-                var coincidencia = this.paginas.findWhere({'slug':slug});
-                if (coincidencia === undefined) {
-                    var busqueda ={'slug':slug}
-                    this.buscar_server(busqueda);
-                }else{
-                    this.model.set(coincidencia.toJSON())
-                }
+                busqueda = {'slug':slug}
+            }
+            coincidencia = this.paginas.findWhere(busqueda)
+
+            if (coincidencia === undefined) {
+                this.buscar_server(busqueda)
             }else{
-                var coincidencia = this.paginas.findWhere({'front':true})
-                if (coincidencia===undefined) {
-                    var busqueda = {front:true}
-                    this.buscar_server(busqueda);
-                }else{
-                    this.model.set(coincidencia.toJSON());
-                }       
+                this.model.set(coincidencia.toJSON())
+                this.render();
             }
         },
         buscar_server:function (busqueda) {
             var self = this;
-            var paginas = new PagesCollection();
-            paginas.fetch({
+            var nueva_pagina = new PagesCollection();
+            nueva_pagina.fetch({
                 data:$.param(busqueda)
-            }).done(function  (data) {
+            }).done(function (data) {
                 self.paginas.add(data);
-                if (data[0].front===true) {
-                    self.buscar_datos()
-                }else{
-                    self.buscar_datos(data[0].slug);
-                }
-            })
+                self.model.set(data[0]);
+                self.render();
+            });
         },
-        rellenar:function () {
+        rellenar_page:function () {
             Head.render(this.model.toJSON().titulo,this.model.toJSON().descripcion);
             var bloques = this.model.attributes.bloques;
             var menus = this.model.attributes.menus;
             bloques.forEach(this.addBloque,this);
             menus.forEach(this.addMenu,this);
+            if (this.model.toJSON().front===true) {
+                this.addTopSeller();
+            };
         },
         addBloque:function (modelo) {
             var bloque = new BloqueView({
                 className:modelo.estilo,
                 model:modelo,
             })
+        },
+        addMenu:function (modelo) {
+            var menu_modelo = new MenuModel();
+            var vista = new Menu({
+                model:menu_modelo
+            });
+            menu_modelo.set(modelo);
+            vista.render()
         },
         addTopSeller:function () {
             var productos = new Productos();            
@@ -106,14 +103,6 @@ define([
             }).done(function () {
                 carrusel_producto.add_Carrusel();
             })
-        },
-        addMenu:function (modelo) {
-            var menu_modelo = new MenuModel();
-            var vista = new Menu({
-                model:menu_modelo
-            });
-            menu_modelo.set(modelo);
-            vista.render()
         }
     });
 

@@ -42,6 +42,7 @@ define([
             this.addBread(modelo,Categorias);
             this.crear_bloque_Categoria(modelo,Categorias);
             this.crear_bloque_colores();
+            this.efectos();
         },
         crear_bloque_busqueda:function (modelo) {
             var bloque_productos = new Catalogo({
@@ -112,6 +113,26 @@ define([
                 el:this.$('.refinement.Color'),
             });
         },
+        efecto_estatico:function () {
+            console.log($(window).scrollTop());
+            if ($(window).scrollTop()> 87) {
+                this.$('.js-panel.from-right').addClass('siguiendo');
+            }else{
+                this.$('.js-panel.from-right').removeClass('siguiendo');
+            };
+        },
+        efectos:function() {            
+            $(window).scroll(this.efecto_estatico);
+            //var altura = this.$('.js-panel.from-right').offset().top;
+            //if ($(window).scrollTop()> altura) {
+                //debugger;
+                //this.$('.js-panel.from-right').addClass('siguiendo');
+            //}else{
+                //debugger;
+                //this.$('.js-panel.from-right').removeClass('siguiendo');
+            //};
+
+        }
     });
 
     var vista = new PageCatalogoView();

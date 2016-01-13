@@ -120,6 +120,17 @@ p.bg-warning {
   -ms-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
 }
+.secNav {
+  list-style: none;
+}
+.secNav li {
+  display: inline-block;
+  margin: 0 10px;
+  border-right: 1px solid #111;
+}
+.secNav li:last {
+  border-right: none;
+}
 ul.no-list {
   padding: 0;
   margin: 0;
@@ -839,7 +850,6 @@ h2 .linea {
 }
 .catalogo .section-refinamiento {
   display: none;
-  border-right: 1px solid #f4f4f4;
 }
 .catalogo .section-refinamiento ul {
   list-style: none;
@@ -866,9 +876,6 @@ h2 .linea {
   background: #111;
   color: #fff;
   text-decoration: none;
-}
-.catalogo .section-main {
-  border-right: 1px solid #eee;
 }
 .lista-productos .productos {
   text-align: center;
@@ -1589,6 +1596,14 @@ h2 .linea {
   }
   .catalogo .section-refinamiento {
     display: block;
+  }
+  .catalogo .section-refinamiento aside.siguiendo {
+    position: fixed;
+    width: 25%;
+    top: 90px;
+  }
+  .catalogo .section-main {
+    border-left: 1px solid #eee;
   }
   .lista-productos .productos figure {
     min-height: 160px;

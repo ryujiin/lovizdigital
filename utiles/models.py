@@ -5,6 +5,7 @@ from django.template.defaultfilters import slugify
 
 class Color(models.Model):
 	nombre = models.CharField(max_length=100)
+	hexdecimal = models.CharField(max_length=10,blank=True)	
 	descripcion = models.TextField(blank=True,null=True)
 	slug = models.SlugField(max_length=120,unique=True,editable=False,blank=True,null=True)
 

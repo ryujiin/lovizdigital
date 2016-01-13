@@ -60,6 +60,9 @@
 <script id="categoria_link_tlp" type="text/template">
 	{%if valor%}
 	<a class="no-link {{slug}} {%if activo%} activo {%else%} no_activo {%endif%}" href="#" data-tipo="{{valor}}" data-valor="{{nombre}}">
+		{%if hexdecimal%}
+		<div class="color-hex" style="background:{{hexdecimal}}"></div>
+		{%endif%}
 		{{nombre}}
 	</a>
 	{%else%}

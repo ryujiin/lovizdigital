@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/comentario"],function(o,e,t){"use strict";var r=e.Collection.extend({model:t,url:"/api/comentarios/",buscar_producto:function(o){this.fetch({data:$.param({producto:o})})}});return r});

@@ -4,13 +4,13 @@ define([
     'jquery',
     'backbone',
     '../views/carro/page_carro',
-    '../views//pages/pages',
+    '../views/pages/pages',
     '../views/catalogo/page_catalogo',
     '../views/productosingle/page_producto',
     '../collections/categoria',
     '../views/procesar/page_procesar',
     '../views/usuario/page_user',
-    '../views/app/page_error'
+    '../views/app/page_error',
 ], function ($, Backbone,CarroPage,Pages,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageError) {
     'use strict';
 
@@ -24,6 +24,7 @@ define([
             'ingresar/':'ingresar',
             'procesar-compra/':'procesar_compra',
             'felicidades/':'felicidades',
+            'sp/:page_slug/':'pagina_statica',
             '*notFound': 'notFound',
         },
 
@@ -68,6 +69,9 @@ define([
         procesar_compra:function () {
             $('body').removeClass();              
             PageProcesar.verificar_render();
+        },
+        pagina_statica:function (page_slug) {
+            Pages.buscar_datos(page_slug);
         },
         felicidades:function () {
             

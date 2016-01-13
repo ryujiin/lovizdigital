@@ -1,1 +1,18 @@
-define(["../ajax"],function(a){return a._evalUrl=function(r){return a.ajax({url:r,type:"GET",dataType:"script",async:!1,global:!1,"throws":!0})},a._evalUrl});
+define([
+	"../ajax"
+], function( jQuery ) {
+
+jQuery._evalUrl = function( url ) {
+	return jQuery.ajax({
+		url: url,
+		type: "GET",
+		dataType: "script",
+		async: false,
+		global: false,
+		"throws": true
+	});
+};
+
+return jQuery._evalUrl;
+
+});

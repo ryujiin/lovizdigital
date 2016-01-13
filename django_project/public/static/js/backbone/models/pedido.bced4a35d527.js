@@ -1,1 +1,0 @@
-define(["underscore","backbone"],function(e,n){"use strict";var t=n.Model.extend({urlRoot:"/api/pedidos/",url:function(){var e=this.urlRoot;return e+("/"==e.charAt(e.length-1)?"":"/")+this.id+"/"},name:"pedido",initialize:function(){},defaults:{},validate:function(){},parse:function(e){return e}});return t});

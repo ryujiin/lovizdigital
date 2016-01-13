@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/breadcrumb"],function(e,n,r){"use strict";var o=n.Collection.extend({model:r});return o});

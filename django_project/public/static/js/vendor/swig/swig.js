@@ -1,6 +1,28 @@
 /*! Swig v1.4.2 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
-
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
+;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var swig = require('../lib/swig');
+
+if (typeof window.define === 'function' && typeof window.define.amd === 'object') {
+  window.define('swig', [], function () {
+    return swig;
+  });
+} else {
+  window.swig = swig;
+}
+
+},{"../lib/swig":9}],2:[function(require,module,exports){
+var utils = require('./utils');
+
+var _months = {
+    full: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    abbr: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  },
+  _days = {
+    full: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    abbr: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    alt: {'-1': 'Yesterday', 0: 'Today', 1: 'Tomorrow'}
+  };
 
 /*
 DateZ is licensed under the MIT License:
@@ -9,6 +31,1346 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+exports.tzOffset = 0;
+exports.DateZ = function () {
+  var members = {
+      'default': ['getUTCDate', 'getUTCDay', 'getUTCFullYear', 'getUTCHours', 'getUTCMilliseconds', 'getUTCMinutes', 'getUTCMonth', 'getUTCSeconds', 'toISOString', 'toGMTString', 'toUTCString', 'valueOf', 'getTime'],
+      z: ['getDate', 'getDay', 'getFullYear', 'getHours', 'getMilliseconds', 'getMinutes', 'getMonth', 'getSeconds', 'getYear', 'toDateString', 'toLocaleDateString', 'toLocaleTimeString']
+    },
+    d = this;
+
+  d.date = d.dateZ = (arguments.length > 1) ? new Date(Date.UTC.apply(Date, arguments) + ((new Date()).getTimezoneOffset() * 60000)) : (arguments.length === 1) ? new Date(new Date(arguments['0'])) : new Date();
+
+  d.timezoneOffset = d.dateZ.getTimezoneOffset();
+
+  utils.each(members.z, function (name) {
+    d[name] = function () {
+      return d.dateZ[name]();
+    };
+  });
+  utils.each(members['default'], function (name) {
+    d[name] = function () {
+      return d.date[name]();
+    };
+  });
+
+  this.setTimezoneOffset(exports.tzOffset);
+};
+exports.DateZ.prototype = {
+  getTimezoneOffset: function () {
+    return this.timezoneOffset;
+  },
+  setTimezoneOffset: function (offset) {
+    this.timezoneOffset = offset;
+    this.dateZ = new Date(this.date.getTime() + this.date.getTimezoneOffset() * 60000 - this.timezoneOffset * 60000);
+    return this;
+  }
+};
+
+// Day
+exports.d = function (input) {
+  return (input.getDate() < 10 ? '0' : '') + input.getDate();
+};
+exports.D = function (input) {
+  return _days.abbr[input.getDay()];
+};
+exports.j = function (input) {
+  return input.getDate();
+};
+exports.l = function (input) {
+  return _days.full[input.getDay()];
+};
+exports.N = function (input) {
+  var d = input.getDay();
+  return (d >= 1) ? d : 7;
+};
+exports.S = function (input) {
+  var d = input.getDate();
+  return (d % 10 === 1 && d !== 11 ? 'st' : (d % 10 === 2 && d !== 12 ? 'nd' : (d % 10 === 3 && d !== 13 ? 'rd' : 'th')));
+};
+exports.w = function (input) {
+  return input.getDay();
+};
+exports.z = function (input, offset, abbr) {
+  var year = input.getFullYear(),
+    e = new exports.DateZ(year, input.getMonth(), input.getDate(), 12, 0, 0),
+    d = new exports.DateZ(year, 0, 1, 12, 0, 0);
+
+  e.setTimezoneOffset(offset, abbr);
+  d.setTimezoneOffset(offset, abbr);
+  return Math.round((e - d) / 86400000);
+};
+
+// Week
+exports.W = function (input) {
+  var target = new Date(input.valueOf()),
+    dayNr = (input.getDay() + 6) % 7,
+    fThurs;
+
+  target.setDate(target.getDate() - dayNr + 3);
+  fThurs = target.valueOf();
+  target.setMonth(0, 1);
+  if (target.getDay() !== 4) {
+    target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+  }
+
+  return 1 + Math.ceil((fThurs - target) / 604800000);
+};
+
+// Month
+exports.F = function (input) {
+  return _months.full[input.getMonth()];
+};
+exports.m = function (input) {
+  return (input.getMonth() < 9 ? '0' : '') + (input.getMonth() + 1);
+};
+exports.M = function (input) {
+  return _months.abbr[input.getMonth()];
+};
+exports.n = function (input) {
+  return input.getMonth() + 1;
+};
+exports.t = function (input) {
+  return 32 - (new Date(input.getFullYear(), input.getMonth(), 32).getDate());
+};
+
+// Year
+exports.L = function (input) {
+  return new Date(input.getFullYear(), 1, 29).getDate() === 29;
+};
+exports.o = function (input) {
+  var target = new Date(input.valueOf());
+  target.setDate(target.getDate() - ((input.getDay() + 6) % 7) + 3);
+  return target.getFullYear();
+};
+exports.Y = function (input) {
+  return input.getFullYear();
+};
+exports.y = function (input) {
+  return (input.getFullYear().toString()).substr(2);
+};
+
+// Time
+exports.a = function (input) {
+  return input.getHours() < 12 ? 'am' : 'pm';
+};
+exports.A = function (input) {
+  return input.getHours() < 12 ? 'AM' : 'PM';
+};
+exports.B = function (input) {
+  var hours = input.getUTCHours(), beats;
+  hours = (hours === 23) ? 0 : hours + 1;
+  beats = Math.abs(((((hours * 60) + input.getUTCMinutes()) * 60) + input.getUTCSeconds()) / 86.4).toFixed(0);
+  return ('000'.concat(beats).slice(beats.length));
+};
+exports.g = function (input) {
+  var h = input.getHours();
+  return h === 0 ? 12 : (h > 12 ? h - 12 : h);
+};
+exports.G = function (input) {
+  return input.getHours();
+};
+exports.h = function (input) {
+  var h = input.getHours();
+  return ((h < 10 || (12 < h && 22 > h)) ? '0' : '') + ((h < 12) ? h : h - 12);
+};
+exports.H = function (input) {
+  var h = input.getHours();
+  return (h < 10 ? '0' : '') + h;
+};
+exports.i = function (input) {
+  var m = input.getMinutes();
+  return (m < 10 ? '0' : '') + m;
+};
+exports.s = function (input) {
+  var s = input.getSeconds();
+  return (s < 10 ? '0' : '') + s;
+};
+//u = function () { return ''; },
+
+// Timezone
+//e = function () { return ''; },
+//I = function () { return ''; },
+exports.O = function (input) {
+  var tz = input.getTimezoneOffset();
+  return (tz < 0 ? '-' : '+') + (tz / 60 < 10 ? '0' : '') + Math.abs((tz / 60)) + '00';
+};
+//T = function () { return ''; },
+exports.Z = function (input) {
+  return input.getTimezoneOffset() * 60;
+};
+
+// Full Date/Time
+exports.c = function (input) {
+  return input.toISOString();
+};
+exports.r = function (input) {
+  return input.toUTCString();
+};
+exports.U = function (input) {
+  return input.getTime() / 1000;
+};
+
+},{"./utils":26}],3:[function(require,module,exports){
+var utils = require('./utils'),
+  dateFormatter = require('./dateformatter');
+
+/**
+ * Helper method to recursively run a filter across an object/array and apply it to all of the object/array's values.
+ * @param  {*} input
+ * @return {*}
+ * @private
+ */
+function iterateFilter(input) {
+  var self = this,
+    out = {};
+
+  if (utils.isArray(input)) {
+    return utils.map(input, function (value) {
+      return self.apply(null, arguments);
+    });
+  }
+
+  if (typeof input === 'object') {
+    utils.each(input, function (value, key) {
+      out[key] = self.apply(null, arguments);
+    });
+    return out;
+  }
+
+  return;
+}
+
+/**
+ * Backslash-escape characters that need to be escaped.
+ *
+ * @example
+ * {{ "\"quoted string\""|addslashes }}
+ * // => \"quoted string\"
+ *
+ * @param  {*}  input
+ * @return {*}        Backslash-escaped string.
+ */
+exports.addslashes = function (input) {
+  var out = iterateFilter.apply(exports.addslashes, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.replace(/\\/g, '\\\\').replace(/\'/g, "\\'").replace(/\"/g, '\\"');
+};
+
+/**
+ * Upper-case the first letter of the input and lower-case the rest.
+ *
+ * @example
+ * {{ "i like Burritos"|capitalize }}
+ * // => I like burritos
+ *
+ * @param  {*} input  If given an array or object, each string member will be run through the filter individually.
+ * @return {*}        Returns the same type as the input.
+ */
+exports.capitalize = function (input) {
+  var out = iterateFilter.apply(exports.capitalize, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.toString().charAt(0).toUpperCase() + input.toString().substr(1).toLowerCase();
+};
+
+/**
+ * Format a date or Date-compatible string.
+ *
+ * @example
+ * // now = new Date();
+ * {{ now|date('Y-m-d') }}
+ * // => 2013-08-14
+ * @example
+ * // now = new Date();
+ * {{ now|date('jS \o\f F') }}
+ * // => 4th of July
+ *
+ * @param  {?(string|date)}   input
+ * @param  {string}           format  PHP-style date format compatible string. Escape characters with <code>\</code> for string literals.
+ * @param  {number=}          offset  Timezone offset from GMT in minutes.
+ * @param  {string=}          abbr    Timezone abbreviation. Used for output only.
+ * @return {string}                   Formatted date string.
+ */
+exports.date = function (input, format, offset, abbr) {
+  var l = format.length,
+    date = new dateFormatter.DateZ(input),
+    cur,
+    i = 0,
+    out = '';
+
+  if (offset) {
+    date.setTimezoneOffset(offset, abbr);
+  }
+
+  for (i; i < l; i += 1) {
+    cur = format.charAt(i);
+    if (cur === '\\') {
+      i += 1;
+      out += (i < l) ? format.charAt(i) : cur;
+    } else if (dateFormatter.hasOwnProperty(cur)) {
+      out += dateFormatter[cur](date, offset, abbr);
+    } else {
+      out += cur;
+    }
+  }
+  return out;
+};
+
+/**
+ * If the input is `undefined`, `null`, or `false`, a default return value can be specified.
+ *
+ * @example
+ * {{ null_value|default('Tacos') }}
+ * // => Tacos
+ *
+ * @example
+ * {{ "Burritos"|default("Tacos") }}
+ * // => Burritos
+ *
+ * @param  {*}  input
+ * @param  {*}  def     Value to return if `input` is `undefined`, `null`, or `false`.
+ * @return {*}          `input` or `def` value.
+ */
+exports["default"] = function (input, def) {
+  return (typeof input !== 'undefined' && (input || typeof input === 'number')) ? input : def;
+};
+
+/**
+ * Force escape the output of the variable. Optionally use `e` as a shortcut filter name. This filter will be applied by default if autoescape is turned on.
+ *
+ * @example
+ * {{ "<blah>"|escape }}
+ * // => &lt;blah&gt;
+ *
+ * @example
+ * {{ "<blah>"|e("js") }}
+ * // => \u003Cblah\u003E
+ *
+ * @param  {*} input
+ * @param  {string} [type='html']   If you pass the string js in as the type, output will be escaped so that it is safe for JavaScript execution.
+ * @return {string}         Escaped string.
+ */
+exports.escape = function (input, type) {
+  var out = iterateFilter.apply(exports.escape, arguments),
+    inp = input,
+    i = 0,
+    code;
+
+  if (out !== undefined) {
+    return out;
+  }
+
+  if (typeof input !== 'string') {
+    return input;
+  }
+
+  out = '';
+
+  switch (type) {
+  case 'js':
+    inp = inp.replace(/\\/g, '\\u005C');
+    for (i; i < inp.length; i += 1) {
+      code = inp.charCodeAt(i);
+      if (code < 32) {
+        code = code.toString(16).toUpperCase();
+        code = (code.length < 2) ? '0' + code : code;
+        out += '\\u00' + code;
+      } else {
+        out += inp[i];
+      }
+    }
+    return out.replace(/&/g, '\\u0026')
+      .replace(/</g, '\\u003C')
+      .replace(/>/g, '\\u003E')
+      .replace(/\'/g, '\\u0027')
+      .replace(/"/g, '\\u0022')
+      .replace(/\=/g, '\\u003D')
+      .replace(/-/g, '\\u002D')
+      .replace(/;/g, '\\u003B');
+
+  default:
+    return inp.replace(/&(?!amp;|lt;|gt;|quot;|#39;)/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+};
+exports.e = exports.escape;
+
+/**
+ * Get the first item in an array or character in a string. All other objects will attempt to return the first value available.
+ *
+ * @example
+ * // my_arr = ['a', 'b', 'c']
+ * {{ my_arr|first }}
+ * // => a
+ *
+ * @example
+ * // my_val = 'Tacos'
+ * {{ my_val|first }}
+ * // T
+ *
+ * @param  {*} input
+ * @return {*}        The first item of the array or first character of the string input.
+ */
+exports.first = function (input) {
+  if (typeof input === 'object' && !utils.isArray(input)) {
+    var keys = utils.keys(input);
+    return input[keys[0]];
+  }
+
+  if (typeof input === 'string') {
+    return input.substr(0, 1);
+  }
+
+  return input[0];
+};
+
+/**
+ * Group an array of objects by a common key. If an array is not provided, the input value will be returned untouched.
+ *
+ * @example
+ * // people = [{ age: 23, name: 'Paul' }, { age: 26, name: 'Jane' }, { age: 23, name: 'Jim' }];
+ * {% for agegroup in people|groupBy('age') %}
+ *   <h2>{{ loop.key }}</h2>
+ *   <ul>
+ *     {% for person in agegroup %}
+ *     <li>{{ person.name }}</li>
+ *     {% endfor %}
+ *   </ul>
+ * {% endfor %}
+ *
+ * @param  {*}      input Input object.
+ * @param  {string} key   Key to group by.
+ * @return {object}       Grouped arrays by given key.
+ */
+exports.groupBy = function (input, key) {
+  if (!utils.isArray(input)) {
+    return input;
+  }
+
+  var out = {};
+
+  utils.each(input, function (value) {
+    if (!value.hasOwnProperty(key)) {
+      return;
+    }
+
+    var keyname = value[key],
+      newVal = utils.extend({}, value);
+    delete value[key];
+
+    if (!out[keyname]) {
+      out[keyname] = [];
+    }
+
+    out[keyname].push(value);
+  });
+
+  return out;
+};
+
+/**
+ * Join the input with a string.
+ *
+ * @example
+ * // my_array = ['foo', 'bar', 'baz']
+ * {{ my_array|join(', ') }}
+ * // => foo, bar, baz
+ *
+ * @example
+ * // my_key_object = { a: 'foo', b: 'bar', c: 'baz' }
+ * {{ my_key_object|join(' and ') }}
+ * // => foo and bar and baz
+ *
+ * @param  {*}  input
+ * @param  {string} glue    String value to join items together.
+ * @return {string}
+ */
+exports.join = function (input, glue) {
+  if (utils.isArray(input)) {
+    return input.join(glue);
+  }
+
+  if (typeof input === 'object') {
+    var out = [];
+    utils.each(input, function (value) {
+      out.push(value);
+    });
+    return out.join(glue);
+  }
+  return input;
+};
+
+/**
+ * Return a string representation of an JavaScript object.
+ *
+ * Backwards compatible with swig@0.x.x using `json_encode`.
+ *
+ * @example
+ * // val = { a: 'b' }
+ * {{ val|json }}
+ * // => {"a":"b"}
+ *
+ * @example
+ * // val = { a: 'b' }
+ * {{ val|json(4) }}
+ * // => {
+ * //        "a": "b"
+ * //    }
+ *
+ * @param  {*}    input
+ * @param  {number}  [indent]  Number of spaces to indent for pretty-formatting.
+ * @return {string}           A valid JSON string.
+ */
+exports.json = function (input, indent) {
+  return JSON.stringify(input, null, indent || 0);
+};
+exports.json_encode = exports.json;
+
+/**
+ * Get the last item in an array or character in a string. All other objects will attempt to return the last value available.
+ *
+ * @example
+ * // my_arr = ['a', 'b', 'c']
+ * {{ my_arr|last }}
+ * // => c
+ *
+ * @example
+ * // my_val = 'Tacos'
+ * {{ my_val|last }}
+ * // s
+ *
+ * @param  {*} input
+ * @return {*}          The last item of the array or last character of the string.input.
+ */
+exports.last = function (input) {
+  if (typeof input === 'object' && !utils.isArray(input)) {
+    var keys = utils.keys(input);
+    return input[keys[keys.length - 1]];
+  }
+
+  if (typeof input === 'string') {
+    return input.charAt(input.length - 1);
+  }
+
+  return input[input.length - 1];
+};
+
+/**
+ * Return the input in all lowercase letters.
+ *
+ * @example
+ * {{ "FOOBAR"|lower }}
+ * // => foobar
+ *
+ * @example
+ * // myObj = { a: 'FOO', b: 'BAR' }
+ * {{ myObj|lower|join('') }}
+ * // => foobar
+ *
+ * @param  {*}  input
+ * @return {*}          Returns the same type as the input.
+ */
+exports.lower = function (input) {
+  var out = iterateFilter.apply(exports.lower, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.toString().toLowerCase();
+};
+
+/**
+ * Deprecated in favor of <a href="#safe">safe</a>.
+ */
+exports.raw = function (input) {
+  return exports.safe(input);
+};
+exports.raw.safe = true;
+
+/**
+ * Returns a new string with the matched search pattern replaced by the given replacement string. Uses JavaScript's built-in String.replace() method.
+ *
+ * @example
+ * // my_var = 'foobar';
+ * {{ my_var|replace('o', 'e', 'g') }}
+ * // => feebar
+ *
+ * @example
+ * // my_var = "farfegnugen";
+ * {{ my_var|replace('^f', 'p') }}
+ * // => parfegnugen
+ *
+ * @example
+ * // my_var = 'a1b2c3';
+ * {{ my_var|replace('\w', '0', 'g') }}
+ * // => 010203
+ *
+ * @param  {string} input
+ * @param  {string} search      String or pattern to replace from the input.
+ * @param  {string} replacement String to replace matched pattern.
+ * @param  {string} [flags]      Regular Expression flags. 'g': global match, 'i': ignore case, 'm': match over multiple lines
+ * @return {string}             Replaced string.
+ */
+exports.replace = function (input, search, replacement, flags) {
+  var r = new RegExp(search, flags);
+  return input.replace(r, replacement);
+};
+
+/**
+ * Reverse sort the input. This is an alias for <code data-language="swig">{{ input|sort(true) }}</code>.
+ *
+ * @example
+ * // val = [1, 2, 3];
+ * {{ val|reverse }}
+ * // => 3,2,1
+ *
+ * @param  {array}  input
+ * @return {array}        Reversed array. The original input object is returned if it was not an array.
+ */
+exports.reverse = function (input) {
+  return exports.sort(input, true);
+};
+
+/**
+ * Forces the input to not be auto-escaped. Use this only on content that you know is safe to be rendered on your page.
+ *
+ * @example
+ * // my_var = "<p>Stuff</p>";
+ * {{ my_var|safe }}
+ * // => <p>Stuff</p>
+ *
+ * @param  {*}  input
+ * @return {*}          The input exactly how it was given, regardless of autoescaping status.
+ */
+exports.safe = function (input) {
+  // This is a magic filter. Its logic is hard-coded into Swig's parser.
+  return input;
+};
+exports.safe.safe = true;
+
+/**
+ * Sort the input in an ascending direction.
+ * If given an object, will return the keys as a sorted array.
+ * If given a string, each character will be sorted individually.
+ *
+ * @example
+ * // val = [2, 6, 4];
+ * {{ val|sort }}
+ * // => 2,4,6
+ *
+ * @example
+ * // val = 'zaq';
+ * {{ val|sort }}
+ * // => aqz
+ *
+ * @example
+ * // val = { bar: 1, foo: 2 }
+ * {{ val|sort(true) }}
+ * // => foo,bar
+ *
+ * @param  {*} input
+ * @param {boolean} [reverse=false] Output is given reverse-sorted if true.
+ * @return {*}        Sorted array;
+ */
+exports.sort = function (input, reverse) {
+  var out;
+  if (utils.isArray(input)) {
+    out = input.sort();
+  } else {
+    switch (typeof input) {
+    case 'object':
+      out = utils.keys(input).sort();
+      break;
+    case 'string':
+      out = input.split('');
+      if (reverse) {
+        return out.reverse().join('');
+      }
+      return out.sort().join('');
+    }
+  }
+
+  if (out && reverse) {
+    return out.reverse();
+  }
+
+  return out || input;
+};
+
+/**
+ * Strip HTML tags.
+ *
+ * @example
+ * // stuff = '<p>foobar</p>';
+ * {{ stuff|striptags }}
+ * // => foobar
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same object as the input, but with all string values stripped of tags.
+ */
+exports.striptags = function (input) {
+  var out = iterateFilter.apply(exports.striptags, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.toString().replace(/(<([^>]+)>)/ig, '');
+};
+
+/**
+ * Capitalizes every word given and lower-cases all other letters.
+ *
+ * @example
+ * // my_str = 'this is soMe text';
+ * {{ my_str|title }}
+ * // => This Is Some Text
+ *
+ * @example
+ * // my_arr = ['hi', 'this', 'is', 'an', 'array'];
+ * {{ my_arr|title|join(' ') }}
+ * // => Hi This Is An Array
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same object as the input, but with all words in strings title-cased.
+ */
+exports.title = function (input) {
+  var out = iterateFilter.apply(exports.title, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.toString().replace(/\w\S*/g, function (str) {
+    return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+  });
+};
+
+/**
+ * Remove all duplicate items from an array.
+ *
+ * @example
+ * // my_arr = [1, 2, 3, 4, 4, 3, 2, 1];
+ * {{ my_arr|uniq|join(',') }}
+ * // => 1,2,3,4
+ *
+ * @param  {array}  input
+ * @return {array}        Array with unique items. If input was not an array, the original item is returned untouched.
+ */
+exports.uniq = function (input) {
+  var result;
+
+  if (!input || !utils.isArray(input)) {
+    return '';
+  }
+
+  result = [];
+  utils.each(input, function (v) {
+    if (result.indexOf(v) === -1) {
+      result.push(v);
+    }
+  });
+  return result;
+};
+
+/**
+ * Convert the input to all uppercase letters. If an object or array is provided, all values will be uppercased.
+ *
+ * @example
+ * // my_str = 'tacos';
+ * {{ my_str|upper }}
+ * // => TACOS
+ *
+ * @example
+ * // my_arr = ['tacos', 'burritos'];
+ * {{ my_arr|upper|join(' & ') }}
+ * // => TACOS & BURRITOS
+ *
+ * @param  {*}  input
+ * @return {*}        Returns the same type as the input, with all strings upper-cased.
+ */
+exports.upper = function (input) {
+  var out = iterateFilter.apply(exports.upper, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+
+  return input.toString().toUpperCase();
+};
+
+/**
+ * URL-encode a string. If an object or array is passed, all values will be URL-encoded.
+ *
+ * @example
+ * // my_str = 'param=1&anotherParam=2';
+ * {{ my_str|url_encode }}
+ * // => param%3D1%26anotherParam%3D2
+ *
+ * @param  {*} input
+ * @return {*}       URL-encoded string.
+ */
+exports.url_encode = function (input) {
+  var out = iterateFilter.apply(exports.url_encode, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+  return encodeURIComponent(input);
+};
+
+/**
+ * URL-decode a string. If an object or array is passed, all values will be URL-decoded.
+ *
+ * @example
+ * // my_str = 'param%3D1%26anotherParam%3D2';
+ * {{ my_str|url_decode }}
+ * // => param=1&anotherParam=2
+ *
+ * @param  {*} input
+ * @return {*}       URL-decoded string.
+ */
+exports.url_decode = function (input) {
+  var out = iterateFilter.apply(exports.url_decode, arguments);
+  if (out !== undefined) {
+    return out;
+  }
+  return decodeURIComponent(input);
+};
+
+},{"./dateformatter":2,"./utils":26}],4:[function(require,module,exports){
+var utils = require('./utils');
+
+/**
+ * A lexer token.
+ * @typedef {object} LexerToken
+ * @property {string} match  The string that was matched.
+ * @property {number} type   Lexer type enum.
+ * @property {number} length Length of the original string processed.
+ */
+
+/**
+ * Enum for token types.
+ * @readonly
+ * @enum {number}
+ */
+var TYPES = {
+    /** Whitespace */
+    WHITESPACE: 0,
+    /** Plain string */
+    STRING: 1,
+    /** Variable filter */
+    FILTER: 2,
+    /** Empty variable filter */
+    FILTEREMPTY: 3,
+    /** Function */
+    FUNCTION: 4,
+    /** Function with no arguments */
+    FUNCTIONEMPTY: 5,
+    /** Open parenthesis */
+    PARENOPEN: 6,
+    /** Close parenthesis */
+    PARENCLOSE: 7,
+    /** Comma */
+    COMMA: 8,
+    /** Variable */
+    VAR: 9,
+    /** Number */
+    NUMBER: 10,
+    /** Math operator */
+    OPERATOR: 11,
+    /** Open square bracket */
+    BRACKETOPEN: 12,
+    /** Close square bracket */
+    BRACKETCLOSE: 13,
+    /** Key on an object using dot-notation */
+    DOTKEY: 14,
+    /** Start of an array */
+    ARRAYOPEN: 15,
+    /** End of an array
+     * Currently unused
+    ARRAYCLOSE: 16, */
+    /** Open curly brace */
+    CURLYOPEN: 17,
+    /** Close curly brace */
+    CURLYCLOSE: 18,
+    /** Colon (:) */
+    COLON: 19,
+    /** JavaScript-valid comparator */
+    COMPARATOR: 20,
+    /** Boolean logic */
+    LOGIC: 21,
+    /** Boolean logic "not" */
+    NOT: 22,
+    /** true or false */
+    BOOL: 23,
+    /** Variable assignment */
+    ASSIGNMENT: 24,
+    /** Start of a method */
+    METHODOPEN: 25,
+    /** End of a method
+     * Currently unused
+    METHODEND: 26, */
+    /** Unknown type */
+    UNKNOWN: 100
+  },
+  rules = [
+    {
+      type: TYPES.WHITESPACE,
+      regex: [
+        /^\s+/
+      ]
+    },
+    {
+      type: TYPES.STRING,
+      regex: [
+        /^""/,
+        /^".*?[^\\]"/,
+        /^''/,
+        /^'.*?[^\\]'/
+      ]
+    },
+    {
+      type: TYPES.FILTER,
+      regex: [
+        /^\|\s*(\w+)\(/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FILTEREMPTY,
+      regex: [
+        /^\|\s*(\w+)/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FUNCTIONEMPTY,
+      regex: [
+        /^\s*(\w+)\(\)/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.FUNCTION,
+      regex: [
+        /^\s*(\w+)\(/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.PARENOPEN,
+      regex: [
+        /^\(/
+      ]
+    },
+    {
+      type: TYPES.PARENCLOSE,
+      regex: [
+        /^\)/
+      ]
+    },
+    {
+      type: TYPES.COMMA,
+      regex: [
+        /^,/
+      ]
+    },
+    {
+      type: TYPES.LOGIC,
+      regex: [
+        /^(&&|\|\|)\s*/,
+        /^(and|or)\s+/
+      ],
+      idx: 1,
+      replace: {
+        'and': '&&',
+        'or': '||'
+      }
+    },
+    {
+      type: TYPES.COMPARATOR,
+      regex: [
+        /^(===|==|\!==|\!=|<=|<|>=|>|in\s|gte\s|gt\s|lte\s|lt\s)\s*/
+      ],
+      idx: 1,
+      replace: {
+        'gte': '>=',
+        'gt': '>',
+        'lte': '<=',
+        'lt': '<'
+      }
+    },
+    {
+      type: TYPES.ASSIGNMENT,
+      regex: [
+        /^(=|\+=|-=|\*=|\/=)/
+      ]
+    },
+    {
+      type: TYPES.NOT,
+      regex: [
+        /^\!\s*/,
+        /^not\s+/
+      ],
+      replace: {
+        'not': '!'
+      }
+    },
+    {
+      type: TYPES.BOOL,
+      regex: [
+        /^(true|false)\s+/,
+        /^(true|false)$/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.VAR,
+      regex: [
+        /^[a-zA-Z_$]\w*((\.\$?\w*)+)?/,
+        /^[a-zA-Z_$]\w*/
+      ]
+    },
+    {
+      type: TYPES.BRACKETOPEN,
+      regex: [
+        /^\[/
+      ]
+    },
+    {
+      type: TYPES.BRACKETCLOSE,
+      regex: [
+        /^\]/
+      ]
+    },
+    {
+      type: TYPES.CURLYOPEN,
+      regex: [
+        /^\{/
+      ]
+    },
+    {
+      type: TYPES.COLON,
+      regex: [
+        /^\:/
+      ]
+    },
+    {
+      type: TYPES.CURLYCLOSE,
+      regex: [
+        /^\}/
+      ]
+    },
+    {
+      type: TYPES.DOTKEY,
+      regex: [
+        /^\.(\w+)/
+      ],
+      idx: 1
+    },
+    {
+      type: TYPES.NUMBER,
+      regex: [
+        /^[+\-]?\d+(\.\d+)?/
+      ]
+    },
+    {
+      type: TYPES.OPERATOR,
+      regex: [
+        /^(\+|\-|\/|\*|%)/
+      ]
+    }
+  ];
+
+exports.types = TYPES;
+
+/**
+ * Return the token type object for a single chunk of a string.
+ * @param  {string} str String chunk.
+ * @return {LexerToken}     Defined type, potentially stripped or replaced with more suitable content.
+ * @private
+ */
+function reader(str) {
+  var matched;
+
+  utils.some(rules, function (rule) {
+    return utils.some(rule.regex, function (regex) {
+      var match = str.match(regex),
+        normalized;
+
+      if (!match) {
+        return;
+      }
+
+      normalized = match[rule.idx || 0].replace(/\s*$/, '');
+      normalized = (rule.hasOwnProperty('replace') && rule.replace.hasOwnProperty(normalized)) ? rule.replace[normalized] : normalized;
+
+      matched = {
+        match: normalized,
+        type: rule.type,
+        length: match[0].length
+      };
+      return true;
+    });
+  });
+
+  if (!matched) {
+    matched = {
+      match: str,
+      type: TYPES.UNKNOWN,
+      length: str.length
+    };
+  }
+
+  return matched;
+}
+
+/**
+ * Read a string and break it into separate token types.
+ * @param  {string} str
+ * @return {Array.LexerToken}     Array of defined types, potentially stripped or replaced with more suitable content.
+ * @private
+ */
+exports.read = function (str) {
+  var offset = 0,
+    tokens = [],
+    substr,
+    match;
+  while (offset < str.length) {
+    substr = str.substring(offset);
+    match = reader(substr);
+    offset += match.length;
+    tokens.push(match);
+  }
+  return tokens;
+};
+
+},{"./utils":26}],5:[function(require,module,exports){
+var process=require("__browserify_process");var fs = require('fs'),
+  path = require('path');
+
+/**
+ * Loads templates from the file system.
+ * @alias swig.loaders.fs
+ * @example
+ * swig.setDefaults({ loader: swig.loaders.fs() });
+ * @example
+ * // Load Templates from a specific directory (does not require using relative paths in your templates)
+ * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates' )});
+ * @param {string}   [basepath='']     Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ * @param {string}   [encoding='utf8']   Template encoding
+ */
+module.exports = function (basepath, encoding) {
+  var ret = {};
+
+  encoding = encoding || 'utf8';
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : process.cwd();
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (identifier, cb) {
+    if (!fs || (cb && !fs.readFile) || !fs.readFileSync) {
+      throw new Error('Unable to find file ' + identifier + ' because there is no filesystem to read from.');
+    }
+
+    identifier = ret.resolve(identifier);
+
+    if (cb) {
+      fs.readFile(identifier, encoding, cb);
+      return;
+    }
+    return fs.readFileSync(identifier, encoding);
+  };
+
+  return ret;
+};
+
+},{"__browserify_process":31,"fs":28,"path":29}],6:[function(require,module,exports){
+/**
+ * @namespace TemplateLoader
+ * @description Swig is able to accept custom template loaders written by you, so that your templates can come from your favorite storage medium without needing to be part of the core library.
+ * A template loader consists of two methods: <var>resolve</var> and <var>load</var>. Each method is used internally by Swig to find and load the source of the template before attempting to parse and compile it.
+ * @example
+ * // A theoretical memcached loader
+ * var path = require('path'),
+ *   Memcached = require('memcached');
+ * function memcachedLoader(locations, options) {
+ *   var memcached = new Memcached(locations, options);
+ *   return {
+ *     resolve: function (to, from) {
+ *       return path.resolve(from, to);
+ *     },
+ *     load: function (identifier, cb) {
+ *       memcached.get(identifier, function (err, data) {
+ *         // if (!data) { load from filesystem; }
+ *         cb(err, data);
+ *       });
+ *     }
+ *   };
+ * };
+ * // Tell swig about the loader:
+ * swig.setDefaults({ loader: memcachedLoader(['192.168.0.2']) });
+ */
+
+/**
+ * @function
+ * @name resolve
+ * @memberof TemplateLoader
+ * @description
+ * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+ * @param  {string} to        Non-absolute identifier or pathname to a file.
+ * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+ * @return {string}
+ */
+
+/**
+ * @function
+ * @name load
+ * @memberof TemplateLoader
+ * @description
+ * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+ * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+ * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+ * @return {string}               Template source string.
+ */
+
+/**
+ * @private
+ */
+exports.fs = require('./filesystem');
+exports.memory = require('./memory');
+
+},{"./filesystem":5,"./memory":7}],7:[function(require,module,exports){
+var path = require('path'),
+  utils = require('../utils');
+
+/**
+ * Loads templates from a provided object mapping.
+ * @alias swig.loaders.memory
+ * @example
+ * var templates = {
+ *   "layout": "{% block content %}{% endblock %}",
+ *   "home.html": "{% extends 'layout.html' %}{% block content %}...{% endblock %}"
+ * };
+ * swig.setDefaults({ loader: swig.loaders.memory(templates) });
+ *
+ * @param {object} mapping Hash object with template paths as keys and template sources as values.
+ * @param {string} [basepath] Path to the templates as string. Assigning this value allows you to use semi-absolute paths to templates instead of relative paths.
+ */
+module.exports = function (mapping, basepath) {
+  var ret = {};
+
+  basepath = (basepath) ? path.normalize(basepath) : null;
+
+  /**
+   * Resolves <var>to</var> to an absolute path or unique identifier. This is used for building correct, normalized, and absolute paths to a given template.
+   * @alias resolve
+   * @param  {string} to        Non-absolute identifier or pathname to a file.
+   * @param  {string} [from]    If given, should attempt to find the <var>to</var> path in relation to this given, known path.
+   * @return {string}
+   */
+  ret.resolve = function (to, from) {
+    if (basepath) {
+      from = basepath;
+    } else {
+      from = (from) ? path.dirname(from) : '/';
+    }
+    return path.resolve(from, to);
+  };
+
+  /**
+   * Loads a single template. Given a unique <var>identifier</var> found by the <var>resolve</var> method this should return the given template.
+   * @alias load
+   * @param  {string}   identifier  Unique identifier of a template (possibly an absolute path).
+   * @param  {function} [cb]        Asynchronous callback function. If not provided, this method should run synchronously.
+   * @return {string}               Template source string.
+   */
+  ret.load = function (pathname, cb) {
+    var src, paths;
+
+    paths = [pathname, pathname.replace(/^(\/|\\)/, '')];
+
+    src = mapping[paths[0]] || mapping[paths[1]];
+    if (!src) {
+      utils.throwError('Unable to find template "' + pathname + '".');
+    }
+
+    if (cb) {
+      cb(null, src);
+      return;
+    }
+    return src;
+  };
+
+  return ret;
+};
+
+},{"../utils":26,"path":29}],8:[function(require,module,exports){
+var utils = require('./utils'),
+  lexer = require('./lexer');
+
+var _t = lexer.types,
+  _reserved = ['break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof', 'new', 'return', 'switch', 'this', 'throw', 'try', 'typeof', 'var', 'void', 'while', 'with'];
+
+
+/**
+ * Filters are simply functions that perform transformations on their first input argument.
+ * Filters are run at render time, so they may not directly modify the compiled template structure in any way.
+ * All of Swig's built-in filters are written in this same way. For more examples, reference the `filters.js` file in Swig's source.
+ *
+ * To disable auto-escaping on a custom filter, simply add a property to the filter method `safe = true;` and the output from this will not be escaped, no matter what the global settings are for Swig.
+ *
+ * @typedef {function} Filter
+ *
+ * @example
+ * // This filter will return 'bazbop' if the idx on the input is not 'foobar'
+ * swig.setFilter('foobar', function (input, idx) {
+ *   return input[idx] === 'foobar' ? input[idx] : 'bazbop';
+ * });
+ * // myvar = ['foo', 'bar', 'baz', 'bop'];
+ * // => {{ myvar|foobar(3) }}
+ * // Since myvar[3] !== 'foobar', we render:
+ * // => bazbop
+ *
+ * @example
+ * // This filter will disable auto-escaping on its output:
+ * function bazbop (input) { return input; }
+ * bazbop.safe = true;
+ * swig.setFilter('bazbop', bazbop);
+ * // => {{ "<p>"|bazbop }}
+ * // => <p>
+ *
+ * @param {*} input Input argument, automatically sent from Swig's built-in parser.
+ * @param {...*} [args] All other arguments are defined by the Filter author.
+ * @return {*}
+ */
 
 /*!
  * Makes a string safe for a regular expression.
@@ -16,16 +1378,3031 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  * @return {string}
  * @private
  */
+function escapeRegExp(str) {
+  return str.replace(/[\-\/\\\^$*+?.()|\[\]{}]/g, '\\$&');
+}
 
-/*!
+/**
+ * Parse strings of variables and tags into tokens for future compilation.
+ * @class
+ * @param {array}   tokens     Pre-split tokens read by the Lexer.
+ * @param {object}  filters    Keyed object of filters that may be applied to variables.
+ * @param {boolean} autoescape Whether or not this should be autoescaped.
+ * @param {number}  line       Beginning line number for the first token.
+ * @param {string}  [filename] Name of the file being parsed.
+ * @private
+ */
+function TokenParser(tokens, filters, autoescape, line, filename) {
+  this.out = [];
+  this.state = [];
+  this.filterApplyIdx = [];
+  this._parsers = {};
+  this.line = line;
+  this.filename = filename;
+  this.filters = filters;
+  this.escape = autoescape;
+
+  this.parse = function () {
+    var self = this;
+
+    if (self._parsers.start) {
+      self._parsers.start.call(self);
+    }
+    utils.each(tokens, function (token, i) {
+      var prevToken = tokens[i - 1];
+      self.isLast = (i === tokens.length - 1);
+      if (prevToken) {
+        while (prevToken.type === _t.WHITESPACE) {
+          i -= 1;
+          prevToken = tokens[i - 1];
+        }
+      }
+      self.prevToken = prevToken;
+      self.parseToken(token);
+    });
+    if (self._parsers.end) {
+      self._parsers.end.call(self);
+    }
+
+    if (self.escape) {
+      self.filterApplyIdx = [0];
+      if (typeof self.escape === 'string') {
+        self.parseToken({ type: _t.FILTER, match: 'e' });
+        self.parseToken({ type: _t.COMMA, match: ',' });
+        self.parseToken({ type: _t.STRING, match: String(autoescape) });
+        self.parseToken({ type: _t.PARENCLOSE, match: ')'});
+      } else {
+        self.parseToken({ type: _t.FILTEREMPTY, match: 'e' });
+      }
+    }
+
+    return self.out;
+  };
+}
+
+TokenParser.prototype = {
+  /**
+   * Set a custom method to be called when a token type is found.
+   *
+   * @example
+   * parser.on(types.STRING, function (token) {
+   *   this.out.push(token.match);
+   * });
+   * @example
+   * parser.on('start', function () {
+   *   this.out.push('something at the beginning of your args')
+   * });
+   * parser.on('end', function () {
+   *   this.out.push('something at the end of your args');
+   * });
+   *
+   * @param  {number}   type Token type ID. Found in the Lexer.
+   * @param  {Function} fn   Callback function. Return true to continue executing the default parsing function.
+   * @return {undefined}
+   */
+  on: function (type, fn) {
+    this._parsers[type] = fn;
+  },
+
+  /**
+   * Parse a single token.
+   * @param  {{match: string, type: number, line: number}} token Lexer token object.
+   * @return {undefined}
+   * @private
+   */
+  parseToken: function (token) {
+    var self = this,
+      fn = self._parsers[token.type] || self._parsers['*'],
+      match = token.match,
+      prevToken = self.prevToken,
+      prevTokenType = prevToken ? prevToken.type : null,
+      lastState = (self.state.length) ? self.state[self.state.length - 1] : null,
+      temp;
+
+    if (fn && typeof fn === 'function') {
+      if (!fn.call(this, token)) {
+        return;
+      }
+    }
+
+    if (lastState && prevToken &&
+        lastState === _t.FILTER &&
+        prevTokenType === _t.FILTER &&
+        token.type !== _t.PARENCLOSE &&
+        token.type !== _t.COMMA &&
+        token.type !== _t.OPERATOR &&
+        token.type !== _t.FILTER &&
+        token.type !== _t.FILTEREMPTY) {
+      self.out.push(', ');
+    }
+
+    if (lastState && lastState === _t.METHODOPEN) {
+      self.state.pop();
+      if (token.type !== _t.PARENCLOSE) {
+        self.out.push(', ');
+      }
+    }
+
+    switch (token.type) {
+    case _t.WHITESPACE:
+      break;
+
+    case _t.STRING:
+      self.filterApplyIdx.push(self.out.length);
+      self.out.push(match.replace(/\\/g, '\\\\'));
+      break;
+
+    case _t.NUMBER:
+    case _t.BOOL:
+      self.filterApplyIdx.push(self.out.length);
+      self.out.push(match);
+      break;
+
+    case _t.FILTER:
+      if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
+        utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
+      }
+      self.escape = self.filters[match].safe ? false : self.escape;
+      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
+      self.state.push(token.type);
+      break;
+
+    case _t.FILTEREMPTY:
+      if (!self.filters.hasOwnProperty(match) || typeof self.filters[match] !== "function") {
+        utils.throwError('Invalid filter "' + match + '"', self.line, self.filename);
+      }
+      self.escape = self.filters[match].safe ? false : self.escape;
+      self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '_filters["' + match + '"](');
+      self.out.push(')');
+      break;
+
+    case _t.FUNCTION:
+    case _t.FUNCTIONEMPTY:
+      self.out.push('((typeof _ctx.' + match + ' !== "undefined") ? _ctx.' + match +
+        ' : ((typeof ' + match + ' !== "undefined") ? ' + match +
+        ' : _fn))(');
+      self.escape = false;
+      if (token.type === _t.FUNCTIONEMPTY) {
+        self.out[self.out.length - 1] = self.out[self.out.length - 1] + ')';
+      } else {
+        self.state.push(token.type);
+      }
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.PARENOPEN:
+      self.state.push(token.type);
+      if (self.filterApplyIdx.length) {
+        self.out.splice(self.filterApplyIdx[self.filterApplyIdx.length - 1], 0, '(');
+        if (prevToken && prevTokenType === _t.VAR) {
+          temp = prevToken.match.split('.').slice(0, -1);
+          self.out.push(' || _fn).call(' + self.checkMatch(temp));
+          self.state.push(_t.METHODOPEN);
+          self.escape = false;
+        } else {
+          self.out.push(' || _fn)(');
+        }
+        self.filterApplyIdx.push(self.out.length - 3);
+      } else {
+        self.out.push('(');
+        self.filterApplyIdx.push(self.out.length - 1);
+      }
+      break;
+
+    case _t.PARENCLOSE:
+      temp = self.state.pop();
+      if (temp !== _t.PARENOPEN && temp !== _t.FUNCTION && temp !== _t.FILTER) {
+        utils.throwError('Mismatched nesting state', self.line, self.filename);
+      }
+      self.out.push(')');
+      // Once off the previous entry
+      self.filterApplyIdx.pop();
+      if (temp !== _t.FILTER) {
+        // Once for the open paren
+        self.filterApplyIdx.pop();
+      }
+      break;
+
+    case _t.COMMA:
+      if (lastState !== _t.FUNCTION &&
+          lastState !== _t.FILTER &&
+          lastState !== _t.ARRAYOPEN &&
+          lastState !== _t.CURLYOPEN &&
+          lastState !== _t.PARENOPEN &&
+          lastState !== _t.COLON) {
+        utils.throwError('Unexpected comma', self.line, self.filename);
+      }
+      if (lastState === _t.COLON) {
+        self.state.pop();
+      }
+      self.out.push(', ');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.LOGIC:
+    case _t.COMPARATOR:
+      if (!prevToken ||
+          prevTokenType === _t.COMMA ||
+          prevTokenType === token.type ||
+          prevTokenType === _t.BRACKETOPEN ||
+          prevTokenType === _t.CURLYOPEN ||
+          prevTokenType === _t.PARENOPEN ||
+          prevTokenType === _t.FUNCTION) {
+        utils.throwError('Unexpected logic', self.line, self.filename);
+      }
+      self.out.push(token.match);
+      break;
+
+    case _t.NOT:
+      self.out.push(token.match);
+      break;
+
+    case _t.VAR:
+      self.parseVar(token, match, lastState);
+      break;
+
+    case _t.BRACKETOPEN:
+      if (!prevToken ||
+          (prevTokenType !== _t.VAR &&
+            prevTokenType !== _t.BRACKETCLOSE &&
+            prevTokenType !== _t.PARENCLOSE)) {
+        self.state.push(_t.ARRAYOPEN);
+        self.filterApplyIdx.push(self.out.length);
+      } else {
+        self.state.push(token.type);
+      }
+      self.out.push('[');
+      break;
+
+    case _t.BRACKETCLOSE:
+      temp = self.state.pop();
+      if (temp !== _t.BRACKETOPEN && temp !== _t.ARRAYOPEN) {
+        utils.throwError('Unexpected closing square bracket', self.line, self.filename);
+      }
+      self.out.push(']');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.CURLYOPEN:
+      self.state.push(token.type);
+      self.out.push('{');
+      self.filterApplyIdx.push(self.out.length - 1);
+      break;
+
+    case _t.COLON:
+      if (lastState !== _t.CURLYOPEN) {
+        utils.throwError('Unexpected colon', self.line, self.filename);
+      }
+      self.state.push(token.type);
+      self.out.push(':');
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.CURLYCLOSE:
+      if (lastState === _t.COLON) {
+        self.state.pop();
+      }
+      if (self.state.pop() !== _t.CURLYOPEN) {
+        utils.throwError('Unexpected closing curly brace', self.line, self.filename);
+      }
+      self.out.push('}');
+
+      self.filterApplyIdx.pop();
+      break;
+
+    case _t.DOTKEY:
+      if (!prevToken || (
+          prevTokenType !== _t.VAR &&
+          prevTokenType !== _t.BRACKETCLOSE &&
+          prevTokenType !== _t.DOTKEY &&
+          prevTokenType !== _t.PARENCLOSE &&
+          prevTokenType !== _t.FUNCTIONEMPTY &&
+          prevTokenType !== _t.FILTEREMPTY &&
+          prevTokenType !== _t.CURLYCLOSE
+        )) {
+        utils.throwError('Unexpected key "' + match + '"', self.line, self.filename);
+      }
+      self.out.push('.' + match);
+      break;
+
+    case _t.OPERATOR:
+      self.out.push(' ' + match + ' ');
+      self.filterApplyIdx.pop();
+      break;
+    }
+  },
+
+  /**
+   * Parse variable token
+   * @param  {{match: string, type: number, line: number}} token      Lexer token object.
+   * @param  {string} match       Shortcut for token.match
+   * @param  {number} lastState   Lexer token type state.
+   * @return {undefined}
+   * @private
+   */
+  parseVar: function (token, match, lastState) {
+    var self = this;
+
+    match = match.split('.');
+
+    if (_reserved.indexOf(match[0]) !== -1) {
+      utils.throwError('Reserved keyword "' + match[0] + '" attempted to be used as a variable', self.line, self.filename);
+    }
+
+    self.filterApplyIdx.push(self.out.length);
+    if (lastState === _t.CURLYOPEN) {
+      if (match.length > 1) {
+        utils.throwError('Unexpected dot', self.line, self.filename);
+      }
+      self.out.push(match[0]);
+      return;
+    }
+
+    self.out.push(self.checkMatch(match));
+  },
+
+  /**
+   * Return contextual dot-check string for a match
+   * @param  {string} match       Shortcut for token.match
+   * @private
+   */
+  checkMatch: function (match) {
+    var temp = match[0], result;
+
+    function checkDot(ctx) {
+      var c = ctx + temp,
+        m = match,
+        build = '';
+
+      build = '(typeof ' + c + ' !== "undefined" && ' + c + ' !== null';
+      utils.each(m, function (v, i) {
+        if (i === 0) {
+          return;
+        }
+        build += ' && ' + c + '.' + v + ' !== undefined && ' + c + '.' + v + ' !== null';
+        c += '.' + v;
+      });
+      build += ')';
+
+      return build;
+    }
+
+    function buildDot(ctx) {
+      return '(' + checkDot(ctx) + ' ? ' + ctx + match.join('.') + ' : "")';
+    }
+    result = '(' + checkDot('_ctx.') + ' ? ' + buildDot('_ctx.') + ' : ' + buildDot('') + ')';
+    return '(' + result + ' !== null ? ' + result + ' : ' + '"" )';
+  }
+};
+
+/**
+ * Parse a source string into tokens that are ready for compilation.
+ *
+ * @example
+ * exports.parse('{{ tacos }}', {}, tags, filters);
+ * // => [{ compile: [Function], ... }]
+ *
+ * @params {object} swig    The current Swig instance
+ * @param  {string} source  Swig template source.
+ * @param  {object} opts    Swig options object.
+ * @param  {object} tags    Keyed object of tags that can be parsed and compiled.
+ * @param  {object} filters Keyed object of filters that may be applied to variables.
+ * @return {array}          List of tokens ready for compilation.
+ */
+exports.parse = function (swig, source, opts, tags, filters) {
+  source = source.replace(/\r\n/g, '\n');
+  var escape = opts.autoescape,
+    tagOpen = opts.tagControls[0],
+    tagClose = opts.tagControls[1],
+    varOpen = opts.varControls[0],
+    varClose = opts.varControls[1],
+    escapedTagOpen = escapeRegExp(tagOpen),
+    escapedTagClose = escapeRegExp(tagClose),
+    escapedVarOpen = escapeRegExp(varOpen),
+    escapedVarClose = escapeRegExp(varClose),
+    tagStrip = new RegExp('^' + escapedTagOpen + '-?\\s*-?|-?\\s*-?' + escapedTagClose + '$', 'g'),
+    tagStripBefore = new RegExp('^' + escapedTagOpen + '-'),
+    tagStripAfter = new RegExp('-' + escapedTagClose + '$'),
+    varStrip = new RegExp('^' + escapedVarOpen + '-?\\s*-?|-?\\s*-?' + escapedVarClose + '$', 'g'),
+    varStripBefore = new RegExp('^' + escapedVarOpen + '-'),
+    varStripAfter = new RegExp('-' + escapedVarClose + '$'),
+    cmtOpen = opts.cmtControls[0],
+    cmtClose = opts.cmtControls[1],
+    anyChar = '[\\s\\S]*?',
+    // Split the template source based on variable, tag, and comment blocks
+    // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
+    splitter = new RegExp(
+      '(' +
+        escapedTagOpen + anyChar + escapedTagClose + '|' +
+        escapedVarOpen + anyChar + escapedVarClose + '|' +
+        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) +
+        ')'
+    ),
+    line = 1,
+    stack = [],
+    parent = null,
+    tokens = [],
+    blocks = {},
+    inRaw = false,
+    stripNext;
+
+  /**
+   * Parse a variable.
+   * @param  {string} str  String contents of the variable, between <i>{{</i> and <i>}}</i>
+   * @param  {number} line The line number that this variable starts on.
+   * @return {VarToken}      Parsed variable token object.
+   * @private
+   */
+  function parseVariable(str, line) {
+    var tokens = lexer.read(utils.strip(str)),
+      parser,
+      out;
+
+    parser = new TokenParser(tokens, filters, escape, line, opts.filename);
+    out = parser.parse().join('');
+
+    if (parser.state.length) {
+      utils.throwError('Unable to parse "' + str + '"', line, opts.filename);
+    }
+
+    /**
+     * A parsed variable token.
+     * @typedef {object} VarToken
+     * @property {function} compile Method for compiling this token.
+     */
+    return {
+      compile: function () {
+        return '_output += ' + out + ';\n';
+      }
+    };
+  }
+  exports.parseVariable = parseVariable;
+
+  /**
+   * Parse a tag.
+   * @param  {string} str  String contents of the tag, between <i>{%</i> and <i>%}</i>
+   * @param  {number} line The line number that this tag starts on.
+   * @return {TagToken}      Parsed token object.
+   * @private
+   */
+  function parseTag(str, line) {
+    var tokens, parser, chunks, tagName, tag, args, last;
+
+    if (utils.startsWith(str, 'end')) {
+      last = stack[stack.length - 1];
+      if (last && last.name === str.split(/\s+/)[0].replace(/^end/, '') && last.ends) {
+        switch (last.name) {
+        case 'autoescape':
+          escape = opts.autoescape;
+          break;
+        case 'raw':
+          inRaw = false;
+          break;
+        }
+        stack.pop();
+        return;
+      }
+
+      if (!inRaw) {
+        utils.throwError('Unexpected end of tag "' + str.replace(/^end/, '') + '"', line, opts.filename);
+      }
+    }
+
+    if (inRaw) {
+      return;
+    }
+
+    chunks = str.split(/\s+(.+)?/);
+    tagName = chunks.shift();
+
+    if (!tags.hasOwnProperty(tagName)) {
+      utils.throwError('Unexpected tag "' + str + '"', line, opts.filename);
+    }
+
+    tokens = lexer.read(utils.strip(chunks.join(' ')));
+    parser = new TokenParser(tokens, filters, false, line, opts.filename);
+    tag = tags[tagName];
+
+    /**
+     * Define custom parsing methods for your tag.
+     * @callback parse
+     *
+     * @example
+     * exports.parse = function (str, line, parser, types, options, swig) {
+     *   parser.on('start', function () {
+     *     // ...
+     *   });
+     *   parser.on(types.STRING, function (token) {
+     *     // ...
+     *   });
+     * };
+     *
+     * @param {string} str The full token string of the tag.
+     * @param {number} line The line number that this tag appears on.
+     * @param {TokenParser} parser A TokenParser instance.
+     * @param {TYPES} types Lexer token type enum.
+     * @param {TagToken[]} stack The current stack of open tags.
+     * @param {SwigOpts} options Swig Options Object.
+     * @param {object} swig The Swig instance (gives acces to loaders, parsers, etc)
+     */
+    if (!tag.parse(chunks[1], line, parser, _t, stack, opts, swig)) {
+      utils.throwError('Unexpected tag "' + tagName + '"', line, opts.filename);
+    }
+
+    parser.parse();
+    args = parser.out;
+
+    switch (tagName) {
+    case 'autoescape':
+      escape = (args[0] !== 'false') ? args[0] : false;
+      break;
+    case 'raw':
+      inRaw = true;
+      break;
+    }
+
+    /**
+     * A parsed tag token.
+     * @typedef {Object} TagToken
+     * @property {compile} [compile] Method for compiling this token.
+     * @property {array} [args] Array of arguments for the tag.
+     * @property {Token[]} [content=[]] An array of tokens that are children of this Token.
+     * @property {boolean} [ends] Whether or not this tag requires an end tag.
+     * @property {string} name The name of this tag.
+     */
+    return {
+      block: !!tags[tagName].block,
+      compile: tag.compile,
+      args: args,
+      content: [],
+      ends: tag.ends,
+      name: tagName
+    };
+  }
+
+  /**
+   * Strip the whitespace from the previous token, if it is a string.
+   * @param  {object} token Parsed token.
+   * @return {object}       If the token was a string, trailing whitespace will be stripped.
+   */
+  function stripPrevToken(token) {
+    if (typeof token === 'string') {
+      token = token.replace(/\s*$/, '');
+    }
+    return token;
+  }
+
+  /*!
    * Loop over the source, split via the tag/var/comment regular expression splitter.
    * Send each chunk to the appropriate parser.
    */
+  utils.each(source.split(splitter), function (chunk) {
+    var token, lines, stripPrev, prevToken, prevChildToken;
+
+    if (!chunk) {
+      return;
+    }
+
+    // Is a variable?
+    if (!inRaw && utils.startsWith(chunk, varOpen) && utils.endsWith(chunk, varClose)) {
+      stripPrev = varStripBefore.test(chunk);
+      stripNext = varStripAfter.test(chunk);
+      token = parseVariable(chunk.replace(varStrip, ''), line);
+    // Is a tag?
+    } else if (utils.startsWith(chunk, tagOpen) && utils.endsWith(chunk, tagClose)) {
+      stripPrev = tagStripBefore.test(chunk);
+      stripNext = tagStripAfter.test(chunk);
+      token = parseTag(chunk.replace(tagStrip, ''), line);
+      if (token) {
+        if (token.name === 'extends') {
+          parent = token.args.join('').replace(/^\'|\'$/g, '').replace(/^\"|\"$/g, '');
+        } else if (token.block && !stack.length) {
+          blocks[token.args.join('')] = token;
+        }
+      }
+      if (inRaw && !token) {
+        token = chunk;
+      }
+    // Is a content string?
+    } else if (inRaw || (!utils.startsWith(chunk, cmtOpen) && !utils.endsWith(chunk, cmtClose))) {
+      token = (stripNext) ? chunk.replace(/^\s*/, '') : chunk;
+      stripNext = false;
+    } else if (utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
+      return;
+    }
+
+    // Did this tag ask to strip previous whitespace? <code>{%- ... %}</code> or <code>{{- ... }}</code>
+    if (stripPrev && tokens.length) {
+      prevToken = tokens.pop();
+      if (typeof prevToken === 'string') {
+        prevToken = stripPrevToken(prevToken);
+      } else if (prevToken.content && prevToken.content.length) {
+        prevChildToken = stripPrevToken(prevToken.content.pop());
+        prevToken.content.push(prevChildToken);
+      }
+      tokens.push(prevToken);
+    }
+
+    // This was a comment, so let's just keep going.
+    if (!token) {
+      return;
+    }
+
+    // If there's an open item in the stack, add this to its content.
+    if (stack.length) {
+      stack[stack.length - 1].content.push(token);
+    } else {
+      tokens.push(token);
+    }
+
+    // If the token is a tag that requires an end tag, open it on the stack.
+    if (token.name && token.ends) {
+      stack.push(token);
+    }
+
+    lines = chunk.match(/\n/g);
+    line += (lines) ? lines.length : 0;
+  });
+
+  return {
+    name: opts.filename,
+    parent: parent,
+    tokens: tokens,
+    blocks: blocks
+  };
+};
+
+
+/**
+ * Compile an array of tokens.
+ * @param  {Token[]} template     An array of template tokens.
+ * @param  {Templates[]} parents  Array of parent templates.
+ * @param  {SwigOpts} [options]   Swig options object.
+ * @param  {string} [blockName]   Name of the current block context.
+ * @return {string}               Partial for a compiled JavaScript method that will output a rendered template.
+ */
+exports.compile = function (template, parents, options, blockName) {
+  var out = '',
+    tokens = utils.isArray(template) ? template : template.tokens;
+
+  utils.each(tokens, function (token) {
+    var o;
+    if (typeof token === 'string') {
+      out += '_output += "' + token.replace(/\\/g, '\\\\').replace(/\n|\r/g, '\\n').replace(/"/g, '\\"') + '";\n';
+      return;
+    }
+
+    /**
+     * Compile callback for VarToken and TagToken objects.
+     * @callback compile
+     *
+     * @example
+     * exports.compile = function (compiler, args, content, parents, options, blockName) {
+     *   if (args[0] === 'foo') {
+     *     return compiler(content, parents, options, blockName) + '\n';
+     *   }
+     *   return '_output += "fallback";\n';
+     * };
+     *
+     * @param {parserCompiler} compiler
+     * @param {array} [args] Array of parsed arguments on the for the token.
+     * @param {array} [content] Array of content within the token.
+     * @param {array} [parents] Array of parent templates for the current template context.
+     * @param {SwigOpts} [options] Swig Options Object
+     * @param {string} [blockName] Name of the direct block parent, if any.
+     */
+    o = token.compile(exports.compile, token.args ? token.args.slice(0) : [], token.content ? token.content.slice(0) : [], parents, options, blockName);
+    out += o || '';
+  });
+
+  return out;
+};
+
+},{"./lexer":4,"./utils":26}],9:[function(require,module,exports){
+var utils = require('./utils'),
+  _tags = require('./tags'),
+  _filters = require('./filters'),
+  parser = require('./parser'),
+  dateformatter = require('./dateformatter'),
+  loaders = require('./loaders');
+
+/**
+ * Swig version number as a string.
+ * @example
+ * if (swig.version === "1.4.2") { ... }
+ *
+ * @type {String}
+ */
+exports.version = "1.4.2";
+
+/**
+ * Swig Options Object. This object can be passed to many of the API-level Swig methods to control various aspects of the engine. All keys are optional.
+ * @typedef {Object} SwigOpts
+ * @property {boolean} autoescape  Controls whether or not variable output will automatically be escaped for safe HTML output. Defaults to <code data-language="js">true</code>. Functions executed in variable statements will not be auto-escaped. Your application/functions should take care of their own auto-escaping.
+ * @property {array}   varControls Open and close controls for variables. Defaults to <code data-language="js">['{{', '}}']</code>.
+ * @property {array}   tagControls Open and close controls for tags. Defaults to <code data-language="js">['{%', '%}']</code>.
+ * @property {array}   cmtControls Open and close controls for comments. Defaults to <code data-language="js">['{#', '#}']</code>.
+ * @property {object}  locals      Default variable context to be passed to <strong>all</strong> templates.
+ * @property {CacheOptions} cache Cache control for templates. Defaults to saving in <code data-language="js">'memory'</code>. Send <code data-language="js">false</code> to disable. Send an object with <code data-language="js">get</code> and <code data-language="js">set</code> functions to customize.
+ * @property {TemplateLoader} loader The method that Swig will use to load templates. Defaults to <var>swig.loaders.fs</var>.
+ */
+var defaultOptions = {
+    autoescape: true,
+    varControls: ['{{', '}}'],
+    tagControls: ['{%', '%}'],
+    cmtControls: ['{#', '#}'],
+    locals: {},
+    /**
+     * Cache control for templates. Defaults to saving all templates into memory.
+     * @typedef {boolean|string|object} CacheOptions
+     * @example
+     * // Default
+     * swig.setDefaults({ cache: 'memory' });
+     * @example
+     * // Disables caching in Swig.
+     * swig.setDefaults({ cache: false });
+     * @example
+     * // Custom cache storage and retrieval
+     * swig.setDefaults({
+     *   cache: {
+     *     get: function (key) { ... },
+     *     set: function (key, val) { ... }
+     *   }
+     * });
+     */
+    cache: 'memory',
+    /**
+     * Configure Swig to use either the <var>swig.loaders.fs</var> or <var>swig.loaders.memory</var> template loader. Or, you can write your own!
+     * For more information, please see the <a href="../loaders/">Template Loaders documentation</a>.
+     * @typedef {class} TemplateLoader
+     * @example
+     * // Default, FileSystem loader
+     * swig.setDefaults({ loader: swig.loaders.fs() });
+     * @example
+     * // FileSystem loader allowing a base path
+     * // With this, you don't use relative URLs in your template references
+     * swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/templates') });
+     * @example
+     * // Memory Loader
+     * swig.setDefaults({ loader: swig.loaders.memory({
+     *   layout: '{% block foo %}{% endblock %}',
+     *   page1: '{% extends "layout" %}{% block foo %}Tacos!{% endblock %}'
+     * })});
+     */
+    loader: loaders.fs()
+  },
+  defaultInstance;
+
+/**
+ * Empty function, used in templates.
+ * @return {string} Empty string
+ * @private
+ */
+function efn() { return ''; }
+
+/**
+ * Validate the Swig options object.
+ * @param  {?SwigOpts} options Swig options object.
+ * @return {undefined}      This method will throw errors if anything is wrong.
+ * @private
+ */
+function validateOptions(options) {
+  if (!options) {
+    return;
+  }
+
+  utils.each(['varControls', 'tagControls', 'cmtControls'], function (key) {
+    if (!options.hasOwnProperty(key)) {
+      return;
+    }
+    if (!utils.isArray(options[key]) || options[key].length !== 2) {
+      throw new Error('Option "' + key + '" must be an array containing 2 different control strings.');
+    }
+    if (options[key][0] === options[key][1]) {
+      throw new Error('Option "' + key + '" open and close controls must not be the same.');
+    }
+    utils.each(options[key], function (a, i) {
+      if (a.length < 2) {
+        throw new Error('Option "' + key + '" ' + ((i) ? 'open ' : 'close ') + 'control must be at least 2 characters. Saw "' + a + '" instead.');
+      }
+    });
+  });
+
+  if (options.hasOwnProperty('cache')) {
+    if (options.cache && options.cache !== 'memory') {
+      if (!options.cache.get || !options.cache.set) {
+        throw new Error('Invalid cache option ' + JSON.stringify(options.cache) + ' found. Expected "memory" or { get: function (key) { ... }, set: function (key, value) { ... } }.');
+      }
+    }
+  }
+  if (options.hasOwnProperty('loader')) {
+    if (options.loader) {
+      if (!options.loader.load || !options.loader.resolve) {
+        throw new Error('Invalid loader option ' + JSON.stringify(options.loader) + ' found. Expected { load: function (pathname, cb) { ... }, resolve: function (to, from) { ... } }.');
+      }
+    }
+  }
+
+}
+
+/**
+ * Set defaults for the base and all new Swig environments.
+ *
+ * @example
+ * swig.setDefaults({ cache: false });
+ * // => Disables Cache
+ *
+ * @example
+ * swig.setDefaults({ locals: { now: function () { return new Date(); } }});
+ * // => sets a globally accessible method for all template
+ * //    contexts, allowing you to print the current date
+ * // => {{ now()|date('F jS, Y') }}
+ *
+ * @param  {SwigOpts} [options={}] Swig options object.
+ * @return {undefined}
+ */
+exports.setDefaults = function (options) {
+  validateOptions(options);
+  defaultInstance.options = utils.extend(defaultInstance.options, options);
+};
+
+/**
+ * Set the default TimeZone offset for date formatting via the date filter. This is a global setting and will affect all Swig environments, old or new.
+ * @param  {number} offset Offset from GMT, in minutes.
+ * @return {undefined}
+ */
+exports.setDefaultTZOffset = function (offset) {
+  dateformatter.tzOffset = offset;
+};
+
+/**
+ * Create a new, separate Swig compile/render environment.
+ *
+ * @example
+ * var swig = require('swig');
+ * var myswig = new swig.Swig({varControls: ['<%=', '%>']});
+ * myswig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});
+ * // => Tacos are delicious!
+ * swig.render('Tacos are <%= tacos =>!', { locals: { tacos: 'delicious' }});
+ * // => 'Tacos are <%= tacos =>!'
+ *
+ * @param  {SwigOpts} [opts={}] Swig options object.
+ * @return {object}      New Swig environment.
+ */
+exports.Swig = function (opts) {
+  validateOptions(opts);
+  this.options = utils.extend({}, defaultOptions, opts || {});
+  this.cache = {};
+  this.extensions = {};
+  var self = this,
+    tags = _tags,
+    filters = _filters;
+
+  /**
+   * Get combined locals context.
+   * @param  {?SwigOpts} [options] Swig options object.
+   * @return {object}         Locals context.
+   * @private
+   */
+  function getLocals(options) {
+    if (!options || !options.locals) {
+      return self.options.locals;
+    }
+
+    return utils.extend({}, self.options.locals, options.locals);
+  }
+
+  /**
+   * Determine whether caching is enabled via the options provided and/or defaults
+   * @param  {SwigOpts} [options={}] Swig Options Object
+   * @return {boolean}
+   * @private
+   */
+  function shouldCache(options) {
+    options = options || {};
+    return (options.hasOwnProperty('cache') && !options.cache) || !self.options.cache;
+  }
+
+  /**
+   * Get compiled template from the cache.
+   * @param  {string} key           Name of template.
+   * @return {object|undefined}     Template function and tokens.
+   * @private
+   */
+  function cacheGet(key, options) {
+    if (shouldCache(options)) {
+      return;
+    }
+
+    if (self.options.cache === 'memory') {
+      return self.cache[key];
+    }
+
+    return self.options.cache.get(key);
+  }
+
+  /**
+   * Store a template in the cache.
+   * @param  {string} key Name of template.
+   * @param  {object} val Template function and tokens.
+   * @return {undefined}
+   * @private
+   */
+  function cacheSet(key, options, val) {
+    if (shouldCache(options)) {
+      return;
+    }
+
+    if (self.options.cache === 'memory') {
+      self.cache[key] = val;
+      return;
+    }
+
+    self.options.cache.set(key, val);
+  }
+
+  /**
+   * Clears the in-memory template cache.
+   *
+   * @example
+   * swig.invalidateCache();
+   *
+   * @return {undefined}
+   */
+  this.invalidateCache = function () {
+    if (self.options.cache === 'memory') {
+      self.cache = {};
+    }
+  };
+
+  /**
+   * Add a custom filter for swig variables.
+   *
+   * @example
+   * function replaceMs(input) { return input.replace(/m/g, 'f'); }
+   * swig.setFilter('replaceMs', replaceMs);
+   * // => {{ "onomatopoeia"|replaceMs }}
+   * // => onofatopeia
+   *
+   * @param {string}    name    Name of filter, used in templates. <strong>Will</strong> overwrite previously defined filters, if using the same name.
+   * @param {function}  method  Function that acts against the input. See <a href="/docs/filters/#custom">Custom Filters</a> for more information.
+   * @return {undefined}
+   */
+  this.setFilter = function (name, method) {
+    if (typeof method !== "function") {
+      throw new Error('Filter "' + name + '" is not a valid function.');
+    }
+    filters[name] = method;
+  };
+
+  /**
+   * Add a custom tag. To expose your own extensions to compiled template code, see <code data-language="js">swig.setExtension</code>.
+   *
+   * For a more in-depth explanation of writing custom tags, see <a href="../extending/#tags">Custom Tags</a>.
+   *
+   * @example
+   * var tacotag = require('./tacotag');
+   * swig.setTag('tacos', tacotag.parse, tacotag.compile, tacotag.ends, tacotag.blockLevel);
+   * // => {% tacos %}Make this be tacos.{% endtacos %}
+   * // => Tacos tacos tacos tacos.
+   *
+   * @param  {string} name      Tag name.
+   * @param  {function} parse   Method for parsing tokens.
+   * @param  {function} compile Method for compiling renderable output.
+   * @param  {boolean} [ends=false]     Whether or not this tag requires an <i>end</i> tag.
+   * @param  {boolean} [blockLevel=false] If false, this tag will not be compiled outside of <code>block</code> tags when extending a parent template.
+   * @return {undefined}
+   */
+  this.setTag = function (name, parse, compile, ends, blockLevel) {
+    if (typeof parse !== 'function') {
+      throw new Error('Tag "' + name + '" parse method is not a valid function.');
+    }
+
+    if (typeof compile !== 'function') {
+      throw new Error('Tag "' + name + '" compile method is not a valid function.');
+    }
+
+    tags[name] = {
+      parse: parse,
+      compile: compile,
+      ends: ends || false,
+      block: !!blockLevel
+    };
+  };
+
+  /**
+   * Add extensions for custom tags. This allows any custom tag to access a globally available methods via a special globally available object, <var>_ext</var>, in templates.
+   *
+   * @example
+   * swig.setExtension('trans', function (v) { return translate(v); });
+   * function compileTrans(compiler, args, content, parent, options) {
+   *   return '_output += _ext.trans(' + args[0] + ');'
+   * };
+   * swig.setTag('trans', parseTrans, compileTrans, true);
+   *
+   * @param  {string} name   Key name of the extension. Accessed via <code data-language="js">_ext[name]</code>.
+   * @param  {*}      object The method, value, or object that should be available via the given name.
+   * @return {undefined}
+   */
+  this.setExtension = function (name, object) {
+    self.extensions[name] = object;
+  };
+
+  /**
+   * Parse a given source string into tokens.
+   *
+   * @param  {string} source  Swig template source.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {object} parsed  Template tokens object.
+   * @private
+   */
+  this.parse = function (source, options) {
+    validateOptions(options);
+
+    var locals = getLocals(options),
+      opts = {},
+      k;
+
+    for (k in options) {
+      if (options.hasOwnProperty(k) && k !== 'locals') {
+        opts[k] = options[k];
+      }
+    }
+
+    options = utils.extend({}, self.options, opts);
+    options.locals = locals;
+
+    return parser.parse(this, source, options, tags, filters);
+  };
+
+  /**
+   * Parse a given file into tokens.
+   *
+   * @param  {string} pathname  Full path to file to parse.
+   * @param  {SwigOpts} [options={}]   Swig options object.
+   * @return {object} parsed    Template tokens object.
+   * @private
+   */
+  this.parseFile = function (pathname, options) {
+    var src;
+
+    if (!options) {
+      options = {};
+    }
+
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
+
+    src = self.options.loader.load(pathname);
+
+    if (!options.filename) {
+      options = utils.extend({ filename: pathname }, options);
+    }
+
+    return self.parse(src, options);
+  };
+
+  /**
+   * Re-Map blocks within a list of tokens to the template's block objects.
+   * @param  {array}  tokens   List of tokens for the parent object.
+   * @param  {object} template Current template that needs to be mapped to the  parent's block and token list.
+   * @return {array}
+   * @private
+   */
+  function remapBlocks(blocks, tokens) {
+    return utils.map(tokens, function (token) {
+      var args = token.args ? token.args.join('') : '';
+      if (token.name === 'block' && blocks[args]) {
+        token = blocks[args];
+      }
+      if (token.content && token.content.length) {
+        token.content = remapBlocks(blocks, token.content);
+      }
+      return token;
+    });
+  }
+
+  /**
+   * Import block-level tags to the token list that are not actual block tags.
+   * @param  {array} blocks List of block-level tags.
+   * @param  {array} tokens List of tokens to render.
+   * @return {undefined}
+   * @private
+   */
+  function importNonBlocks(blocks, tokens) {
+    var temp = [];
+    utils.each(blocks, function (block) { temp.push(block); });
+    utils.each(temp.reverse(), function (block) {
+      if (block.name !== 'block') {
+        tokens.unshift(block);
+      }
+    });
+  }
+
+  /**
+   * Recursively compile and get parents of given parsed token object.
+   *
+   * @param  {object} tokens    Parsed tokens from template.
+   * @param  {SwigOpts} [options={}]   Swig options object.
+   * @return {object}           Parsed tokens from parent templates.
+   * @private
+   */
+  function getParents(tokens, options) {
+    var parentName = tokens.parent,
+      parentFiles = [],
+      parents = [],
+      parentFile,
+      parent,
+      l;
+
+    while (parentName) {
+      if (!options || !options.filename) {
+        throw new Error('Cannot extend "' + parentName + '" because current template has no filename.');
+      }
+
+      parentFile = parentFile || options.filename;
+      parentFile = self.options.loader.resolve(parentName, parentFile);
+      parent = cacheGet(parentFile, options) || self.parseFile(parentFile, utils.extend({}, options, { filename: parentFile }));
+      parentName = parent.parent;
+
+      if (parentFiles.indexOf(parentFile) !== -1) {
+        throw new Error('Illegal circular extends of "' + parentFile + '".');
+      }
+      parentFiles.push(parentFile);
+
+      parents.push(parent);
+    }
+
+    // Remap each parents'(1) blocks onto its own parent(2), receiving the full token list for rendering the original parent(1) on its own.
+    l = parents.length;
+    for (l = parents.length - 2; l >= 0; l -= 1) {
+      parents[l].tokens = remapBlocks(parents[l].blocks, parents[l + 1].tokens);
+      importNonBlocks(parents[l].blocks, parents[l].tokens);
+    }
+
+    return parents;
+  }
+
+  /**
+   * Pre-compile a source string into a cache-able template function.
+   *
+   * @example
+   * swig.precompile('{{ tacos }}');
+   * // => {
+   * //      tpl: function (_swig, _locals, _filters, _utils, _fn) { ... },
+   * //      tokens: {
+   * //        name: undefined,
+   * //        parent: null,
+   * //        tokens: [...],
+   * //        blocks: {}
+   * //      }
+   * //    }
+   *
+   * In order to render a pre-compiled template, you must have access to filters and utils from Swig. <var>efn</var> is simply an empty function that does nothing.
+   *
+   * @param  {string} source  Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {object}         Renderable function and tokens object.
+   */
+  this.precompile = function (source, options) {
+    var tokens = self.parse(source, options),
+      parents = getParents(tokens, options),
+      tpl,
+      err;
+
+    if (parents.length) {
+      // Remap the templates first-parent's tokens using this template's blocks.
+      tokens.tokens = remapBlocks(tokens.blocks, parents[0].tokens);
+      importNonBlocks(tokens.blocks, tokens.tokens);
+    }
+
+    try {
+      tpl = new Function('_swig', '_ctx', '_filters', '_utils', '_fn',
+        '  var _ext = _swig.extensions,\n' +
+        '    _output = "";\n' +
+        parser.compile(tokens, parents, options) + '\n' +
+        '  return _output;\n'
+        );
+    } catch (e) {
+      utils.throwError(e, null, options.filename);
+    }
+
+    return { tpl: tpl, tokens: tokens };
+  };
+
+  /**
+   * Compile and render a template string for final output.
+   *
+   * When rendering a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
+   *
+   * @example
+   * swig.render('{{ tacos }}', { locals: { tacos: 'Tacos!!!!' }});
+   * // => Tacos!!!!
+   *
+   * @param  {string} source    Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {string}           Rendered output.
+   */
+  this.render = function (source, options) {
+    return self.compile(source, options)();
+  };
+
+  /**
+   * Compile and render a template file for final output. This is most useful for libraries like Express.js.
+   *
+   * @example
+   * swig.renderFile('./template.html', {}, function (err, output) {
+   *   if (err) {
+   *     throw err;
+   *   }
+   *   console.log(output);
+   * });
+   *
+   * @example
+   * swig.renderFile('./template.html', {});
+   * // => output
+   *
+   * @param  {string}   pathName    File location.
+   * @param  {object}   [locals={}] Template variable context.
+   * @param  {Function} [cb] Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.
+   * @return {string}             Rendered output.
+   */
+  this.renderFile = function (pathName, locals, cb) {
+    if (cb) {
+      self.compileFile(pathName, {}, function (err, fn) {
+        var result;
+
+        if (err) {
+          cb(err);
+          return;
+        }
+
+        try {
+          result = fn(locals);
+        } catch (err2) {
+          cb(err2);
+          return;
+        }
+
+        cb(null, result);
+      });
+      return;
+    }
+
+    return self.compileFile(pathName)(locals);
+  };
+
+  /**
+   * Compile string source into a renderable template function.
+   *
+   * @example
+   * var tpl = swig.compile('{{ tacos }}');
+   * // => {
+   * //      [Function: compiled]
+   * //      parent: null,
+   * //      tokens: [{ compile: [Function] }],
+   * //      blocks: {}
+   * //    }
+   * tpl({ tacos: 'Tacos!!!!' });
+   * // => Tacos!!!!
+   *
+   * When compiling a source string, a file path should be specified in the options object in order for <var>extends</var>, <var>include</var>, and <var>import</var> to work properly. Do this by adding <code data-language="js">{ filename: '/absolute/path/to/mytpl.html' }</code> to the options argument.
+   *
+   * @param  {string} source    Swig template source string.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @return {function}         Renderable function with keys for parent, blocks, and tokens.
+   */
+  this.compile = function (source, options) {
+    var key = options ? options.filename : null,
+      cached = key ? cacheGet(key, options) : null,
+      context,
+      contextLength,
+      pre;
+
+    if (cached) {
+      return cached;
+    }
+
+    context = getLocals(options);
+    contextLength = utils.keys(context).length;
+    pre = this.precompile(source, options);
+
+    function compiled(locals) {
+      var lcls;
+      if (locals && contextLength) {
+        lcls = utils.extend({}, context, locals);
+      } else if (locals && !contextLength) {
+        lcls = locals;
+      } else if (!locals && contextLength) {
+        lcls = context;
+      } else {
+        lcls = {};
+      }
+      return pre.tpl(self, lcls, filters, utils, efn);
+    }
+
+    utils.extend(compiled, pre.tokens);
+
+    if (key) {
+      cacheSet(key, options, compiled);
+    }
+
+    return compiled;
+  };
+
+  /**
+   * Compile a source file into a renderable template function.
+   *
+   * @example
+   * var tpl = swig.compileFile('./mytpl.html');
+   * // => {
+   * //      [Function: compiled]
+   * //      parent: null,
+   * //      tokens: [{ compile: [Function] }],
+   * //      blocks: {}
+   * //    }
+   * tpl({ tacos: 'Tacos!!!!' });
+   * // => Tacos!!!!
+   *
+   * @example
+   * swig.compileFile('/myfile.txt', { varControls: ['<%=', '=%>'], tagControls: ['<%', '%>']});
+   * // => will compile 'myfile.txt' using the var and tag controls as specified.
+   *
+   * @param  {string} pathname  File location.
+   * @param  {SwigOpts} [options={}] Swig options object.
+   * @param  {Function} [cb] Asyncronous callback function. If not provided, <var>compileFile</var> will run syncronously.
+   * @return {function}         Renderable function with keys for parent, blocks, and tokens.
+   */
+  this.compileFile = function (pathname, options, cb) {
+    var src, cached;
+
+    if (!options) {
+      options = {};
+    }
+
+    pathname = self.options.loader.resolve(pathname, options.resolveFrom);
+    if (!options.filename) {
+      options = utils.extend({ filename: pathname }, options);
+    }
+    cached = cacheGet(pathname, options);
+
+    if (cached) {
+      if (cb) {
+        cb(null, cached);
+        return;
+      }
+      return cached;
+    }
+
+    if (cb) {
+      self.options.loader.load(pathname, function (err, src) {
+        if (err) {
+          cb(err);
+          return;
+        }
+        var compiled;
+
+        try {
+          compiled = self.compile(src, options);
+        } catch (err2) {
+          cb(err2);
+          return;
+        }
+
+        cb(err, compiled);
+      });
+      return;
+    }
+
+    src = self.options.loader.load(pathname);
+    return self.compile(src, options);
+  };
+
+  /**
+   * Run a pre-compiled template function. This is most useful in the browser when you've pre-compiled your templates with the Swig command-line tool.
+   *
+   * @example
+   * $ swig compile ./mytpl.html --wrap-start="var mytpl = " > mytpl.js
+   * @example
+   * <script src="mytpl.js"></script>
+   * <script>
+   *   swig.run(mytpl, {});
+   *   // => "rendered template..."
+   * </script>
+   *
+   * @param  {function} tpl       Pre-compiled Swig template function. Use the Swig CLI to compile your templates.
+   * @param  {object} [locals={}] Template variable context.
+   * @param  {string} [filepath]  Filename used for caching the template.
+   * @return {string}             Rendered output.
+   */
+  this.run = function (tpl, locals, filepath) {
+    var context = getLocals({ locals: locals });
+    if (filepath) {
+      cacheSet(filepath, {}, tpl);
+    }
+    return tpl(self, context, filters, utils, efn);
+  };
+};
 
 /*!
  * Export methods publicly
  */
+defaultInstance = new exports.Swig();
+exports.setFilter = defaultInstance.setFilter;
+exports.setTag = defaultInstance.setTag;
+exports.setExtension = defaultInstance.setExtension;
+exports.parseFile = defaultInstance.parseFile;
+exports.precompile = defaultInstance.precompile;
+exports.compile = defaultInstance.compile;
+exports.compileFile = defaultInstance.compileFile;
+exports.render = defaultInstance.render;
+exports.renderFile = defaultInstance.renderFile;
+exports.run = defaultInstance.run;
+exports.invalidateCache = defaultInstance.invalidateCache;
+exports.loaders = loaders;
 
+},{"./dateformatter":2,"./filters":3,"./loaders":6,"./parser":8,"./tags":20,"./utils":26}],10:[function(require,module,exports){
+var utils = require('../utils'),
+  strings = ['html', 'js'];
+
+/**
+ * Control auto-escaping of variable output from within your templates.
+ *
+ * @alias autoescape
+ *
+ * @example
+ * // myvar = '<foo>';
+ * {% autoescape true %}{{ myvar }}{% endautoescape %}
+ * // => &lt;foo&gt;
+ * {% autoescape false %}{{ myvar }}{% endautoescape %}
+ * // => <foo>
+ *
+ * @param {boolean|string} control One of `true`, `false`, `"js"` or `"html"`.
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  return compiler(content, parents, options, blockName);
+};
+exports.parse = function (str, line, parser, types, stack, opts) {
+  var matched;
+  parser.on('*', function (token) {
+    if (!matched &&
+        (token.type === types.BOOL ||
+          (token.type === types.STRING && strings.indexOf(token.match) === -1))
+        ) {
+      this.out.push(token.match);
+      matched = true;
+      return;
+    }
+    utils.throwError('Unexpected token "' + token.match + '" in autoescape tag', line, opts.filename);
+  });
+
+  return true;
+};
+exports.ends = true;
+
+},{"../utils":26}],11:[function(require,module,exports){
+/**
+ * Defines a block in a template that can be overridden by a template extending this one and/or will override the current template's parent template block of the same name.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias block
+ *
+ * @example
+ * {% block body %}...{% endblock %}
+ *
+ * @param {literal}  name   Name of the block for use in parent and extended templates.
+ */
+exports.compile = function (compiler, args, content, parents, options) {
+  return compiler(content, parents, options, args.join(''));
+};
+
+exports.parse = function (str, line, parser) {
+  parser.on('*', function (token) {
+    this.out.push(token.match);
+  });
+  return true;
+};
+
+exports.ends = true;
+exports.block = true;
+
+},{}],12:[function(require,module,exports){
+/**
+ * Used within an <code data-language="swig">{% if %}</code> tag, the code block following this tag up until <code data-language="swig">{% endif %}</code> will be rendered if the <i>if</i> statement returns false.
+ *
+ * @alias else
+ *
+ * @example
+ * {% if false %}
+ *   statement1
+ * {% else %}
+ *   statement2
+ * {% endif %}
+ * // => statement2
+ *
+ */
+exports.compile = function () {
+  return '} else {\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  parser.on('*', function (token) {
+    throw new Error('"else" tag does not accept any tokens. Found "' + token.match + '" on line ' + line + '.');
+  });
+
+  return (stack.length && stack[stack.length - 1].name === 'if');
+};
+
+},{}],13:[function(require,module,exports){
+var ifparser = require('./if').parse;
+
+/**
+ * Like <code data-language="swig">{% else %}</code>, except this tag can take more conditional statements.
+ *
+ * @alias elseif
+ * @alias elif
+ *
+ * @example
+ * {% if false %}
+ *   Tacos
+ * {% elseif true %}
+ *   Burritos
+ * {% else %}
+ *   Churros
+ * {% endif %}
+ * // => Burritos
+ *
+ * @param {...mixed} conditional  Conditional statement that returns a truthy or falsy value.
+ */
+exports.compile = function (compiler, args) {
+  return '} else if (' + args.join(' ') + ') {\n';
+};
+
+exports.parse = function (str, line, parser, types, stack) {
+  var okay = ifparser(str, line, parser, types, stack);
+  return okay && (stack.length && stack[stack.length - 1].name === 'if');
+};
+
+},{"./if":17}],14:[function(require,module,exports){
+/**
+ * Makes the current template extend a parent template. This tag must be the first item in your template.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias extends
+ *
+ * @example
+ * {% extends "./layout.html" %}
+ *
+ * @param {string} parentFile  Relative path to the file that this template extends.
+ */
+exports.compile = function () {};
+
+exports.parse = function () {
+  return true;
+};
+
+exports.ends = false;
+
+},{}],15:[function(require,module,exports){
+var filters = require('../filters');
+
+/**
+ * Apply a filter to an entire block of template.
+ *
+ * @alias filter
+ *
+ * @example
+ * {% filter uppercase %}oh hi, {{ name }}{% endfilter %}
+ * // => OH HI, PAUL
+ *
+ * @example
+ * {% filter replace(".", "!", "g") %}Hi. My name is Paul.{% endfilter %}
+ * // => Hi! My name is Paul!
+ *
+ * @param {function} filter  The filter that should be applied to the contents of the tag.
+ */
+
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  var filter = args.shift().replace(/\($/, ''),
+    val = '(function () {\n' +
+      '  var _output = "";\n' +
+      compiler(content, parents, options, blockName) +
+      '  return _output;\n' +
+      '})()';
+
+  if (args[args.length - 1] === ')') {
+    args.pop();
+  }
+
+  args = (args.length) ? ', ' + args.join('') : '';
+  return '_output += _filters["' + filter + '"](' + val + args + ');\n';
+};
+
+exports.parse = function (str, line, parser, types) {
+  var filter;
+
+  function check(filter) {
+    if (!filters.hasOwnProperty(filter)) {
+      throw new Error('Filter "' + filter + '" does not exist on line ' + line + '.');
+    }
+  }
+
+  parser.on(types.FUNCTION, function (token) {
+    if (!filter) {
+      filter = token.match.replace(/\($/, '');
+      check(filter);
+      this.out.push(token.match);
+      this.state.push(token.type);
+      return;
+    }
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (!filter) {
+      filter = token.match;
+      check(filter);
+      this.out.push(filter);
+      return;
+    }
+    return true;
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{"../filters":3}],16:[function(require,module,exports){
+var ctx = '_ctx.',
+  ctxloop = ctx + 'loop';
+
+/**
+ * Loop over objects and arrays.
+ *
+ * @alias for
+ *
+ * @example
+ * // obj = { one: 'hi', two: 'bye' };
+ * {% for x in obj %}
+ *   {% if loop.first %}<ul>{% endif %}
+ *   <li>{{ loop.index }} - {{ loop.key }}: {{ x }}</li>
+ *   {% if loop.last %}</ul>{% endif %}
+ * {% endfor %}
+ * // => <ul>
+ * //    <li>1 - one: hi</li>
+ * //    <li>2 - two: bye</li>
+ * //    </ul>
+ *
+ * @example
+ * // arr = [1, 2, 3]
+ * // Reverse the array, shortcut the key/index to `key`
+ * {% for key, val in arr|reverse %}
+ * {{ key }} -- {{ val }}
+ * {% endfor %}
+ * // => 0 -- 3
+ * //    1 -- 2
+ * //    2 -- 1
+ *
+ * @param {literal} [key]     A shortcut to the index of the array or current key accessor.
+ * @param {literal} variable  The current value will be assigned to this variable name temporarily. The variable will be reset upon ending the for tag.
+ * @param {literal} in        Literally, "in". This token is required.
+ * @param {object}  object    An enumerable object that will be iterated over.
+ *
+ * @return {loop.index} The current iteration of the loop (1-indexed)
+ * @return {loop.index0} The current iteration of the loop (0-indexed)
+ * @return {loop.revindex} The number of iterations from the end of the loop (1-indexed)
+ * @return {loop.revindex0} The number of iterations from the end of the loop (0-indexed)
+ * @return {loop.key} If the iterator is an object, this will be the key of the current item, otherwise it will be the same as the loop.index.
+ * @return {loop.first} True if the current object is the first in the object or array.
+ * @return {loop.last} True if the current object is the last in the object or array.
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  var val = args.shift(),
+    key = '__k',
+    ctxloopcache = (ctx + '__loopcache' + Math.random()).replace(/\./g, ''),
+    last;
+
+  if (args[0] && args[0] === ',') {
+    args.shift();
+    key = val;
+    val = args.shift();
+  }
+
+  last = args.join('');
+
+  return [
+    '(function () {\n',
+    '  var __l = ' + last + ', __len = (_utils.isArray(__l) || typeof __l === "string") ? __l.length : _utils.keys(__l).length;\n',
+    '  if (!__l) { return; }\n',
+    '    var ' + ctxloopcache + ' = { loop: ' + ctxloop + ', ' + val + ': ' + ctx + val + ', ' + key + ': ' + ctx + key + ' };\n',
+    '    ' + ctxloop + ' = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n',
+    '  _utils.each(__l, function (' + val + ', ' + key + ') {\n',
+    '    ' + ctx + val + ' = ' + val + ';\n',
+    '    ' + ctx + key + ' = ' + key + ';\n',
+    '    ' + ctxloop + '.key = ' + key + ';\n',
+    '    ' + ctxloop + '.first = (' + ctxloop + '.index0 === 0);\n',
+    '    ' + ctxloop + '.last = (' + ctxloop + '.revindex0 === 0);\n',
+    '    ' + compiler(content, parents, options, blockName),
+    '    ' + ctxloop + '.index += 1; ' + ctxloop + '.index0 += 1; ' + ctxloop + '.revindex -= 1; ' + ctxloop + '.revindex0 -= 1;\n',
+    '  });\n',
+    '  ' + ctxloop + ' = ' + ctxloopcache + '.loop;\n',
+    '  ' + ctx + val + ' = ' + ctxloopcache + '.' + val + ';\n',
+    '  ' + ctx + key + ' = ' + ctxloopcache + '.' + key + ';\n',
+    '  ' + ctxloopcache + ' = undefined;\n',
+    '})();\n'
+  ].join('');
+};
+
+exports.parse = function (str, line, parser, types) {
+  var firstVar, ready;
+
+  parser.on(types.NUMBER, function (token) {
+    var lastState = this.state.length ? this.state[this.state.length - 1] : null;
+    if (!ready ||
+        (lastState !== types.ARRAYOPEN &&
+          lastState !== types.CURLYOPEN &&
+          lastState !== types.CURLYCLOSE &&
+          lastState !== types.FUNCTION &&
+          lastState !== types.FILTER)
+        ) {
+      throw new Error('Unexpected number "' + token.match + '" on line ' + line + '.');
+    }
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (ready && firstVar) {
+      return true;
+    }
+
+    if (!this.out.length) {
+      firstVar = true;
+    }
+
+    this.out.push(token.match);
+  });
+
+  parser.on(types.COMMA, function (token) {
+    if (firstVar && this.prevToken.type === types.VAR) {
+      this.out.push(token.match);
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.COMPARATOR, function (token) {
+    if (token.match !== 'in' || !firstVar) {
+      throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+    }
+    ready = true;
+    this.filterApplyIdx.push(this.out.length);
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{}],17:[function(require,module,exports){
+/**
+ * Used to create conditional statements in templates. Accepts most JavaScript valid comparisons.
+ *
+ * Can be used in conjunction with <a href="#elseif"><code data-language="swig">{% elseif ... %}</code></a> and <a href="#else"><code data-language="swig">{% else %}</code></a> tags.
+ *
+ * @alias if
+ *
+ * @example
+ * {% if x %}{% endif %}
+ * {% if !x %}{% endif %}
+ * {% if not x %}{% endif %}
+ *
+ * @example
+ * {% if x and y %}{% endif %}
+ * {% if x && y %}{% endif %}
+ * {% if x or y %}{% endif %}
+ * {% if x || y %}{% endif %}
+ * {% if x || (y && z) %}{% endif %}
+ *
+ * @example
+ * {% if x [operator] y %}
+ *   Operators: ==, !=, <, <=, >, >=, ===, !==
+ * {% endif %}
+ *
+ * @example
+ * {% if x == 'five' %}
+ *   The operands can be also be string or number literals
+ * {% endif %}
+ *
+ * @example
+ * {% if x|lower === 'tacos' %}
+ *   You can use filters on any operand in the statement.
+ * {% endif %}
+ *
+ * @example
+ * {% if x in y %}
+ *   If x is a value that is present in y, this will return true.
+ * {% endif %}
+ *
+ * @param {...mixed} conditional Conditional statement that returns a truthy or falsy value.
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  return 'if (' + args.join(' ') + ') { \n' +
+    compiler(content, parents, options, blockName) + '\n' +
+    '}';
+};
+
+exports.parse = function (str, line, parser, types) {
+  if (typeof str === "undefined") {
+    throw new Error('No conditional statement provided on line ' + line + '.');
+  }
+
+  parser.on(types.COMPARATOR, function (token) {
+    if (this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    if (this.prevToken.type === types.NOT) {
+      throw new Error('Attempted logic "not ' + token.match + '" on line ' + line + '. Use !(foo ' + token.match + ') instead.');
+    }
+    this.out.push(token.match);
+    this.filterApplyIdx.push(this.out.length);
+  });
+
+  parser.on(types.NOT, function (token) {
+    if (this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+  });
+
+  parser.on(types.BOOL, function (token) {
+    this.out.push(token.match);
+  });
+
+  parser.on(types.LOGIC, function (token) {
+    if (!this.out.length || this.isLast) {
+      throw new Error('Unexpected logic "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+    this.filterApplyIdx.pop();
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{}],18:[function(require,module,exports){
+var utils = require('../utils');
+
+/**
+ * Allows you to import macros from another file directly into your current context.
+ * The import tag is specifically designed for importing macros into your template with a specific context scope. This is very useful for keeping your macros from overriding template context that is being injected by your server-side page generation.
+ *
+ * @alias import
+ *
+ * @example
+ * {% import './formmacros.html' as forms %}
+ * {{ form.input("text", "name") }}
+ * // => <input type="text" name="name">
+ *
+ * @example
+ * {% import "../shared/tags.html" as tags %}
+ * {{ tags.stylesheet('global') }}
+ * // => <link rel="stylesheet" href="/global.css">
+ *
+ * @param {string|var}  file      Relative path from the current template file to the file to import macros from.
+ * @param {literal}     as        Literally, "as".
+ * @param {literal}     varname   Local-accessible object name to assign the macros to.
+ */
+exports.compile = function (compiler, args) {
+  var ctx = args.pop(),
+    out = '_ctx.' + ctx + ' = {};\n  var _output = "";\n',
+    replacements = utils.map(args, function (arg) {
+      return {
+        ex: new RegExp('_ctx.' + arg.name, 'g'),
+        re: '_ctx.' + ctx + '.' + arg.name
+      };
+    });
+
+  // Replace all occurrences of all macros in this file with
+  // proper namespaced definitions and calls
+  utils.each(args, function (arg) {
+    var c = arg.compiled;
+    utils.each(replacements, function (re) {
+      c = c.replace(re.ex, re.re);
+    });
+    out += c;
+  });
+
+  return out;
+};
+
+exports.parse = function (str, line, parser, types, stack, opts, swig) {
+  var compiler = require('../parser').compile,
+    parseOpts = { resolveFrom: opts.filename },
+    compileOpts = utils.extend({}, opts, parseOpts),
+    tokens,
+    ctx;
+
+  parser.on(types.STRING, function (token) {
+    var self = this;
+    if (!tokens) {
+      tokens = swig.parseFile(token.match.replace(/^("|')|("|')$/g, ''), parseOpts).tokens;
+      utils.each(tokens, function (token) {
+        var out = '',
+          macroName;
+        if (!token || token.name !== 'macro' || !token.compile) {
+          return;
+        }
+        macroName = token.args[0];
+        out += token.compile(compiler, token.args, token.content, [], compileOpts) + '\n';
+        self.out.push({compiled: out, name: macroName});
+      });
+      return;
+    }
+
+    throw new Error('Unexpected string ' + token.match + ' on line ' + line + '.');
+  });
+
+  parser.on(types.VAR, function (token) {
+    var self = this;
+    if (!tokens || ctx) {
+      throw new Error('Unexpected variable "' + token.match + '" on line ' + line + '.');
+    }
+
+    if (token.match === 'as') {
+      return;
+    }
+
+    ctx = token.match;
+    self.out.push(ctx);
+    return false;
+  });
+
+  return true;
+};
+
+exports.block = true;
+
+},{"../parser":8,"../utils":26}],19:[function(require,module,exports){
+var ignore = 'ignore',
+  missing = 'missing',
+  only = 'only';
+
+/**
+ * Includes a template partial in place. The template is rendered within the current locals variable context.
+ *
+ * @alias include
+ *
+ * @example
+ * // food = 'burritos';
+ * // drink = 'lemonade';
+ * {% include "./partial.html" %}
+ * // => I like burritos and lemonade.
+ *
+ * @example
+ * // my_obj = { food: 'tacos', drink: 'horchata' };
+ * {% include "./partial.html" with my_obj only %}
+ * // => I like tacos and horchata.
+ *
+ * @example
+ * {% include "/this/file/does/not/exist" ignore missing %}
+ * // => (Nothing! empty string)
+ *
+ * @param {string|var}  file      The path, relative to the template root, to render into the current context.
+ * @param {literal}     [with]    Literally, "with".
+ * @param {object}      [context] Local variable key-value object context to provide to the included file.
+ * @param {literal}     [only]    Restricts to <strong>only</strong> passing the <code>with context</code> as local variables–the included template will not be aware of any other local variables in the parent template. For best performance, usage of this option is recommended if possible.
+ * @param {literal}     [ignore missing] Will output empty string if not found instead of throwing an error.
+ */
+exports.compile = function (compiler, args) {
+  var file = args.shift(),
+    onlyIdx = args.indexOf(only),
+    onlyCtx = onlyIdx !== -1 ? args.splice(onlyIdx, 1) : false,
+    parentFile = (args.pop() || '').replace(/\\/g, '\\\\'),
+    ignore = args[args.length - 1] === missing ? (args.pop()) : false,
+    w = args.join('');
+
+  return (ignore ? '  try {\n' : '') +
+    '_output += _swig.compileFile(' + file + ', {' +
+    'resolveFrom: "' + parentFile + '"' +
+    '})(' +
+    ((onlyCtx && w) ? w : (!w ? '_ctx' : '_utils.extend({}, _ctx, ' + w + ')')) +
+    ');\n' +
+    (ignore ? '} catch (e) {}\n' : '');
+};
+
+exports.parse = function (str, line, parser, types, stack, opts) {
+  var file, w;
+  parser.on(types.STRING, function (token) {
+    if (!file) {
+      file = token.match;
+      this.out.push(file);
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.VAR, function (token) {
+    if (!file) {
+      file = token.match;
+      return true;
+    }
+
+    if (!w && token.match === 'with') {
+      w = true;
+      return;
+    }
+
+    if (w && token.match === only && this.prevToken.match !== 'with') {
+      this.out.push(token.match);
+      return;
+    }
+
+    if (token.match === ignore) {
+      return false;
+    }
+
+    if (token.match === missing) {
+      if (this.prevToken.match !== ignore) {
+        throw new Error('Unexpected token "' + missing + '" on line ' + line + '.');
+      }
+      this.out.push(token.match);
+      return false;
+    }
+
+    if (this.prevToken.match === ignore) {
+      throw new Error('Expected "' + missing + '" on line ' + line + ' but found "' + token.match + '".');
+    }
+
+    return true;
+  });
+
+  parser.on('end', function () {
+    this.out.push(opts.filename || null);
+  });
+
+  return true;
+};
+
+},{}],20:[function(require,module,exports){
+exports.autoescape = require('./autoescape');
+exports.block = require('./block');
+exports["else"] = require('./else');
+exports.elseif = require('./elseif');
+exports.elif = exports.elseif;
+exports["extends"] = require('./extends');
+exports.filter = require('./filter');
+exports["for"] = require('./for');
+exports["if"] = require('./if');
+exports["import"] = require('./import');
+exports.include = require('./include');
+exports.macro = require('./macro');
+exports.parent = require('./parent');
+exports.raw = require('./raw');
+exports.set = require('./set');
+exports.spaceless = require('./spaceless');
+
+},{"./autoescape":10,"./block":11,"./else":12,"./elseif":13,"./extends":14,"./filter":15,"./for":16,"./if":17,"./import":18,"./include":19,"./macro":21,"./parent":22,"./raw":23,"./set":24,"./spaceless":25}],21:[function(require,module,exports){
+/**
+ * Create custom, reusable snippets within your templates.
+ * Can be imported from one template to another using the <a href="#import"><code data-language="swig">{% import ... %}</code></a> tag.
+ *
+ * @alias macro
+ *
+ * @example
+ * {% macro input(type, name, id, label, value, error) %}
+ *   <label for="{{ name }}">{{ label }}</label>
+ *   <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}"{% if error %} class="error"{% endif %}>
+ * {% endmacro %}
+ *
+ * {{ input("text", "fname", "fname", "First Name", fname.value, fname.errors) }}
+ * // => <label for="fname">First Name</label>
+ * //    <input type="text" name="fname" id="fname" value="">
+ *
+ * @param {...arguments} arguments  User-defined arguments.
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  var fnName = args.shift();
+
+  return '_ctx.' + fnName + ' = function (' + args.join('') + ') {\n' +
+    '  var _output = "",\n' +
+    '    __ctx = _utils.extend({}, _ctx);\n' +
+    '  _utils.each(_ctx, function (v, k) {\n' +
+    '    if (["' + args.join('","') + '"].indexOf(k) !== -1) { delete _ctx[k]; }\n' +
+    '  });\n' +
+    compiler(content, parents, options, blockName) + '\n' +
+    ' _ctx = _utils.extend(_ctx, __ctx);\n' +
+    '  return _output;\n' +
+    '};\n' +
+    '_ctx.' + fnName + '.safe = true;\n';
+};
+
+exports.parse = function (str, line, parser, types) {
+  var name;
+
+  parser.on(types.VAR, function (token) {
+    if (token.match.indexOf('.') !== -1) {
+      throw new Error('Unexpected dot in macro argument "' + token.match + '" on line ' + line + '.');
+    }
+    this.out.push(token.match);
+  });
+
+  parser.on(types.FUNCTION, function (token) {
+    if (!name) {
+      name = token.match;
+      this.out.push(name);
+      this.state.push(types.FUNCTION);
+    }
+  });
+
+  parser.on(types.FUNCTIONEMPTY, function (token) {
+    if (!name) {
+      name = token.match;
+      this.out.push(name);
+    }
+  });
+
+  parser.on(types.PARENCLOSE, function () {
+    if (this.isLast) {
+      return;
+    }
+    throw new Error('Unexpected parenthesis close on line ' + line + '.');
+  });
+
+  parser.on(types.COMMA, function () {
+    return true;
+  });
+
+  parser.on('*', function () {
+    return;
+  });
+
+  return true;
+};
+
+exports.ends = true;
+exports.block = true;
+
+},{}],22:[function(require,module,exports){
+/**
+ * Inject the content from the parent template's block of the same name into the current block.
+ *
+ * See <a href="#inheritance">Template Inheritance</a> for more information.
+ *
+ * @alias parent
+ *
+ * @example
+ * {% extends "./foo.html" %}
+ * {% block content %}
+ *   My content.
+ *   {% parent %}
+ * {% endblock %}
+ *
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  if (!parents || !parents.length) {
+    return '';
+  }
+
+  var parentFile = args[0],
+    breaker = true,
+    l = parents.length,
+    i = 0,
+    parent,
+    block;
+
+  for (i; i < l; i += 1) {
+    parent = parents[i];
+    if (!parent.blocks || !parent.blocks.hasOwnProperty(blockName)) {
+      continue;
+    }
+    // Silly JSLint "Strange Loop" requires return to be in a conditional
+    if (breaker && parentFile !== parent.name) {
+      block = parent.blocks[blockName];
+      return block.compile(compiler, [blockName], block.content, parents.slice(i + 1), options) + '\n';
+    }
+  }
+};
+
+exports.parse = function (str, line, parser, types, stack, opts) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected argument "' + token.match + '" on line ' + line + '.');
+  });
+
+  parser.on('end', function () {
+    this.out.push(opts.filename);
+  });
+
+  return true;
+};
+
+},{}],23:[function(require,module,exports){
+// Magic tag, hardcoded into parser
+
+/**
+ * Forces the content to not be auto-escaped. All swig instructions will be ignored and the content will be rendered exactly as it was given.
+ *
+ * @alias raw
+ *
+ * @example
+ * // foobar = '<p>'
+ * {% raw %}{{ foobar }}{% endraw %}
+ * // => {{ foobar }}
+ *
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  return compiler(content, parents, options, blockName);
+};
+exports.parse = function (str, line, parser) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected token "' + token.match + '" in raw tag on line ' + line + '.');
+  });
+  return true;
+};
+exports.ends = true;
+
+},{}],24:[function(require,module,exports){
+/**
+ * Set a variable for re-use in the current context. This will over-write any value already set to the context for the given <var>varname</var>.
+ *
+ * @alias set
+ *
+ * @example
+ * {% set foo = "anything!" %}
+ * {{ foo }}
+ * // => anything!
+ *
+ * @example
+ * // index = 2;
+ * {% set bar = 1 %}
+ * {% set bar += index|default(3) %}
+ * // => 3
+ *
+ * @example
+ * // foods = {};
+ * // food = 'chili';
+ * {% set foods[food] = "con queso" %}
+ * {{ foods.chili }}
+ * // => con queso
+ *
+ * @example
+ * // foods = { chili: 'chili con queso' }
+ * {% set foods.chili = "guatamalan insanity pepper" %}
+ * {{ foods.chili }}
+ * // => guatamalan insanity pepper
+ *
+ * @param {literal} varname   The variable name to assign the value to.
+ * @param {literal} assignement   Any valid JavaScript assignement. <code data-language="js">=, +=, *=, /=, -=</code>
+ * @param {*}   value     Valid variable output.
+ */
+exports.compile = function (compiler, args) {
+  return args.join(' ') + ';\n';
+};
+
+exports.parse = function (str, line, parser, types) {
+  var nameSet = '',
+    propertyName;
+
+  parser.on(types.VAR, function (token) {
+    if (propertyName) {
+      // Tell the parser where to find the variable
+      propertyName += '_ctx.' + token.match;
+      return;
+    }
+
+    if (!parser.out.length) {
+      nameSet += token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.BRACKETOPEN, function (token) {
+    if (!propertyName && !this.out.length) {
+      propertyName = token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.STRING, function (token) {
+    if (propertyName && !this.out.length) {
+      propertyName += token.match;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.BRACKETCLOSE, function (token) {
+    if (propertyName && !this.out.length) {
+      nameSet += propertyName + token.match;
+      propertyName = undefined;
+      return;
+    }
+
+    return true;
+  });
+
+  parser.on(types.DOTKEY, function (token) {
+    if (!propertyName && !nameSet) {
+      return true;
+    }
+    nameSet += '.' + token.match;
+    return;
+  });
+
+  parser.on(types.ASSIGNMENT, function (token) {
+    if (this.out.length || !nameSet) {
+      throw new Error('Unexpected assignment "' + token.match + '" on line ' + line + '.');
+    }
+
+    this.out.push(
+      // Prevent the set from spilling into global scope
+      '_ctx.' + nameSet
+    );
+    this.out.push(token.match);
+    this.filterApplyIdx.push(this.out.length);
+  });
+
+  return true;
+};
+
+exports.block = true;
+
+},{}],25:[function(require,module,exports){
+var utils = require('../utils');
+
+/**
+ * Attempts to remove whitespace between HTML tags. Use at your own risk.
+ *
+ * @alias spaceless
+ *
+ * @example
+ * {% spaceless %}
+ *   {% for num in foo %}
+ *   <li>{{ loop.index }}</li>
+ *   {% endfor %}
+ * {% endspaceless %}
+ * // => <li>1</li><li>2</li><li>3</li>
+ *
+ */
+exports.compile = function (compiler, args, content, parents, options, blockName) {
+  function stripWhitespace(tokens) {
+    return utils.map(tokens, function (token) {
+      if (token.content || typeof token !== 'string') {
+        token.content = stripWhitespace(token.content);
+        return token;
+      }
+
+      return token.replace(/^\s+/, '')
+        .replace(/>\s+</g, '><')
+        .replace(/\s+$/, '');
+    });
+  }
+
+  return compiler(stripWhitespace(content), parents, options, blockName);
+};
+
+exports.parse = function (str, line, parser) {
+  parser.on('*', function (token) {
+    throw new Error('Unexpected token "' + token.match + '" on line ' + line + '.');
+  });
+
+  return true;
+};
+
+exports.ends = true;
+
+},{"../utils":26}],26:[function(require,module,exports){
+var isArray;
+
+/**
+ * Strip leading and trailing whitespace from a string.
+ * @param  {string} input
+ * @return {string}       Stripped input.
+ */
+exports.strip = function (input) {
+  return input.replace(/^\s+|\s+$/g, '');
+};
+
+/**
+ * Test if a string starts with a given prefix.
+ * @param  {string} str    String to test against.
+ * @param  {string} prefix Prefix to check for.
+ * @return {boolean}
+ */
+exports.startsWith = function (str, prefix) {
+  return str.indexOf(prefix) === 0;
+};
+
+/**
+ * Test if a string ends with a given suffix.
+ * @param  {string} str    String to test against.
+ * @param  {string} suffix Suffix to check for.
+ * @return {boolean}
+ */
+exports.endsWith = function (str, suffix) {
+  return str.indexOf(suffix, str.length - suffix.length) !== -1;
+};
+
+/**
+ * Iterate over an array or object.
+ * @param  {array|object} obj Enumerable object.
+ * @param  {Function}     fn  Callback function executed for each item.
+ * @return {array|object}     The original input object.
+ */
+exports.each = function (obj, fn) {
+  var i, l;
+
+  if (isArray(obj)) {
+    i = 0;
+    l = obj.length;
+    for (i; i < l; i += 1) {
+      if (fn(obj[i], i, obj) === false) {
+        break;
+      }
+    }
+  } else {
+    for (i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        if (fn(obj[i], i, obj) === false) {
+          break;
+        }
+      }
+    }
+  }
+
+  return obj;
+};
+
+/**
+ * Test if an object is an Array.
+ * @param {object} obj
+ * @return {boolean}
+ */
+exports.isArray = isArray = (Array.hasOwnProperty('isArray')) ? Array.isArray : function (obj) {
+  return (obj) ? (typeof obj === 'object' && Object.prototype.toString.call(obj).indexOf() !== -1) : false;
+};
+
+/**
+ * Test if an item in an enumerable matches your conditions.
+ * @param  {array|object}   obj   Enumerable object.
+ * @param  {Function}       fn    Executed for each item. Return true if your condition is met.
+ * @return {boolean}
+ */
+exports.some = function (obj, fn) {
+  var i = 0,
+    result,
+    l;
+  if (isArray(obj)) {
+    l = obj.length;
+
+    for (i; i < l; i += 1) {
+      result = fn(obj[i], i, obj);
+      if (result) {
+        break;
+      }
+    }
+  } else {
+    exports.each(obj, function (value, index) {
+      result = fn(value, index, obj);
+      return !(result);
+    });
+  }
+  return !!result;
+};
+
+/**
+ * Return a new enumerable, mapped by a given iteration function.
+ * @param  {object}   obj Enumerable object.
+ * @param  {Function} fn  Executed for each item. Return the item to replace the original item with.
+ * @return {object}       New mapped object.
+ */
+exports.map = function (obj, fn) {
+  var i = 0,
+    result = [],
+    l;
+
+  if (isArray(obj)) {
+    l = obj.length;
+    for (i; i < l; i += 1) {
+      result[i] = fn(obj[i], i);
+    }
+  } else {
+    for (i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        result[i] = fn(obj[i], i);
+      }
+    }
+  }
+  return result;
+};
+
+/**
+ * Copy all of the properties in the source objects over to the destination object, and return the destination object. It's in-order, so the last source will override properties of the same name in previous arguments.
+ * @param {...object} arguments
+ * @return {object}
+ */
+exports.extend = function () {
+  var args = arguments,
+    target = args[0],
+    objs = (args.length > 1) ? Array.prototype.slice.call(args, 1) : [],
+    i = 0,
+    l = objs.length,
+    key,
+    obj;
+
+  for (i; i < l; i += 1) {
+    obj = objs[i] || {};
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        target[key] = obj[key];
+      }
+    }
+  }
+  return target;
+};
+
+/**
+ * Get all of the keys on an object.
+ * @param  {object} obj
+ * @return {array}
+ */
+exports.keys = function (obj) {
+  if (!obj) {
+    return [];
+  }
+
+  if (Object.keys) {
+    return Object.keys(obj);
+  }
+
+  return exports.map(obj, function (v, k) {
+    return k;
+  });
+};
+
+/**
+ * Throw an error with possible line number and source file.
+ * @param  {string} message Error message
+ * @param  {number} [line]  Line number in template.
+ * @param  {string} [file]  Template file the error occured in.
+ * @throws {Error} No seriously, the point is to throw an error.
+ */
+exports.throwError = function (message, line, file) {
+  if (line) {
+    message += ' on line ' + line;
+  }
+  if (file) {
+    message += ' in file ' + file;
+  }
+  throw new Error(message + '.');
+};
+
+},{}],27:[function(require,module,exports){
+
+
+//
+// The shims in this file are not fully implemented shims for the ES5
+// features, but do work for the particular usecases there is in
+// the other modules.
+//
+
+var toString = Object.prototype.toString;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+// Array.isArray is supported in IE9
+function isArray(xs) {
+  return toString.call(xs) === '[object Array]';
+}
+exports.isArray = typeof Array.isArray === 'function' ? Array.isArray : isArray;
+
+// Array.prototype.indexOf is supported in IE9
+exports.indexOf = function indexOf(xs, x) {
+  if (xs.indexOf) return xs.indexOf(x);
+  for (var i = 0; i < xs.length; i++) {
+    if (x === xs[i]) return i;
+  }
+  return -1;
+};
+
+// Array.prototype.filter is supported in IE9
+exports.filter = function filter(xs, fn) {
+  if (xs.filter) return xs.filter(fn);
+  var res = [];
+  for (var i = 0; i < xs.length; i++) {
+    if (fn(xs[i], i, xs)) res.push(xs[i]);
+  }
+  return res;
+};
+
+// Array.prototype.forEach is supported in IE9
+exports.forEach = function forEach(xs, fn, self) {
+  if (xs.forEach) return xs.forEach(fn, self);
+  for (var i = 0; i < xs.length; i++) {
+    fn.call(self, xs[i], i, xs);
+  }
+};
+
+// Array.prototype.map is supported in IE9
+exports.map = function map(xs, fn) {
+  if (xs.map) return xs.map(fn);
+  var out = new Array(xs.length);
+  for (var i = 0; i < xs.length; i++) {
+    out[i] = fn(xs[i], i, xs);
+  }
+  return out;
+};
+
+// Array.prototype.reduce is supported in IE9
+exports.reduce = function reduce(array, callback, opt_initialValue) {
+  if (array.reduce) return array.reduce(callback, opt_initialValue);
+  var value, isValueSet = false;
+
+  if (2 < arguments.length) {
+    value = opt_initialValue;
+    isValueSet = true;
+  }
+  for (var i = 0, l = array.length; l > i; ++i) {
+    if (array.hasOwnProperty(i)) {
+      if (isValueSet) {
+        value = callback(value, array[i], i, array);
+      }
+      else {
+        value = array[i];
+        isValueSet = true;
+      }
+    }
+  }
+
+  return value;
+};
+
+// String.prototype.substr - negative index don't work in IE8
+if ('ab'.substr(-1) !== 'b') {
+  exports.substr = function (str, start, length) {
+    // did we get a negative start, calculate how much it is from the beginning of the string
+    if (start < 0) start = str.length + start;
+
+    // call the original function
+    return str.substr(start, length);
+  };
+} else {
+  exports.substr = function (str, start, length) {
+    return str.substr(start, length);
+  };
+}
+
+// String.prototype.trim is supported in IE9
+exports.trim = function (str) {
+  if (str.trim) return str.trim();
+  return str.replace(/^\s+|\s+$/g, '');
+};
+
+// Function.prototype.bind is supported in IE9
+exports.bind = function () {
+  var args = Array.prototype.slice.call(arguments);
+  var fn = args.shift();
+  if (fn.bind) return fn.bind.apply(fn, args);
+  var self = args.shift();
+  return function () {
+    fn.apply(self, args.concat([Array.prototype.slice.call(arguments)]));
+  };
+};
+
+// Object.create is supported in IE9
+function create(prototype, properties) {
+  var object;
+  if (prototype === null) {
+    object = { '__proto__' : null };
+  }
+  else {
+    if (typeof prototype !== 'object') {
+      throw new TypeError(
+        'typeof prototype[' + (typeof prototype) + '] != \'object\''
+      );
+    }
+    var Type = function () {};
+    Type.prototype = prototype;
+    object = new Type();
+    object.__proto__ = prototype;
+  }
+  if (typeof properties !== 'undefined' && Object.defineProperties) {
+    Object.defineProperties(object, properties);
+  }
+  return object;
+}
+exports.create = typeof Object.create === 'function' ? Object.create : create;
+
+// Object.keys and Object.getOwnPropertyNames is supported in IE9 however
+// they do show a description and number property on Error objects
+function notObject(object) {
+  return ((typeof object != "object" && typeof object != "function") || object === null);
+}
+
+function keysShim(object) {
+  if (notObject(object)) {
+    throw new TypeError("Object.keys called on a non-object");
+  }
+
+  var result = [];
+  for (var name in object) {
+    if (hasOwnProperty.call(object, name)) {
+      result.push(name);
+    }
+  }
+  return result;
+}
+
+// getOwnPropertyNames is almost the same as Object.keys one key feature
+//  is that it returns hidden properties, since that can't be implemented,
+//  this feature gets reduced so it just shows the length property on arrays
+function propertyShim(object) {
+  if (notObject(object)) {
+    throw new TypeError("Object.getOwnPropertyNames called on a non-object");
+  }
+
+  var result = keysShim(object);
+  if (exports.isArray(object) && exports.indexOf(object, 'length') === -1) {
+    result.push('length');
+  }
+  return result;
+}
+
+var keys = typeof Object.keys === 'function' ? Object.keys : keysShim;
+var getOwnPropertyNames = typeof Object.getOwnPropertyNames === 'function' ?
+  Object.getOwnPropertyNames : propertyShim;
+
+if (new Error().hasOwnProperty('description')) {
+  var ERROR_PROPERTY_FILTER = function (obj, array) {
+    if (toString.call(obj) === '[object Error]') {
+      array = exports.filter(array, function (name) {
+        return name !== 'description' && name !== 'number' && name !== 'message';
+      });
+    }
+    return array;
+  };
+
+  exports.keys = function (object) {
+    return ERROR_PROPERTY_FILTER(object, keys(object));
+  };
+  exports.getOwnPropertyNames = function (object) {
+    return ERROR_PROPERTY_FILTER(object, getOwnPropertyNames(object));
+  };
+} else {
+  exports.keys = keys;
+  exports.getOwnPropertyNames = getOwnPropertyNames;
+}
+
+// Object.getOwnPropertyDescriptor - supported in IE8 but only on dom elements
+function valueObject(value, key) {
+  return { value: value[key] };
+}
+
+if (typeof Object.getOwnPropertyDescriptor === 'function') {
+  try {
+    Object.getOwnPropertyDescriptor({'a': 1}, 'a');
+    exports.getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+  } catch (e) {
+    // IE8 dom element issue - use a try catch and default to valueObject
+    exports.getOwnPropertyDescriptor = function (value, key) {
+      try {
+        return Object.getOwnPropertyDescriptor(value, key);
+      } catch (e) {
+        return valueObject(value, key);
+      }
+    };
+  }
+} else {
+  exports.getOwnPropertyDescriptor = valueObject;
+}
+
+},{}],28:[function(require,module,exports){
+
+// not implemented
+// The reason for having an empty file and not throwing is to allow
+// untraditional implementation of this module.
+
+},{}],29:[function(require,module,exports){
+var process=require("__browserify_process");// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var util = require('util');
+var shims = require('_shims');
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (!util.isString(path)) {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(shims.filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = shims.substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(shims.filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(shims.filter(paths, function(p, index) {
+    if (!util.isString(p)) {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+},{"__browserify_process":31,"_shims":27,"util":30}],30:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -47,5 +4424,583 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-!function e(t,n,r){function o(a,s){if(!n[a]){if(!t[a]){var u="function"==typeof require&&require;if(!s&&u)return u(a,!0);if(i)return i(a,!0);throw new Error("Cannot find module '"+a+"'")}var c=n[a]={exports:{}};t[a][0].call(c.exports,function(e){var n=t[a][1][e];return o(n?n:e)},c,c.exports,e,t,n,r)}return n[a].exports}for(var i="function"==typeof require&&require,a=0;a<r.length;a++)o(r[a]);return o}({1:[function(e){var t=e("../lib/swig");"function"==typeof window.define&&"object"==typeof window.define.amd?window.define("swig",[],function(){return t}):window.swig=t},{"../lib/swig":9}],2:[function(e,t,n){var r=e("./utils"),o={full:["January","February","March","April","May","June","July","August","September","October","November","December"],abbr:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]},i={full:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],abbr:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],alt:{"-1":"Yesterday",0:"Today",1:"Tomorrow"}};n.tzOffset=0,n.DateZ=function(){var e={"default":["getUTCDate","getUTCDay","getUTCFullYear","getUTCHours","getUTCMilliseconds","getUTCMinutes","getUTCMonth","getUTCSeconds","toISOString","toGMTString","toUTCString","valueOf","getTime"],z:["getDate","getDay","getFullYear","getHours","getMilliseconds","getMinutes","getMonth","getSeconds","getYear","toDateString","toLocaleDateString","toLocaleTimeString"]},t=this;t.date=t.dateZ=arguments.length>1?new Date(Date.UTC.apply(Date,arguments)+6e4*(new Date).getTimezoneOffset()):1===arguments.length?new Date(new Date(arguments[0])):new Date,t.timezoneOffset=t.dateZ.getTimezoneOffset(),r.each(e.z,function(e){t[e]=function(){return t.dateZ[e]()}}),r.each(e["default"],function(e){t[e]=function(){return t.date[e]()}}),this.setTimezoneOffset(n.tzOffset)},n.DateZ.prototype={getTimezoneOffset:function(){return this.timezoneOffset},setTimezoneOffset:function(e){return this.timezoneOffset=e,this.dateZ=new Date(this.date.getTime()+6e4*this.date.getTimezoneOffset()-6e4*this.timezoneOffset),this}},n.d=function(e){return(e.getDate()<10?"0":"")+e.getDate()},n.D=function(e){return i.abbr[e.getDay()]},n.j=function(e){return e.getDate()},n.l=function(e){return i.full[e.getDay()]},n.N=function(e){var t=e.getDay();return t>=1?t:7},n.S=function(e){var t=e.getDate();return t%10===1&&11!==t?"st":t%10===2&&12!==t?"nd":t%10===3&&13!==t?"rd":"th"},n.w=function(e){return e.getDay()},n.z=function(e,t,r){var o=e.getFullYear(),i=new n.DateZ(o,e.getMonth(),e.getDate(),12,0,0),a=new n.DateZ(o,0,1,12,0,0);return i.setTimezoneOffset(t,r),a.setTimezoneOffset(t,r),Math.round((i-a)/864e5)},n.W=function(e){var t,n=new Date(e.valueOf()),r=(e.getDay()+6)%7;return n.setDate(n.getDate()-r+3),t=n.valueOf(),n.setMonth(0,1),4!==n.getDay()&&n.setMonth(0,1+(4-n.getDay()+7)%7),1+Math.ceil((t-n)/6048e5)},n.F=function(e){return o.full[e.getMonth()]},n.m=function(e){return(e.getMonth()<9?"0":"")+(e.getMonth()+1)},n.M=function(e){return o.abbr[e.getMonth()]},n.n=function(e){return e.getMonth()+1},n.t=function(e){return 32-new Date(e.getFullYear(),e.getMonth(),32).getDate()},n.L=function(e){return 29===new Date(e.getFullYear(),1,29).getDate()},n.o=function(e){var t=new Date(e.valueOf());return t.setDate(t.getDate()-(e.getDay()+6)%7+3),t.getFullYear()},n.Y=function(e){return e.getFullYear()},n.y=function(e){return e.getFullYear().toString().substr(2)},n.a=function(e){return e.getHours()<12?"am":"pm"},n.A=function(e){return e.getHours()<12?"AM":"PM"},n.B=function(e){var t,n=e.getUTCHours();return n=23===n?0:n+1,t=Math.abs((60*(60*n+e.getUTCMinutes())+e.getUTCSeconds())/86.4).toFixed(0),"000".concat(t).slice(t.length)},n.g=function(e){var t=e.getHours();return 0===t?12:t>12?t-12:t},n.G=function(e){return e.getHours()},n.h=function(e){var t=e.getHours();return(10>t||t>12&&22>t?"0":"")+(12>t?t:t-12)},n.H=function(e){var t=e.getHours();return(10>t?"0":"")+t},n.i=function(e){var t=e.getMinutes();return(10>t?"0":"")+t},n.s=function(e){var t=e.getSeconds();return(10>t?"0":"")+t},n.O=function(e){var t=e.getTimezoneOffset();return(0>t?"-":"+")+(10>t/60?"0":"")+Math.abs(t/60)+"00"},n.Z=function(e){return 60*e.getTimezoneOffset()},n.c=function(e){return e.toISOString()},n.r=function(e){return e.toUTCString()},n.U=function(e){return e.getTime()/1e3}},{"./utils":26}],3:[function(e,t,n){function r(e){var t=this,n={};return o.isArray(e)?o.map(e,function(){return t.apply(null,arguments)}):"object"==typeof e?(o.each(e,function(e,r){n[r]=t.apply(null,arguments)}),n):void 0}var o=e("./utils"),i=e("./dateformatter");n.addslashes=function(e){var t=r.apply(n.addslashes,arguments);return void 0!==t?t:e.replace(/\\/g,"\\\\").replace(/\'/g,"\\'").replace(/\"/g,'\\"')},n.capitalize=function(e){var t=r.apply(n.capitalize,arguments);return void 0!==t?t:e.toString().charAt(0).toUpperCase()+e.toString().substr(1).toLowerCase()},n.date=function(e,t,n,r){var o,a=t.length,s=new i.DateZ(e),u=0,c="";for(n&&s.setTimezoneOffset(n,r),u;a>u;u+=1)o=t.charAt(u),"\\"===o?(u+=1,c+=a>u?t.charAt(u):o):c+=i.hasOwnProperty(o)?i[o](s,n,r):o;return c},n["default"]=function(e,t){return"undefined"==typeof e||!e&&"number"!=typeof e?t:e},n.escape=function(e,t){var o,i=r.apply(n.escape,arguments),a=e,s=0;if(void 0!==i)return i;if("string"!=typeof e)return e;switch(i="",t){case"js":for(a=a.replace(/\\/g,"\\u005C"),s;s<a.length;s+=1)o=a.charCodeAt(s),32>o?(o=o.toString(16).toUpperCase(),o=o.length<2?"0"+o:o,i+="\\u00"+o):i+=a[s];return i.replace(/&/g,"\\u0026").replace(/</g,"\\u003C").replace(/>/g,"\\u003E").replace(/\'/g,"\\u0027").replace(/"/g,"\\u0022").replace(/\=/g,"\\u003D").replace(/-/g,"\\u002D").replace(/;/g,"\\u003B");default:return a.replace(/&(?!amp;|lt;|gt;|quot;|#39;)/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}},n.e=n.escape,n.first=function(e){if("object"==typeof e&&!o.isArray(e)){var t=o.keys(e);return e[t[0]]}return"string"==typeof e?e.substr(0,1):e[0]},n.groupBy=function(e,t){if(!o.isArray(e))return e;var n={};return o.each(e,function(e){if(e.hasOwnProperty(t)){{var r=e[t];o.extend({},e)}delete e[t],n[r]||(n[r]=[]),n[r].push(e)}}),n},n.join=function(e,t){if(o.isArray(e))return e.join(t);if("object"==typeof e){var n=[];return o.each(e,function(e){n.push(e)}),n.join(t)}return e},n.json=function(e,t){return JSON.stringify(e,null,t||0)},n.json_encode=n.json,n.last=function(e){if("object"==typeof e&&!o.isArray(e)){var t=o.keys(e);return e[t[t.length-1]]}return"string"==typeof e?e.charAt(e.length-1):e[e.length-1]},n.lower=function(e){var t=r.apply(n.lower,arguments);return void 0!==t?t:e.toString().toLowerCase()},n.raw=function(e){return n.safe(e)},n.raw.safe=!0,n.replace=function(e,t,n,r){var o=new RegExp(t,r);return e.replace(o,n)},n.reverse=function(e){return n.sort(e,!0)},n.safe=function(e){return e},n.safe.safe=!0,n.sort=function(e,t){var n;if(o.isArray(e))n=e.sort();else switch(typeof e){case"object":n=o.keys(e).sort();break;case"string":return n=e.split(""),t?n.reverse().join(""):n.sort().join("")}return n&&t?n.reverse():n||e},n.striptags=function(e){var t=r.apply(n.striptags,arguments);return void 0!==t?t:e.toString().replace(/(<([^>]+)>)/gi,"")},n.title=function(e){var t=r.apply(n.title,arguments);return void 0!==t?t:e.toString().replace(/\w\S*/g,function(e){return e.charAt(0).toUpperCase()+e.substr(1).toLowerCase()})},n.uniq=function(e){var t;return e&&o.isArray(e)?(t=[],o.each(e,function(e){-1===t.indexOf(e)&&t.push(e)}),t):""},n.upper=function(e){var t=r.apply(n.upper,arguments);return void 0!==t?t:e.toString().toUpperCase()},n.url_encode=function(e){var t=r.apply(n.url_encode,arguments);return void 0!==t?t:encodeURIComponent(e)},n.url_decode=function(e){var t=r.apply(n.url_decode,arguments);return void 0!==t?t:decodeURIComponent(e)}},{"./dateformatter":2,"./utils":26}],4:[function(e,t,n){function r(e){var t;return o.some(a,function(n){return o.some(n.regex,function(r){var o,i=e.match(r);if(i)return o=i[n.idx||0].replace(/\s*$/,""),o=n.hasOwnProperty("replace")&&n.replace.hasOwnProperty(o)?n.replace[o]:o,t={match:o,type:n.type,length:i[0].length},!0})}),t||(t={match:e,type:i.UNKNOWN,length:e.length}),t}var o=e("./utils"),i={WHITESPACE:0,STRING:1,FILTER:2,FILTEREMPTY:3,FUNCTION:4,FUNCTIONEMPTY:5,PARENOPEN:6,PARENCLOSE:7,COMMA:8,VAR:9,NUMBER:10,OPERATOR:11,BRACKETOPEN:12,BRACKETCLOSE:13,DOTKEY:14,ARRAYOPEN:15,CURLYOPEN:17,CURLYCLOSE:18,COLON:19,COMPARATOR:20,LOGIC:21,NOT:22,BOOL:23,ASSIGNMENT:24,METHODOPEN:25,UNKNOWN:100},a=[{type:i.WHITESPACE,regex:[/^\s+/]},{type:i.STRING,regex:[/^""/,/^".*?[^\\]"/,/^''/,/^'.*?[^\\]'/]},{type:i.FILTER,regex:[/^\|\s*(\w+)\(/],idx:1},{type:i.FILTEREMPTY,regex:[/^\|\s*(\w+)/],idx:1},{type:i.FUNCTIONEMPTY,regex:[/^\s*(\w+)\(\)/],idx:1},{type:i.FUNCTION,regex:[/^\s*(\w+)\(/],idx:1},{type:i.PARENOPEN,regex:[/^\(/]},{type:i.PARENCLOSE,regex:[/^\)/]},{type:i.COMMA,regex:[/^,/]},{type:i.LOGIC,regex:[/^(&&|\|\|)\s*/,/^(and|or)\s+/],idx:1,replace:{and:"&&",or:"||"}},{type:i.COMPARATOR,regex:[/^(===|==|\!==|\!=|<=|<|>=|>|in\s|gte\s|gt\s|lte\s|lt\s)\s*/],idx:1,replace:{gte:">=",gt:">",lte:"<=",lt:"<"}},{type:i.ASSIGNMENT,regex:[/^(=|\+=|-=|\*=|\/=)/]},{type:i.NOT,regex:[/^\!\s*/,/^not\s+/],replace:{not:"!"}},{type:i.BOOL,regex:[/^(true|false)\s+/,/^(true|false)$/],idx:1},{type:i.VAR,regex:[/^[a-zA-Z_$]\w*((\.\$?\w*)+)?/,/^[a-zA-Z_$]\w*/]},{type:i.BRACKETOPEN,regex:[/^\[/]},{type:i.BRACKETCLOSE,regex:[/^\]/]},{type:i.CURLYOPEN,regex:[/^\{/]},{type:i.COLON,regex:[/^\:/]},{type:i.CURLYCLOSE,regex:[/^\}/]},{type:i.DOTKEY,regex:[/^\.(\w+)/],idx:1},{type:i.NUMBER,regex:[/^[+\-]?\d+(\.\d+)?/]},{type:i.OPERATOR,regex:[/^(\+|\-|\/|\*|%)/]}];n.types=i,n.read=function(e){for(var t,n,o=0,i=[];o<e.length;)t=e.substring(o),n=r(t),o+=n.length,i.push(n);return i}},{"./utils":26}],5:[function(e,t){var n=e("__browserify_process"),r=e("fs"),o=e("path");t.exports=function(e,t){var i={};return t=t||"utf8",e=e?o.normalize(e):null,i.resolve=function(t,r){return r=e?e:r?o.dirname(r):n.cwd(),o.resolve(r,t)},i.load=function(e,n){if(!r||n&&!r.readFile||!r.readFileSync)throw new Error("Unable to find file "+e+" because there is no filesystem to read from.");return e=i.resolve(e),n?void r.readFile(e,t,n):r.readFileSync(e,t)},i}},{__browserify_process:31,fs:28,path:29}],6:[function(e,t,n){n.fs=e("./filesystem"),n.memory=e("./memory")},{"./filesystem":5,"./memory":7}],7:[function(e,t){var n=e("path"),r=e("../utils");t.exports=function(e,t){var o={};return t=t?n.normalize(t):null,o.resolve=function(e,r){return r=t?t:r?n.dirname(r):"/",n.resolve(r,e)},o.load=function(t,n){var o,i;return i=[t,t.replace(/^(\/|\\)/,"")],o=e[i[0]]||e[i[1]],o||r.throwError('Unable to find template "'+t+'".'),n?void n(null,o):o},o}},{"../utils":26,path:29}],8:[function(e,t,n){function r(e){return e.replace(/[\-\/\\\^$*+?.()|\[\]{}]/g,"\\$&")}function o(e,t,n,r,o){this.out=[],this.state=[],this.filterApplyIdx=[],this._parsers={},this.line=r,this.filename=o,this.filters=t,this.escape=n,this.parse=function(){var t=this;return t._parsers.start&&t._parsers.start.call(t),i.each(e,function(n,r){var o=e[r-1];if(t.isLast=r===e.length-1,o)for(;o.type===s.WHITESPACE;)r-=1,o=e[r-1];t.prevToken=o,t.parseToken(n)}),t._parsers.end&&t._parsers.end.call(t),t.escape&&(t.filterApplyIdx=[0],"string"==typeof t.escape?(t.parseToken({type:s.FILTER,match:"e"}),t.parseToken({type:s.COMMA,match:","}),t.parseToken({type:s.STRING,match:String(n)}),t.parseToken({type:s.PARENCLOSE,match:")"})):t.parseToken({type:s.FILTEREMPTY,match:"e"})),t.out}}var i=e("./utils"),a=e("./lexer"),s=a.types,u=["break","case","catch","continue","debugger","default","delete","do","else","finally","for","function","if","in","instanceof","new","return","switch","this","throw","try","typeof","var","void","while","with"];o.prototype={on:function(e,t){this._parsers[e]=t},parseToken:function(e){var t,n=this,r=n._parsers[e.type]||n._parsers["*"],o=e.match,a=n.prevToken,u=a?a.type:null,c=n.state.length?n.state[n.state.length-1]:null;if(!r||"function"!=typeof r||r.call(this,e))switch(c&&a&&c===s.FILTER&&u===s.FILTER&&e.type!==s.PARENCLOSE&&e.type!==s.COMMA&&e.type!==s.OPERATOR&&e.type!==s.FILTER&&e.type!==s.FILTEREMPTY&&n.out.push(", "),c&&c===s.METHODOPEN&&(n.state.pop(),e.type!==s.PARENCLOSE&&n.out.push(", ")),e.type){case s.WHITESPACE:break;case s.STRING:n.filterApplyIdx.push(n.out.length),n.out.push(o.replace(/\\/g,"\\\\"));break;case s.NUMBER:case s.BOOL:n.filterApplyIdx.push(n.out.length),n.out.push(o);break;case s.FILTER:n.filters.hasOwnProperty(o)&&"function"==typeof n.filters[o]||i.throwError('Invalid filter "'+o+'"',n.line,n.filename),n.escape=n.filters[o].safe?!1:n.escape,n.out.splice(n.filterApplyIdx[n.filterApplyIdx.length-1],0,'_filters["'+o+'"]('),n.state.push(e.type);break;case s.FILTEREMPTY:n.filters.hasOwnProperty(o)&&"function"==typeof n.filters[o]||i.throwError('Invalid filter "'+o+'"',n.line,n.filename),n.escape=n.filters[o].safe?!1:n.escape,n.out.splice(n.filterApplyIdx[n.filterApplyIdx.length-1],0,'_filters["'+o+'"]('),n.out.push(")");break;case s.FUNCTION:case s.FUNCTIONEMPTY:n.out.push("((typeof _ctx."+o+' !== "undefined") ? _ctx.'+o+" : ((typeof "+o+' !== "undefined") ? '+o+" : _fn))("),n.escape=!1,e.type===s.FUNCTIONEMPTY?n.out[n.out.length-1]=n.out[n.out.length-1]+")":n.state.push(e.type),n.filterApplyIdx.push(n.out.length-1);break;case s.PARENOPEN:n.state.push(e.type),n.filterApplyIdx.length?(n.out.splice(n.filterApplyIdx[n.filterApplyIdx.length-1],0,"("),a&&u===s.VAR?(t=a.match.split(".").slice(0,-1),n.out.push(" || _fn).call("+n.checkMatch(t)),n.state.push(s.METHODOPEN),n.escape=!1):n.out.push(" || _fn)("),n.filterApplyIdx.push(n.out.length-3)):(n.out.push("("),n.filterApplyIdx.push(n.out.length-1));break;case s.PARENCLOSE:t=n.state.pop(),t!==s.PARENOPEN&&t!==s.FUNCTION&&t!==s.FILTER&&i.throwError("Mismatched nesting state",n.line,n.filename),n.out.push(")"),n.filterApplyIdx.pop(),t!==s.FILTER&&n.filterApplyIdx.pop();break;case s.COMMA:c!==s.FUNCTION&&c!==s.FILTER&&c!==s.ARRAYOPEN&&c!==s.CURLYOPEN&&c!==s.PARENOPEN&&c!==s.COLON&&i.throwError("Unexpected comma",n.line,n.filename),c===s.COLON&&n.state.pop(),n.out.push(", "),n.filterApplyIdx.pop();break;case s.LOGIC:case s.COMPARATOR:a&&u!==s.COMMA&&u!==e.type&&u!==s.BRACKETOPEN&&u!==s.CURLYOPEN&&u!==s.PARENOPEN&&u!==s.FUNCTION||i.throwError("Unexpected logic",n.line,n.filename),n.out.push(e.match);break;case s.NOT:n.out.push(e.match);break;case s.VAR:n.parseVar(e,o,c);break;case s.BRACKETOPEN:!a||u!==s.VAR&&u!==s.BRACKETCLOSE&&u!==s.PARENCLOSE?(n.state.push(s.ARRAYOPEN),n.filterApplyIdx.push(n.out.length)):n.state.push(e.type),n.out.push("[");break;case s.BRACKETCLOSE:t=n.state.pop(),t!==s.BRACKETOPEN&&t!==s.ARRAYOPEN&&i.throwError("Unexpected closing square bracket",n.line,n.filename),n.out.push("]"),n.filterApplyIdx.pop();break;case s.CURLYOPEN:n.state.push(e.type),n.out.push("{"),n.filterApplyIdx.push(n.out.length-1);break;case s.COLON:c!==s.CURLYOPEN&&i.throwError("Unexpected colon",n.line,n.filename),n.state.push(e.type),n.out.push(":"),n.filterApplyIdx.pop();break;case s.CURLYCLOSE:c===s.COLON&&n.state.pop(),n.state.pop()!==s.CURLYOPEN&&i.throwError("Unexpected closing curly brace",n.line,n.filename),n.out.push("}"),n.filterApplyIdx.pop();break;case s.DOTKEY:(!a||u!==s.VAR&&u!==s.BRACKETCLOSE&&u!==s.DOTKEY&&u!==s.PARENCLOSE&&u!==s.FUNCTIONEMPTY&&u!==s.FILTEREMPTY&&u!==s.CURLYCLOSE)&&i.throwError('Unexpected key "'+o+'"',n.line,n.filename),n.out.push("."+o);break;case s.OPERATOR:n.out.push(" "+o+" "),n.filterApplyIdx.pop()}},parseVar:function(e,t,n){var r=this;return t=t.split("."),-1!==u.indexOf(t[0])&&i.throwError('Reserved keyword "'+t[0]+'" attempted to be used as a variable',r.line,r.filename),r.filterApplyIdx.push(r.out.length),n===s.CURLYOPEN?(t.length>1&&i.throwError("Unexpected dot",r.line,r.filename),void r.out.push(t[0])):void r.out.push(r.checkMatch(t))},checkMatch:function(e){function t(t){var n=t+o,r=e,a="";return a="(typeof "+n+' !== "undefined" && '+n+" !== null",i.each(r,function(e,t){0!==t&&(a+=" && "+n+"."+e+" !== undefined && "+n+"."+e+" !== null",n+="."+e)}),a+=")"}function n(n){return"("+t(n)+" ? "+n+e.join(".")+' : "")'}var r,o=e[0];return r="("+t("_ctx.")+" ? "+n("_ctx.")+" : "+n("")+")","("+r+" !== null ? "+r+' : "" )'}},n.parse=function(e,t,u,c,l){function p(e,t){var n,r,s=a.read(i.strip(e));return n=new o(s,l,d,t,u.filename),r=n.parse().join(""),n.state.length&&i.throwError('Unable to parse "'+e+'"',t,u.filename),{compile:function(){return"_output += "+r+";\n"}}}function f(t,n){var r,p,f,h,g,m,y;if(i.startsWith(t,"end")){if(y=M[M.length-1],y&&y.name===t.split(/\s+/)[0].replace(/^end/,"")&&y.ends){switch(y.name){case"autoescape":d=u.autoescape;break;case"raw":D=!1}return void M.pop()}D||i.throwError('Unexpected end of tag "'+t.replace(/^end/,"")+'"',n,u.filename)}if(!D){switch(f=t.split(/\s+(.+)?/),h=f.shift(),c.hasOwnProperty(h)||i.throwError('Unexpected tag "'+t+'"',n,u.filename),r=a.read(i.strip(f.join(" "))),p=new o(r,l,!1,n,u.filename),g=c[h],g.parse(f[1],n,p,s,M,u,e)||i.throwError('Unexpected tag "'+h+'"',n,u.filename),p.parse(),m=p.out,h){case"autoescape":d="false"!==m[0]?m[0]:!1;break;case"raw":D=!0}return{block:!!c[h].block,compile:g.compile,args:m,content:[],ends:g.ends,name:h}}}function h(e){return"string"==typeof e&&(e=e.replace(/\s*$/,"")),e}t=t.replace(/\r\n/g,"\n");var g,d=u.autoescape,m=u.tagControls[0],y=u.tagControls[1],v=u.varControls[0],w=u.varControls[1],O=r(m),E=r(y),x=r(v),b=r(w),A=new RegExp("^"+O+"-?\\s*-?|-?\\s*-?"+E+"$","g"),T=new RegExp("^"+O+"-"),C=new RegExp("-"+E+"$"),N=new RegExp("^"+x+"-?\\s*-?|-?\\s*-?"+b+"$","g"),R=new RegExp("^"+x+"-"),_=new RegExp("-"+b+"$"),P=u.cmtControls[0],k=u.cmtControls[1],S="[\\s\\S]*?",I=new RegExp("("+O+S+E+"|"+x+S+b+"|"+r(P)+S+r(k)+")"),U=1,M=[],j=null,F=[],L={},D=!1;return n.parseVariable=p,i.each(t.split(I),function(e){var t,n,r,o,a;if(e){if(!D&&i.startsWith(e,v)&&i.endsWith(e,w))r=R.test(e),g=_.test(e),t=p(e.replace(N,""),U);else if(i.startsWith(e,m)&&i.endsWith(e,y))r=T.test(e),g=C.test(e),t=f(e.replace(A,""),U),t&&("extends"===t.name?j=t.args.join("").replace(/^\'|\'$/g,"").replace(/^\"|\"$/g,""):t.block&&!M.length&&(L[t.args.join("")]=t)),D&&!t&&(t=e);else if(D||!i.startsWith(e,P)&&!i.endsWith(e,k))t=g?e.replace(/^\s*/,""):e,g=!1;else if(i.startsWith(e,P)&&i.endsWith(e,k))return;r&&F.length&&(o=F.pop(),"string"==typeof o?o=h(o):o.content&&o.content.length&&(a=h(o.content.pop()),o.content.push(a)),F.push(o)),t&&(M.length?M[M.length-1].content.push(t):F.push(t),t.name&&t.ends&&M.push(t),n=e.match(/\n/g),U+=n?n.length:0)}}),{name:u.filename,parent:j,tokens:F,blocks:L}},n.compile=function(e,t,r,o){var a="",s=i.isArray(e)?e:e.tokens;return i.each(s,function(e){var i;return"string"==typeof e?void(a+='_output += "'+e.replace(/\\/g,"\\\\").replace(/\n|\r/g,"\\n").replace(/"/g,'\\"')+'";\n'):(i=e.compile(n.compile,e.args?e.args.slice(0):[],e.content?e.content.slice(0):[],t,r,o),void(a+=i||""))}),a}},{"./lexer":4,"./utils":26}],9:[function(e,t,n){function r(){return""}function o(e){if(e){if(i.each(["varControls","tagControls","cmtControls"],function(t){if(e.hasOwnProperty(t)){if(!i.isArray(e[t])||2!==e[t].length)throw new Error('Option "'+t+'" must be an array containing 2 different control strings.');if(e[t][0]===e[t][1])throw new Error('Option "'+t+'" open and close controls must not be the same.');i.each(e[t],function(e,n){if(e.length<2)throw new Error('Option "'+t+'" '+(n?"open ":"close ")+'control must be at least 2 characters. Saw "'+e+'" instead.')})}}),e.hasOwnProperty("cache")&&e.cache&&"memory"!==e.cache&&(!e.cache.get||!e.cache.set))throw new Error("Invalid cache option "+JSON.stringify(e.cache)+' found. Expected "memory" or { get: function (key) { ... }, set: function (key, value) { ... } }.');if(e.hasOwnProperty("loader")&&e.loader&&(!e.loader.load||!e.loader.resolve))throw new Error("Invalid loader option "+JSON.stringify(e.loader)+" found. Expected { load: function (pathname, cb) { ... }, resolve: function (to, from) { ... } }.")}}var i=e("./utils"),a=e("./tags"),s=e("./filters"),u=e("./parser"),c=e("./dateformatter"),l=e("./loaders");n.version="1.4.2";var p,f={autoescape:!0,varControls:["{{","}}"],tagControls:["{%","%}"],cmtControls:["{#","#}"],locals:{},cache:"memory",loader:l.fs()};n.setDefaults=function(e){o(e),p.options=i.extend(p.options,e)},n.setDefaultTZOffset=function(e){c.tzOffset=e},n.Swig=function(e){function t(e){return e&&e.locals?i.extend({},d.options.locals,e.locals):d.options.locals}function n(e){return e=e||{},e.hasOwnProperty("cache")&&!e.cache||!d.options.cache}function c(e,t){return n(t)?void 0:"memory"===d.options.cache?d.cache[e]:d.options.cache.get(e)}function l(e,t,r){return n(t)?void 0:"memory"===d.options.cache?void(d.cache[e]=r):void d.options.cache.set(e,r)}function p(e,t){return i.map(t,function(t){var n=t.args?t.args.join(""):"";return"block"===t.name&&e[n]&&(t=e[n]),t.content&&t.content.length&&(t.content=p(e,t.content)),t})}function h(e,t){var n=[];i.each(e,function(e){n.push(e)}),i.each(n.reverse(),function(e){"block"!==e.name&&t.unshift(e)})}function g(e,t){for(var n,r,o,a=e.parent,s=[],u=[];a;){if(!t||!t.filename)throw new Error('Cannot extend "'+a+'" because current template has no filename.');if(n=n||t.filename,n=d.options.loader.resolve(a,n),r=c(n,t)||d.parseFile(n,i.extend({},t,{filename:n})),a=r.parent,-1!==s.indexOf(n))throw new Error('Illegal circular extends of "'+n+'".');s.push(n),u.push(r)}for(o=u.length,o=u.length-2;o>=0;o-=1)u[o].tokens=p(u[o].blocks,u[o+1].tokens),h(u[o].blocks,u[o].tokens);return u}o(e),this.options=i.extend({},f,e||{}),this.cache={},this.extensions={};var d=this,m=a,y=s;this.invalidateCache=function(){"memory"===d.options.cache&&(d.cache={})},this.setFilter=function(e,t){if("function"!=typeof t)throw new Error('Filter "'+e+'" is not a valid function.');y[e]=t},this.setTag=function(e,t,n,r,o){if("function"!=typeof t)throw new Error('Tag "'+e+'" parse method is not a valid function.');if("function"!=typeof n)throw new Error('Tag "'+e+'" compile method is not a valid function.');m[e]={parse:t,compile:n,ends:r||!1,block:!!o}},this.setExtension=function(e,t){d.extensions[e]=t},this.parse=function(e,n){o(n);var r,a=t(n),s={};for(r in n)n.hasOwnProperty(r)&&"locals"!==r&&(s[r]=n[r]);return n=i.extend({},d.options,s),n.locals=a,u.parse(this,e,n,m,y)},this.parseFile=function(e,t){var n;return t||(t={}),e=d.options.loader.resolve(e,t.resolveFrom),n=d.options.loader.load(e),t.filename||(t=i.extend({filename:e},t)),d.parse(n,t)},this.precompile=function(e,t){var n,r=d.parse(e,t),o=g(r,t);o.length&&(r.tokens=p(r.blocks,o[0].tokens),h(r.blocks,r.tokens));try{n=new Function("_swig","_ctx","_filters","_utils","_fn",'  var _ext = _swig.extensions,\n    _output = "";\n'+u.compile(r,o,t)+"\n  return _output;\n")}catch(a){i.throwError(a,null,t.filename)}return{tpl:n,tokens:r}},this.render=function(e,t){return d.compile(e,t)()},this.renderFile=function(e,t,n){return n?void d.compileFile(e,{},function(e,r){var o;if(e)return void n(e);try{o=r(t)}catch(i){return void n(i)}n(null,o)}):d.compileFile(e)(t)},this.compile=function(e,n){function o(e){var t;return t=e&&s?i.extend({},a,e):e&&!s?e:!e&&s?a:{},u.tpl(d,t,y,i,r)}var a,s,u,p=n?n.filename:null,f=p?c(p,n):null;return f?f:(a=t(n),s=i.keys(a).length,u=this.precompile(e,n),i.extend(o,u.tokens),p&&l(p,n,o),o)},this.compileFile=function(e,t,n){var r,o;return t||(t={}),e=d.options.loader.resolve(e,t.resolveFrom),t.filename||(t=i.extend({filename:e},t)),(o=c(e,t))?n?void n(null,o):o:n?void d.options.loader.load(e,function(e,r){if(e)return void n(e);var o;try{o=d.compile(r,t)}catch(i){return void n(i)}n(e,o)}):(r=d.options.loader.load(e),d.compile(r,t))},this.run=function(e,n,o){var a=t({locals:n});return o&&l(o,{},e),e(d,a,y,i,r)}},p=new n.Swig,n.setFilter=p.setFilter,n.setTag=p.setTag,n.setExtension=p.setExtension,n.parseFile=p.parseFile,n.precompile=p.precompile,n.compile=p.compile,n.compileFile=p.compileFile,n.render=p.render,n.renderFile=p.renderFile,n.run=p.run,n.invalidateCache=p.invalidateCache,n.loaders=l},{"./dateformatter":2,"./filters":3,"./loaders":6,"./parser":8,"./tags":20,"./utils":26}],10:[function(e,t,n){var r=e("../utils"),o=["html","js"];n.compile=function(e,t,n,r,o,i){return e(n,r,o,i)},n.parse=function(e,t,n,i,a,s){var u;return n.on("*",function(e){return u||e.type!==i.BOOL&&(e.type!==i.STRING||-1!==o.indexOf(e.match))?void r.throwError('Unexpected token "'+e.match+'" in autoescape tag',t,s.filename):(this.out.push(e.match),void(u=!0))}),!0},n.ends=!0},{"../utils":26}],11:[function(e,t,n){n.compile=function(e,t,n,r,o){return e(n,r,o,t.join(""))},n.parse=function(e,t,n){return n.on("*",function(e){this.out.push(e.match)}),!0},n.ends=!0,n.block=!0},{}],12:[function(e,t,n){n.compile=function(){return"} else {\n"},n.parse=function(e,t,n,r,o){return n.on("*",function(e){throw new Error('"else" tag does not accept any tokens. Found "'+e.match+'" on line '+t+".")}),o.length&&"if"===o[o.length-1].name}},{}],13:[function(e,t,n){var r=e("./if").parse;n.compile=function(e,t){return"} else if ("+t.join(" ")+") {\n"},n.parse=function(e,t,n,o,i){var a=r(e,t,n,o,i);return a&&i.length&&"if"===i[i.length-1].name}},{"./if":17}],14:[function(e,t,n){n.compile=function(){},n.parse=function(){return!0},n.ends=!1},{}],15:[function(e,t,n){var r=e("../filters");n.compile=function(e,t,n,r,o,i){var a=t.shift().replace(/\($/,""),s='(function () {\n  var _output = "";\n'+e(n,r,o,i)+"  return _output;\n})()";return")"===t[t.length-1]&&t.pop(),t=t.length?", "+t.join(""):"",'_output += _filters["'+a+'"]('+s+t+");\n"},n.parse=function(e,t,n,o){function i(e){if(!r.hasOwnProperty(e))throw new Error('Filter "'+e+'" does not exist on line '+t+".")}var a;return n.on(o.FUNCTION,function(e){return a?!0:(a=e.match.replace(/\($/,""),i(a),this.out.push(e.match),void this.state.push(e.type))}),n.on(o.VAR,function(e){return a?!0:(a=e.match,i(a),void this.out.push(a))}),!0},n.ends=!0},{"../filters":3}],16:[function(e,t,n){var r="_ctx.",o=r+"loop";n.compile=function(e,t,n,i,a,s){var u,c=t.shift(),l="__k",p=(r+"__loopcache"+Math.random()).replace(/\./g,"");return t[0]&&","===t[0]&&(t.shift(),l=c,c=t.shift()),u=t.join(""),["(function () {\n","  var __l = "+u+', __len = (_utils.isArray(__l) || typeof __l === "string") ? __l.length : _utils.keys(__l).length;\n',"  if (!__l) { return; }\n","    var "+p+" = { loop: "+o+", "+c+": "+r+c+", "+l+": "+r+l+" };\n","    "+o+" = { first: false, index: 1, index0: 0, revindex: __len, revindex0: __len - 1, length: __len, last: false };\n","  _utils.each(__l, function ("+c+", "+l+") {\n","    "+r+c+" = "+c+";\n","    "+r+l+" = "+l+";\n","    "+o+".key = "+l+";\n","    "+o+".first = ("+o+".index0 === 0);\n","    "+o+".last = ("+o+".revindex0 === 0);\n","    "+e(n,i,a,s),"    "+o+".index += 1; "+o+".index0 += 1; "+o+".revindex -= 1; "+o+".revindex0 -= 1;\n","  });\n","  "+o+" = "+p+".loop;\n","  "+r+c+" = "+p+"."+c+";\n","  "+r+l+" = "+p+"."+l+";\n","  "+p+" = undefined;\n","})();\n"].join("")},n.parse=function(e,t,n,r){var o,i;return n.on(r.NUMBER,function(e){var n=this.state.length?this.state[this.state.length-1]:null;if(!i||n!==r.ARRAYOPEN&&n!==r.CURLYOPEN&&n!==r.CURLYCLOSE&&n!==r.FUNCTION&&n!==r.FILTER)throw new Error('Unexpected number "'+e.match+'" on line '+t+".");return!0}),n.on(r.VAR,function(e){return i&&o?!0:(this.out.length||(o=!0),void this.out.push(e.match))}),n.on(r.COMMA,function(e){return o&&this.prevToken.type===r.VAR?void this.out.push(e.match):!0}),n.on(r.COMPARATOR,function(e){if("in"!==e.match||!o)throw new Error('Unexpected token "'+e.match+'" on line '+t+".");i=!0,this.filterApplyIdx.push(this.out.length)}),!0},n.ends=!0},{}],17:[function(e,t,n){n.compile=function(e,t,n,r,o,i){return"if ("+t.join(" ")+") { \n"+e(n,r,o,i)+"\n}"},n.parse=function(e,t,n,r){if("undefined"==typeof e)throw new Error("No conditional statement provided on line "+t+".");return n.on(r.COMPARATOR,function(e){if(this.isLast)throw new Error('Unexpected logic "'+e.match+'" on line '+t+".");if(this.prevToken.type===r.NOT)throw new Error('Attempted logic "not '+e.match+'" on line '+t+". Use !(foo "+e.match+") instead.");this.out.push(e.match),this.filterApplyIdx.push(this.out.length)}),n.on(r.NOT,function(e){if(this.isLast)throw new Error('Unexpected logic "'+e.match+'" on line '+t+".");this.out.push(e.match)}),n.on(r.BOOL,function(e){this.out.push(e.match)}),n.on(r.LOGIC,function(e){if(!this.out.length||this.isLast)throw new Error('Unexpected logic "'+e.match+'" on line '+t+".");this.out.push(e.match),this.filterApplyIdx.pop()}),!0},n.ends=!0},{}],18:[function(e,t,n){var r=e("../utils");n.compile=function(e,t){var n=t.pop(),o="_ctx."+n+' = {};\n  var _output = "";\n',i=r.map(t,function(e){return{ex:new RegExp("_ctx."+e.name,"g"),re:"_ctx."+n+"."+e.name}});return r.each(t,function(e){var t=e.compiled;r.each(i,function(e){t=t.replace(e.ex,e.re)}),o+=t}),o},n.parse=function(t,n,o,i,a,s,u){var c,l,p=e("../parser").compile,f={resolveFrom:s.filename},h=r.extend({},s,f);return o.on(i.STRING,function(e){var t=this;if(!c)return c=u.parseFile(e.match.replace(/^("|')|("|')$/g,""),f).tokens,void r.each(c,function(e){var n,r="";e&&"macro"===e.name&&e.compile&&(n=e.args[0],r+=e.compile(p,e.args,e.content,[],h)+"\n",t.out.push({compiled:r,name:n}))});throw new Error("Unexpected string "+e.match+" on line "+n+".")}),o.on(i.VAR,function(e){var t=this;if(!c||l)throw new Error('Unexpected variable "'+e.match+'" on line '+n+".");if("as"!==e.match)return l=e.match,t.out.push(l),!1}),!0},n.block=!0},{"../parser":8,"../utils":26}],19:[function(e,t,n){var r="ignore",o="missing",i="only";n.compile=function(e,t){var n=t.shift(),r=t.indexOf(i),a=-1!==r?t.splice(r,1):!1,s=(t.pop()||"").replace(/\\/g,"\\\\"),u=t[t.length-1]===o?t.pop():!1,c=t.join("");return(u?"  try {\n":"")+"_output += _swig.compileFile("+n+', {resolveFrom: "'+s+'"})('+(a&&c?c:c?"_utils.extend({}, _ctx, "+c+")":"_ctx")+");\n"+(u?"} catch (e) {}\n":"")},n.parse=function(e,t,n,a,s,u){var c,l;return n.on(a.STRING,function(e){return c?!0:(c=e.match,void this.out.push(c))}),n.on(a.VAR,function(e){if(!c)return c=e.match,!0;if(!l&&"with"===e.match)return void(l=!0);if(l&&e.match===i&&"with"!==this.prevToken.match)return void this.out.push(e.match);if(e.match===r)return!1;if(e.match===o){if(this.prevToken.match!==r)throw new Error('Unexpected token "'+o+'" on line '+t+".");return this.out.push(e.match),!1}if(this.prevToken.match===r)throw new Error('Expected "'+o+'" on line '+t+' but found "'+e.match+'".');return!0}),n.on("end",function(){this.out.push(u.filename||null)}),!0}},{}],20:[function(e,t,n){n.autoescape=e("./autoescape"),n.block=e("./block"),n["else"]=e("./else"),n.elseif=e("./elseif"),n.elif=n.elseif,n["extends"]=e("./extends"),n.filter=e("./filter"),n["for"]=e("./for"),n["if"]=e("./if"),n["import"]=e("./import"),n.include=e("./include"),n.macro=e("./macro"),n.parent=e("./parent"),n.raw=e("./raw"),n.set=e("./set"),n.spaceless=e("./spaceless")},{"./autoescape":10,"./block":11,"./else":12,"./elseif":13,"./extends":14,"./filter":15,"./for":16,"./if":17,"./import":18,"./include":19,"./macro":21,"./parent":22,"./raw":23,"./set":24,"./spaceless":25}],21:[function(e,t,n){n.compile=function(e,t,n,r,o,i){var a=t.shift();return"_ctx."+a+" = function ("+t.join("")+') {\n  var _output = "",\n    __ctx = _utils.extend({}, _ctx);\n  _utils.each(_ctx, function (v, k) {\n    if (["'+t.join('","')+'"].indexOf(k) !== -1) { delete _ctx[k]; }\n  });\n'+e(n,r,o,i)+"\n _ctx = _utils.extend(_ctx, __ctx);\n  return _output;\n};\n_ctx."+a+".safe = true;\n"},n.parse=function(e,t,n,r){var o;return n.on(r.VAR,function(e){if(-1!==e.match.indexOf("."))throw new Error('Unexpected dot in macro argument "'+e.match+'" on line '+t+".");this.out.push(e.match)}),n.on(r.FUNCTION,function(e){o||(o=e.match,this.out.push(o),this.state.push(r.FUNCTION))}),n.on(r.FUNCTIONEMPTY,function(e){o||(o=e.match,this.out.push(o))}),n.on(r.PARENCLOSE,function(){if(!this.isLast)throw new Error("Unexpected parenthesis close on line "+t+".")
-}),n.on(r.COMMA,function(){return!0}),n.on("*",function(){}),!0},n.ends=!0,n.block=!0},{}],22:[function(e,t,n){n.compile=function(e,t,n,r,o,i){if(!r||!r.length)return"";var a,s,u=t[0],c=!0,l=r.length,p=0;for(p;l>p;p+=1)if(a=r[p],a.blocks&&a.blocks.hasOwnProperty(i)&&c&&u!==a.name)return s=a.blocks[i],s.compile(e,[i],s.content,r.slice(p+1),o)+"\n"},n.parse=function(e,t,n,r,o,i){return n.on("*",function(e){throw new Error('Unexpected argument "'+e.match+'" on line '+t+".")}),n.on("end",function(){this.out.push(i.filename)}),!0}},{}],23:[function(e,t,n){n.compile=function(e,t,n,r,o,i){return e(n,r,o,i)},n.parse=function(e,t,n){return n.on("*",function(e){throw new Error('Unexpected token "'+e.match+'" in raw tag on line '+t+".")}),!0},n.ends=!0},{}],24:[function(e,t,n){n.compile=function(e,t){return t.join(" ")+";\n"},n.parse=function(e,t,n,r){var o,i="";return n.on(r.VAR,function(e){return o?void(o+="_ctx."+e.match):n.out.length?!0:void(i+=e.match)}),n.on(r.BRACKETOPEN,function(e){return o||this.out.length?!0:void(o=e.match)}),n.on(r.STRING,function(e){return o&&!this.out.length?void(o+=e.match):!0}),n.on(r.BRACKETCLOSE,function(e){return o&&!this.out.length?(i+=o+e.match,void(o=void 0)):!0}),n.on(r.DOTKEY,function(e){return o||i?void(i+="."+e.match):!0}),n.on(r.ASSIGNMENT,function(e){if(this.out.length||!i)throw new Error('Unexpected assignment "'+e.match+'" on line '+t+".");this.out.push("_ctx."+i),this.out.push(e.match),this.filterApplyIdx.push(this.out.length)}),!0},n.block=!0},{}],25:[function(e,t,n){var r=e("../utils");n.compile=function(e,t,n,o,i,a){function s(e){return r.map(e,function(e){return e.content||"string"!=typeof e?(e.content=s(e.content),e):e.replace(/^\s+/,"").replace(/>\s+</g,"><").replace(/\s+$/,"")})}return e(s(n),o,i,a)},n.parse=function(e,t,n){return n.on("*",function(e){throw new Error('Unexpected token "'+e.match+'" on line '+t+".")}),!0},n.ends=!0},{"../utils":26}],26:[function(e,t,n){var r;n.strip=function(e){return e.replace(/^\s+|\s+$/g,"")},n.startsWith=function(e,t){return 0===e.indexOf(t)},n.endsWith=function(e,t){return-1!==e.indexOf(t,e.length-t.length)},n.each=function(e,t){var n,o;if(r(e))for(n=0,o=e.length,n;o>n&&t(e[n],n,e)!==!1;n+=1);else for(n in e)if(e.hasOwnProperty(n)&&t(e[n],n,e)===!1)break;return e},n.isArray=r=Array.hasOwnProperty("isArray")?Array.isArray:function(e){return e?"object"==typeof e&&-1!==Object.prototype.toString.call(e).indexOf():!1},n.some=function(e,t){var o,i,a=0;if(r(e))for(i=e.length,a;i>a&&!(o=t(e[a],a,e));a+=1);else n.each(e,function(n,r){return o=t(n,r,e),!o});return!!o},n.map=function(e,t){var n,o=0,i=[];if(r(e))for(n=e.length,o;n>o;o+=1)i[o]=t(e[o],o);else for(o in e)e.hasOwnProperty(o)&&(i[o]=t(e[o],o));return i},n.extend=function(){var e,t,n=arguments,r=n[0],o=n.length>1?Array.prototype.slice.call(n,1):[],i=0,a=o.length;for(i;a>i;i+=1){t=o[i]||{};for(e in t)t.hasOwnProperty(e)&&(r[e]=t[e])}return r},n.keys=function(e){return e?Object.keys?Object.keys(e):n.map(e,function(e,t){return t}):[]},n.throwError=function(e,t,n){throw t&&(e+=" on line "+t),n&&(e+=" in file "+n),new Error(e+".")}},{}],27:[function(e,t,n){function r(e){return"[object Array]"===c.call(e)}function o(e,t){var n;if(null===e)n={__proto__:null};else{if("object"!=typeof e)throw new TypeError("typeof prototype["+typeof e+"] != 'object'");var r=function(){};r.prototype=e,n=new r,n.__proto__=e}return"undefined"!=typeof t&&Object.defineProperties&&Object.defineProperties(n,t),n}function i(e){return"object"!=typeof e&&"function"!=typeof e||null===e}function a(e){if(i(e))throw new TypeError("Object.keys called on a non-object");var t=[];for(var n in e)l.call(e,n)&&t.push(n);return t}function s(e){if(i(e))throw new TypeError("Object.getOwnPropertyNames called on a non-object");var t=a(e);return n.isArray(e)&&-1===n.indexOf(e,"length")&&t.push("length"),t}function u(e,t){return{value:e[t]}}var c=Object.prototype.toString,l=Object.prototype.hasOwnProperty;n.isArray="function"==typeof Array.isArray?Array.isArray:r,n.indexOf=function(e,t){if(e.indexOf)return e.indexOf(t);for(var n=0;n<e.length;n++)if(t===e[n])return n;return-1},n.filter=function(e,t){if(e.filter)return e.filter(t);for(var n=[],r=0;r<e.length;r++)t(e[r],r,e)&&n.push(e[r]);return n},n.forEach=function(e,t,n){if(e.forEach)return e.forEach(t,n);for(var r=0;r<e.length;r++)t.call(n,e[r],r,e)},n.map=function(e,t){if(e.map)return e.map(t);for(var n=new Array(e.length),r=0;r<e.length;r++)n[r]=t(e[r],r,e);return n},n.reduce=function(e,t,n){if(e.reduce)return e.reduce(t,n);var r,o=!1;2<arguments.length&&(r=n,o=!0);for(var i=0,a=e.length;a>i;++i)e.hasOwnProperty(i)&&(o?r=t(r,e[i],i,e):(r=e[i],o=!0));return r},n.substr="b"!=="ab".substr(-1)?function(e,t,n){return 0>t&&(t=e.length+t),e.substr(t,n)}:function(e,t,n){return e.substr(t,n)},n.trim=function(e){return e.trim?e.trim():e.replace(/^\s+|\s+$/g,"")},n.bind=function(){var e=Array.prototype.slice.call(arguments),t=e.shift();if(t.bind)return t.bind.apply(t,e);var n=e.shift();return function(){t.apply(n,e.concat([Array.prototype.slice.call(arguments)]))}},n.create="function"==typeof Object.create?Object.create:o;var p="function"==typeof Object.keys?Object.keys:a,f="function"==typeof Object.getOwnPropertyNames?Object.getOwnPropertyNames:s;if((new Error).hasOwnProperty("description")){var h=function(e,t){return"[object Error]"===c.call(e)&&(t=n.filter(t,function(e){return"description"!==e&&"number"!==e&&"message"!==e})),t};n.keys=function(e){return h(e,p(e))},n.getOwnPropertyNames=function(e){return h(e,f(e))}}else n.keys=p,n.getOwnPropertyNames=f;if("function"==typeof Object.getOwnPropertyDescriptor)try{Object.getOwnPropertyDescriptor({a:1},"a"),n.getOwnPropertyDescriptor=Object.getOwnPropertyDescriptor}catch(g){n.getOwnPropertyDescriptor=function(e,t){try{return Object.getOwnPropertyDescriptor(e,t)}catch(n){return u(e,t)}}}else n.getOwnPropertyDescriptor=u},{}],28:[function(){},{}],29:[function(e,t,n){function r(e,t){for(var n=0,r=e.length-1;r>=0;r--){var o=e[r];"."===o?e.splice(r,1):".."===o?(e.splice(r,1),n++):n&&(e.splice(r,1),n--)}if(t)for(;n--;n)e.unshift("..");return e}var o=e("__browserify_process"),i=e("util"),a=e("_shims"),s=/^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/,u=function(e){return s.exec(e).slice(1)};n.resolve=function(){for(var e="",t=!1,n=arguments.length-1;n>=-1&&!t;n--){var s=n>=0?arguments[n]:o.cwd();if(!i.isString(s))throw new TypeError("Arguments to path.resolve must be strings");s&&(e=s+"/"+e,t="/"===s.charAt(0))}return e=r(a.filter(e.split("/"),function(e){return!!e}),!t).join("/"),(t?"/":"")+e||"."},n.normalize=function(e){var t=n.isAbsolute(e),o="/"===a.substr(e,-1);return e=r(a.filter(e.split("/"),function(e){return!!e}),!t).join("/"),e||t||(e="."),e&&o&&(e+="/"),(t?"/":"")+e},n.isAbsolute=function(e){return"/"===e.charAt(0)},n.join=function(){var e=Array.prototype.slice.call(arguments,0);return n.normalize(a.filter(e,function(e){if(!i.isString(e))throw new TypeError("Arguments to path.join must be strings");return e}).join("/"))},n.relative=function(e,t){function r(e){for(var t=0;t<e.length&&""===e[t];t++);for(var n=e.length-1;n>=0&&""===e[n];n--);return t>n?[]:e.slice(t,n-t+1)}e=n.resolve(e).substr(1),t=n.resolve(t).substr(1);for(var o=r(e.split("/")),i=r(t.split("/")),a=Math.min(o.length,i.length),s=a,u=0;a>u;u++)if(o[u]!==i[u]){s=u;break}for(var c=[],u=s;u<o.length;u++)c.push("..");return c=c.concat(i.slice(s)),c.join("/")},n.sep="/",n.delimiter=":",n.dirname=function(e){var t=u(e),n=t[0],r=t[1];return n||r?(r&&(r=r.substr(0,r.length-1)),n+r):"."},n.basename=function(e,t){var n=u(e)[2];return t&&n.substr(-1*t.length)===t&&(n=n.substr(0,n.length-t.length)),n},n.extname=function(e){return u(e)[3]}},{__browserify_process:31,_shims:27,util:30}],30:[function(e,t,n){function r(e,t){var r={seen:[],stylize:i};return arguments.length>=3&&(r.depth=arguments[2]),arguments.length>=4&&(r.colors=arguments[3]),g(t)?r.showHidden=t:t&&n._extend(r,t),O(r.showHidden)&&(r.showHidden=!1),O(r.depth)&&(r.depth=2),O(r.colors)&&(r.colors=!1),O(r.customInspect)&&(r.customInspect=!0),r.colors&&(r.stylize=o),s(r,e,r.depth)}function o(e,t){var n=r.styles[t];return n?"["+r.colors[n][0]+"m"+e+"["+r.colors[n][1]+"m":e}function i(e){return e}function a(e){var t={};return S.forEach(e,function(e){t[e]=!0}),t}function s(e,t,r){if(e.customInspect&&t&&T(t.inspect)&&t.inspect!==n.inspect&&(!t.constructor||t.constructor.prototype!==t)){var o=t.inspect(r);return v(o)||(o=s(e,o,r)),o}var i=u(e,t);if(i)return i;var g=S.keys(t),d=a(g);if(e.showHidden&&(g=S.getOwnPropertyNames(t)),0===g.length){if(T(t)){var m=t.name?": "+t.name:"";return e.stylize("[Function"+m+"]","special")}if(E(t))return e.stylize(RegExp.prototype.toString.call(t),"regexp");if(b(t))return e.stylize(Date.prototype.toString.call(t),"date");if(A(t))return c(t)}var y="",w=!1,O=["{","}"];if(h(t)&&(w=!0,O=["[","]"]),T(t)){var x=t.name?": "+t.name:"";y=" [Function"+x+"]"}if(E(t)&&(y=" "+RegExp.prototype.toString.call(t)),b(t)&&(y=" "+Date.prototype.toUTCString.call(t)),A(t)&&(y=" "+c(t)),0===g.length&&(!w||0==t.length))return O[0]+y+O[1];if(0>r)return E(t)?e.stylize(RegExp.prototype.toString.call(t),"regexp"):e.stylize("[Object]","special");e.seen.push(t);var C;return C=w?l(e,t,r,d,g):g.map(function(n){return p(e,t,r,d,n,w)}),e.seen.pop(),f(C,y,O)}function u(e,t){if(O(t))return e.stylize("undefined","undefined");if(v(t)){var n="'"+JSON.stringify(t).replace(/^"|"$/g,"").replace(/'/g,"\\'").replace(/\\"/g,'"')+"'";return e.stylize(n,"string")}return y(t)?e.stylize(""+t,"number"):g(t)?e.stylize(""+t,"boolean"):d(t)?e.stylize("null","null"):void 0}function c(e){return"["+Error.prototype.toString.call(e)+"]"}function l(e,t,n,r,o){for(var i=[],a=0,s=t.length;s>a;++a)i.push(k(t,String(a))?p(e,t,n,r,String(a),!0):"");return S.forEach(o,function(o){o.match(/^\d+$/)||i.push(p(e,t,n,r,o,!0))}),i}function p(e,t,n,r,o,i){var a,u,c;if(c=S.getOwnPropertyDescriptor(t,o)||{value:t[o]},c.get?u=c.set?e.stylize("[Getter/Setter]","special"):e.stylize("[Getter]","special"):c.set&&(u=e.stylize("[Setter]","special")),k(r,o)||(a="["+o+"]"),u||(S.indexOf(e.seen,c.value)<0?(u=d(n)?s(e,c.value,null):s(e,c.value,n-1),u.indexOf("\n")>-1&&(u=i?u.split("\n").map(function(e){return"  "+e}).join("\n").substr(2):"\n"+u.split("\n").map(function(e){return"   "+e}).join("\n"))):u=e.stylize("[Circular]","special")),O(a)){if(i&&o.match(/^\d+$/))return u;a=JSON.stringify(""+o),a.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)?(a=a.substr(1,a.length-2),a=e.stylize(a,"name")):(a=a.replace(/'/g,"\\'").replace(/\\"/g,'"').replace(/(^"|"$)/g,"'"),a=e.stylize(a,"string"))}return a+": "+u}function f(e,t,n){var r=0,o=S.reduce(e,function(e,t){return r++,t.indexOf("\n")>=0&&r++,e+t.replace(/\u001b\[\d\d?m/g,"").length+1},0);return o>60?n[0]+(""===t?"":t+"\n ")+" "+e.join(",\n  ")+" "+n[1]:n[0]+t+" "+e.join(", ")+" "+n[1]}function h(e){return S.isArray(e)}function g(e){return"boolean"==typeof e}function d(e){return null===e}function m(e){return null==e}function y(e){return"number"==typeof e}function v(e){return"string"==typeof e}function w(e){return"symbol"==typeof e}function O(e){return void 0===e}function E(e){return x(e)&&"[object RegExp]"===R(e)}function x(e){return"object"==typeof e&&e}function b(e){return x(e)&&"[object Date]"===R(e)}function A(e){return x(e)&&"[object Error]"===R(e)}function T(e){return"function"==typeof e}function C(e){return null===e||"boolean"==typeof e||"number"==typeof e||"string"==typeof e||"symbol"==typeof e||"undefined"==typeof e}function N(e){return e&&"object"==typeof e&&"function"==typeof e.copy&&"function"==typeof e.fill&&"function"==typeof e.binarySlice}function R(e){return Object.prototype.toString.call(e)}function _(e){return 10>e?"0"+e.toString(10):e.toString(10)}function P(){var e=new Date,t=[_(e.getHours()),_(e.getMinutes()),_(e.getSeconds())].join(":");return[e.getDate(),U[e.getMonth()],t].join(" ")}function k(e,t){return Object.prototype.hasOwnProperty.call(e,t)}var S=e("_shims"),I=/%[sdj%]/g;n.format=function(e){if(!v(e)){for(var t=[],n=0;n<arguments.length;n++)t.push(r(arguments[n]));return t.join(" ")}for(var n=1,o=arguments,i=o.length,a=String(e).replace(I,function(e){if("%%"===e)return"%";if(n>=i)return e;switch(e){case"%s":return String(o[n++]);case"%d":return Number(o[n++]);case"%j":try{return JSON.stringify(o[n++])}catch(t){return"[Circular]"}default:return e}}),s=o[n];i>n;s=o[++n])a+=d(s)||!x(s)?" "+s:" "+r(s);return a},n.inspect=r,r.colors={bold:[1,22],italic:[3,23],underline:[4,24],inverse:[7,27],white:[37,39],grey:[90,39],black:[30,39],blue:[34,39],cyan:[36,39],green:[32,39],magenta:[35,39],red:[31,39],yellow:[33,39]},r.styles={special:"cyan",number:"yellow","boolean":"yellow",undefined:"grey","null":"bold",string:"green",date:"magenta",regexp:"red"},n.isArray=h,n.isBoolean=g,n.isNull=d,n.isNullOrUndefined=m,n.isNumber=y,n.isString=v,n.isSymbol=w,n.isUndefined=O,n.isRegExp=E,n.isObject=x,n.isDate=b,n.isError=A,n.isFunction=T,n.isPrimitive=C,n.isBuffer=N;var U=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];n.log=function(){console.log("%s - %s",P(),n.format.apply(n,arguments))},n.inherits=function(e,t){e.super_=t,e.prototype=S.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}})},n._extend=function(e,t){if(!t||!x(t))return e;for(var n=S.keys(t),r=n.length;r--;)e[n[r]]=t[n[r]];return e}},{_shims:27}],31:[function(e,t){var n=t.exports={};n.nextTick=function(){var e="undefined"!=typeof window&&window.setImmediate,t="undefined"!=typeof window&&window.postMessage&&window.addEventListener;if(e)return function(e){return window.setImmediate(e)};if(t){var n=[];return window.addEventListener("message",function(e){var t=e.source;if((t===window||null===t)&&"process-tick"===e.data&&(e.stopPropagation(),n.length>0)){var r=n.shift();r()}},!0),function(e){n.push(e),window.postMessage("process-tick","*")}}return function(e){setTimeout(e,0)}}(),n.title="browser",n.browser=!0,n.env={},n.argv=[],n.binding=function(){throw new Error("process.binding is not supported")},n.cwd=function(){return"/"},n.chdir=function(){throw new Error("process.chdir is not supported")}},{}]},{},[1]);
+var shims = require('_shims');
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  shims.forEach(array, function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = shims.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = shims.getOwnPropertyNames(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+
+  shims.forEach(keys, function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = shims.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (shims.indexOf(ctx.seen, desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = shims.reduce(output, function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return shims.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) && objectToString(e) === '[object Error]';
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.binarySlice === 'function'
+  ;
+}
+exports.isBuffer = isBuffer;
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = function(ctor, superCtor) {
+  ctor.super_ = superCtor;
+  ctor.prototype = shims.create(superCtor.prototype, {
+    constructor: {
+      value: ctor,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+};
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = shims.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+},{"_shims":27}],31:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+
+process.nextTick = (function () {
+    var canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    var canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener
+    ;
+
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+
+    if (canPost) {
+        var queue = [];
+        window.addEventListener('message', function (ev) {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+}
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+
+},{}]},{},[1])
+;

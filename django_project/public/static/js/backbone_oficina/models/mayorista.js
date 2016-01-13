@@ -1,1 +1,27 @@
-define(["underscore","backbone"],function(n,e){"use strict";var i=e.Model.extend({urlRoot:"/api/oficina/mayoristas/",initialize:function(){},defaults:{},validate:function(){},parse:function(n){return n}});return i});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
+    'use strict';
+
+    var MayoristaModel = Backbone.Model.extend({
+        urlRoot : '/api/oficina/mayoristas/',
+
+        initialize: function() {
+        },
+
+        defaults: {
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
+        }
+    });
+
+    return MayoristaModel;
+});

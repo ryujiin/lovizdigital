@@ -1,1 +1,32 @@
-define(["jquery","underscore","backbone","swig"],function(e,t,i,n){"use strict";var l=i.View.extend({template:n.compile(e("#titulo_catalogo_tlp").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){this.render()},render:function(){this.$el.html(this.template(this.model.toJSON()))}});return l});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+], function ($, _, Backbone, swig) {
+    'use strict';
+
+    var TituloCatalogoView = Backbone.View.extend({
+
+        template: swig.compile($('#titulo_catalogo_tlp').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+            this.render();
+        },
+        render:function () {
+            this.$el.html(this.template(this.model.toJSON()));
+        },
+    });
+
+    return TituloCatalogoView;
+});

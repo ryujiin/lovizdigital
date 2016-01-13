@@ -65,6 +65,7 @@ define([
                     var vista = new Menu({
                         model:menu
                     });
+                    vista.render();
                 });
             })
         },

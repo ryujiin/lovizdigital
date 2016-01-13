@@ -1,1 +1,9 @@
-define(["jquery","../js/backbone/collections/pages"],function(e,n){"use strict";var c=new n;return c});
+define([
+    'jquery',
+    '../js/backbone/collections/pages',
+], function ($,Pages) {
+    'use strict';
+    var pages = new Pages();
+    
+    return pages;
+});

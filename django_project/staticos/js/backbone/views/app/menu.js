@@ -20,13 +20,13 @@ define([
         },
 
         initialize: function () {            
-            this.render();
         },
 
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
             this.addtoDOM();
             this.addlinks();
+            this.add_class();
         },
         addtoDOM:function () {
             var contenedor = '#'+this.model.toJSON().seccion;
@@ -35,12 +35,17 @@ define([
         addlinks:function () {
             var self = this;
             this.model.toJSON().links.forEach(function (link) {
-                var link = '<li><a href="'+link.link+'">'+link.nombre+'</a></li>';
+                var link = '<li><a href="'+link.link+'" class="link">'+link.nombre+'</a></li>';
                 self.$('ul').append(link);
             })
         },
         mostrar_links:function () {
             this.$('ul').toggleClass('activo');
+        },
+        add_class:function () {
+            if(this.model.toJSON().estilo){
+                this.$el.addClass(this.model.toJSON().estilo)
+            }
         }
 
     });

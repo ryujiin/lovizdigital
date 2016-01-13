@@ -1,1 +1,18 @@
-define(["underscore","backbone","../models/color"],function(e,o,n){"use strict";var r=o.Collection.extend({model:n,url:"/api/colores/"}),c=new r;return c});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/color'
+], function (_, Backbone, ColorModel) {
+    'use strict';
+
+    var ColorCollection = Backbone.Collection.extend({
+        model: ColorModel,
+
+    	url:'/api/colores/',
+    });
+    var colores = new ColorCollection();
+
+    return colores;
+});

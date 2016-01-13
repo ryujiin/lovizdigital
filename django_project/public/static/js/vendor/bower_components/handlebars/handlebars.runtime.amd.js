@@ -25,4 +25,491 @@ THE SOFTWARE.
 @license
 */
 
-define("handlebars/safe-string",["exports"],function(e){function r(e){this.string=e}r.prototype.toString=function(){return""+this.string},e["default"]=r}),define("handlebars/utils",["./safe-string","exports"],function(e,r){function t(e){return s[e]||"&amp;"}function n(e,r){for(var t in r)Object.prototype.hasOwnProperty.call(r,t)&&(e[t]=r[t])}function i(e){return e instanceof o?e.toString():e||0===e?(e=""+e,u.test(e)?e.replace(l,t):e):""}function a(e){return e||0===e?f(e)&&0===e.length?!0:!1:!0}var o=e["default"],s={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},l=/[&<>"'`]/g,u=/[&<>"'`]/;r.extend=n;var p=Object.prototype.toString;r.toString=p;var c=function(e){return"function"==typeof e};c(/x/)&&(c=function(e){return"function"==typeof e&&"[object Function]"===p.call(e)});var c;r.isFunction=c;var f=Array.isArray||function(e){return e&&"object"==typeof e?"[object Array]"===p.call(e):!1};r.isArray=f,r.escapeExpression=i,r.isEmpty=a}),define("handlebars/exception",["exports"],function(e){function r(e,r){var n;r&&r.firstLine&&(n=r.firstLine,e+=" - "+n+":"+r.firstColumn);for(var i=Error.prototype.constructor.call(this,e),a=0;a<t.length;a++)this[t[a]]=i[t[a]];n&&(this.lineNumber=n,this.column=r.firstColumn)}var t=["description","fileName","lineNumber","message","name","number","stack"];r.prototype=new Error,e["default"]=r}),define("handlebars/base",["./utils","./exception","exports"],function(e,r,t){function n(e,r){this.helpers=e||{},this.partials=r||{},i(this)}function i(e){e.registerHelper("helperMissing",function(e){if(2===arguments.length)return void 0;throw new s("Missing helper: '"+e+"'")}),e.registerHelper("blockHelperMissing",function(r,t){var n=t.inverse||function(){},i=t.fn;return f(r)&&(r=r.call(this)),r===!0?i(this):r===!1||null==r?n(this):c(r)?r.length>0?e.helpers.each(r,t):n(this):i(r)}),e.registerHelper("each",function(e,r){var t,n=r.fn,i=r.inverse,a=0,o="";if(f(e)&&(e=e.call(this)),r.data&&(t=g(r.data)),e&&"object"==typeof e)if(c(e))for(var s=e.length;s>a;a++)t&&(t.index=a,t.first=0===a,t.last=a===e.length-1),o+=n(e[a],{data:t});else for(var l in e)e.hasOwnProperty(l)&&(t&&(t.key=l,t.index=a,t.first=0===a),o+=n(e[l],{data:t}),a++);return 0===a&&(o=i(this)),o}),e.registerHelper("if",function(e,r){return f(e)&&(e=e.call(this)),!r.hash.includeZero&&!e||o.isEmpty(e)?r.inverse(this):r.fn(this)}),e.registerHelper("unless",function(r,t){return e.helpers["if"].call(this,r,{fn:t.inverse,inverse:t.fn,hash:t.hash})}),e.registerHelper("with",function(e,r){return f(e)&&(e=e.call(this)),o.isEmpty(e)?void 0:r.fn(e)}),e.registerHelper("log",function(r,t){var n=t.data&&null!=t.data.level?parseInt(t.data.level,10):1;e.log(n,r)})}function a(e,r){v.log(e,r)}var o=e,s=r["default"],l="1.3.0";t.VERSION=l;var u=4;t.COMPILER_REVISION=u;var p={1:"<= 1.0.rc.2",2:"== 1.0.0-rc.3",3:"== 1.0.0-rc.4",4:">= 1.0.0"};t.REVISION_CHANGES=p;var c=o.isArray,f=o.isFunction,h=o.toString,d="[object Object]";t.HandlebarsEnvironment=n,n.prototype={constructor:n,logger:v,log:a,registerHelper:function(e,r,t){if(h.call(e)===d){if(t||r)throw new s("Arg not supported with multiple helpers");o.extend(this.helpers,e)}else t&&(r.not=t),this.helpers[e]=r},registerPartial:function(e,r){h.call(e)===d?o.extend(this.partials,e):this.partials[e]=r}};var v={methodMap:{0:"debug",1:"info",2:"warn",3:"error"},DEBUG:0,INFO:1,WARN:2,ERROR:3,level:3,log:function(e,r){if(v.level<=e){var t=v.methodMap[e];"undefined"!=typeof console&&console[t]&&console[t].call(console,r)}}};t.logger=v,t.log=a;var g=function(e){var r={};return o.extend(r,e),r};t.createFrame=g}),define("handlebars/runtime",["./utils","./exception","./base","exports"],function(e,r,t,n){function i(e){var r=e&&e[0]||1,t=f;if(r!==t){if(t>r){var n=h[t],i=h[r];throw new c("Template was precompiled with an older version of Handlebars than the current runtime. Please update your precompiler to a newer version ("+n+") or downgrade your runtime to an older version ("+i+").")}throw new c("Template was precompiled with a newer version of Handlebars than the current runtime. Please update your runtime to a newer version ("+e[1]+").")}}function a(e,r){if(!r)throw new c("No environment passed to template");var t=function(e,t,n,i,a,o){var s=r.VM.invokePartial.apply(this,arguments);if(null!=s)return s;if(r.compile){var l={helpers:i,partials:a,data:o};return a[t]=r.compile(e,{data:void 0!==o},r),a[t](n,l)}throw new c("The partial "+t+" could not be compiled when running in runtime-only mode")},n={escapeExpression:p.escapeExpression,invokePartial:t,programs:[],program:function(e,r,t){var n=this.programs[e];return t?n=s(e,r,t):n||(n=this.programs[e]=s(e,r)),n},merge:function(e,r){var t=e||r;return e&&r&&e!==r&&(t={},p.extend(t,r),p.extend(t,e)),t},programWithDepth:r.VM.programWithDepth,noop:r.VM.noop,compilerInfo:null};return function(t,i){i=i||{};var a,o,s=i.partial?i:r;i.partial||(a=i.helpers,o=i.partials);var l=e.call(n,s,t,a,o,i.data);return i.partial||r.VM.checkRevision(n.compilerInfo),l}}function o(e,r,t){var n=Array.prototype.slice.call(arguments,3),i=function(e,i){return i=i||{},r.apply(this,[e,i.data||t].concat(n))};return i.program=e,i.depth=n.length,i}function s(e,r,t){var n=function(e,n){return n=n||{},r(e,n.data||t)};return n.program=e,n.depth=0,n}function l(e,r,t,n,i,a){var o={partial:!0,helpers:n,partials:i,data:a};if(void 0===e)throw new c("The partial "+r+" could not be found");return e instanceof Function?e(t,o):void 0}function u(){return""}var p=e,c=r["default"],f=t.COMPILER_REVISION,h=t.REVISION_CHANGES;n.checkRevision=i,n.template=a,n.programWithDepth=o,n.program=s,n.invokePartial=l,n.noop=u}),define("handlebars.runtime",["./handlebars/base","./handlebars/safe-string","./handlebars/exception","./handlebars/utils","./handlebars/runtime","exports"],function(e,r,t,n,i,a){var o=e,s=r["default"],l=t["default"],u=n,p=i,c=function(){var e=new o.HandlebarsEnvironment;return u.extend(e,o),e.SafeString=s,e.Exception=l,e.Utils=u,e.VM=p,e.template=function(r){return p.template(r,e)},e},f=c();f.create=c,a["default"]=f});
+define(
+  'handlebars/safe-string',["exports"],
+  function(__exports__) {
+    
+    // Build out our basic SafeString type
+    function SafeString(string) {
+      this.string = string;
+    }
+
+    SafeString.prototype.toString = function() {
+      return "" + this.string;
+    };
+
+    __exports__["default"] = SafeString;
+  });
+define(
+  'handlebars/utils',["./safe-string","exports"],
+  function(__dependency1__, __exports__) {
+    
+    /*jshint -W004 */
+    var SafeString = __dependency1__["default"];
+
+    var escape = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#x27;",
+      "`": "&#x60;"
+    };
+
+    var badChars = /[&<>"'`]/g;
+    var possible = /[&<>"'`]/;
+
+    function escapeChar(chr) {
+      return escape[chr] || "&amp;";
+    }
+
+    function extend(obj, value) {
+      for(var key in value) {
+        if(Object.prototype.hasOwnProperty.call(value, key)) {
+          obj[key] = value[key];
+        }
+      }
+    }
+
+    __exports__.extend = extend;var toString = Object.prototype.toString;
+    __exports__.toString = toString;
+    // Sourced from lodash
+    // https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
+    var isFunction = function(value) {
+      return typeof value === 'function';
+    };
+    // fallback for older versions of Chrome and Safari
+    if (isFunction(/x/)) {
+      isFunction = function(value) {
+        return typeof value === 'function' && toString.call(value) === '[object Function]';
+      };
+    }
+    var isFunction;
+    __exports__.isFunction = isFunction;
+    var isArray = Array.isArray || function(value) {
+      return (value && typeof value === 'object') ? toString.call(value) === '[object Array]' : false;
+    };
+    __exports__.isArray = isArray;
+
+    function escapeExpression(string) {
+      // don't escape SafeStrings, since they're already safe
+      if (string instanceof SafeString) {
+        return string.toString();
+      } else if (!string && string !== 0) {
+        return "";
+      }
+
+      // Force a string conversion as this will be done by the append regardless and
+      // the regex test will do this transparently behind the scenes, causing issues if
+      // an object's to string has escaped characters in it.
+      string = "" + string;
+
+      if(!possible.test(string)) { return string; }
+      return string.replace(badChars, escapeChar);
+    }
+
+    __exports__.escapeExpression = escapeExpression;function isEmpty(value) {
+      if (!value && value !== 0) {
+        return true;
+      } else if (isArray(value) && value.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    __exports__.isEmpty = isEmpty;
+  });
+define(
+  'handlebars/exception',["exports"],
+  function(__exports__) {
+    
+
+    var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
+
+    function Exception(message, node) {
+      var line;
+      if (node && node.firstLine) {
+        line = node.firstLine;
+
+        message += ' - ' + line + ':' + node.firstColumn;
+      }
+
+      var tmp = Error.prototype.constructor.call(this, message);
+
+      // Unfortunately errors are not enumerable in Chrome (at least), so `for prop in tmp` doesn't work.
+      for (var idx = 0; idx < errorProps.length; idx++) {
+        this[errorProps[idx]] = tmp[errorProps[idx]];
+      }
+
+      if (line) {
+        this.lineNumber = line;
+        this.column = node.firstColumn;
+      }
+    }
+
+    Exception.prototype = new Error();
+
+    __exports__["default"] = Exception;
+  });
+define(
+  'handlebars/base',["./utils","./exception","exports"],
+  function(__dependency1__, __dependency2__, __exports__) {
+    
+    var Utils = __dependency1__;
+    var Exception = __dependency2__["default"];
+
+    var VERSION = "1.3.0";
+    __exports__.VERSION = VERSION;var COMPILER_REVISION = 4;
+    __exports__.COMPILER_REVISION = COMPILER_REVISION;
+    var REVISION_CHANGES = {
+      1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
+      2: '== 1.0.0-rc.3',
+      3: '== 1.0.0-rc.4',
+      4: '>= 1.0.0'
+    };
+    __exports__.REVISION_CHANGES = REVISION_CHANGES;
+    var isArray = Utils.isArray,
+        isFunction = Utils.isFunction,
+        toString = Utils.toString,
+        objectType = '[object Object]';
+
+    function HandlebarsEnvironment(helpers, partials) {
+      this.helpers = helpers || {};
+      this.partials = partials || {};
+
+      registerDefaultHelpers(this);
+    }
+
+    __exports__.HandlebarsEnvironment = HandlebarsEnvironment;HandlebarsEnvironment.prototype = {
+      constructor: HandlebarsEnvironment,
+
+      logger: logger,
+      log: log,
+
+      registerHelper: function(name, fn, inverse) {
+        if (toString.call(name) === objectType) {
+          if (inverse || fn) { throw new Exception('Arg not supported with multiple helpers'); }
+          Utils.extend(this.helpers, name);
+        } else {
+          if (inverse) { fn.not = inverse; }
+          this.helpers[name] = fn;
+        }
+      },
+
+      registerPartial: function(name, str) {
+        if (toString.call(name) === objectType) {
+          Utils.extend(this.partials,  name);
+        } else {
+          this.partials[name] = str;
+        }
+      }
+    };
+
+    function registerDefaultHelpers(instance) {
+      instance.registerHelper('helperMissing', function(arg) {
+        if(arguments.length === 2) {
+          return undefined;
+        } else {
+          throw new Exception("Missing helper: '" + arg + "'");
+        }
+      });
+
+      instance.registerHelper('blockHelperMissing', function(context, options) {
+        var inverse = options.inverse || function() {}, fn = options.fn;
+
+        if (isFunction(context)) { context = context.call(this); }
+
+        if(context === true) {
+          return fn(this);
+        } else if(context === false || context == null) {
+          return inverse(this);
+        } else if (isArray(context)) {
+          if(context.length > 0) {
+            return instance.helpers.each(context, options);
+          } else {
+            return inverse(this);
+          }
+        } else {
+          return fn(context);
+        }
+      });
+
+      instance.registerHelper('each', function(context, options) {
+        var fn = options.fn, inverse = options.inverse;
+        var i = 0, ret = "", data;
+
+        if (isFunction(context)) { context = context.call(this); }
+
+        if (options.data) {
+          data = createFrame(options.data);
+        }
+
+        if(context && typeof context === 'object') {
+          if (isArray(context)) {
+            for(var j = context.length; i<j; i++) {
+              if (data) {
+                data.index = i;
+                data.first = (i === 0);
+                data.last  = (i === (context.length-1));
+              }
+              ret = ret + fn(context[i], { data: data });
+            }
+          } else {
+            for(var key in context) {
+              if(context.hasOwnProperty(key)) {
+                if(data) { 
+                  data.key = key; 
+                  data.index = i;
+                  data.first = (i === 0);
+                }
+                ret = ret + fn(context[key], {data: data});
+                i++;
+              }
+            }
+          }
+        }
+
+        if(i === 0){
+          ret = inverse(this);
+        }
+
+        return ret;
+      });
+
+      instance.registerHelper('if', function(conditional, options) {
+        if (isFunction(conditional)) { conditional = conditional.call(this); }
+
+        // Default behavior is to render the positive path if the value is truthy and not empty.
+        // The `includeZero` option may be set to treat the condtional as purely not empty based on the
+        // behavior of isEmpty. Effectively this determines if 0 is handled by the positive path or negative.
+        if ((!options.hash.includeZero && !conditional) || Utils.isEmpty(conditional)) {
+          return options.inverse(this);
+        } else {
+          return options.fn(this);
+        }
+      });
+
+      instance.registerHelper('unless', function(conditional, options) {
+        return instance.helpers['if'].call(this, conditional, {fn: options.inverse, inverse: options.fn, hash: options.hash});
+      });
+
+      instance.registerHelper('with', function(context, options) {
+        if (isFunction(context)) { context = context.call(this); }
+
+        if (!Utils.isEmpty(context)) return options.fn(context);
+      });
+
+      instance.registerHelper('log', function(context, options) {
+        var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
+        instance.log(level, context);
+      });
+    }
+
+    var logger = {
+      methodMap: { 0: 'debug', 1: 'info', 2: 'warn', 3: 'error' },
+
+      // State enum
+      DEBUG: 0,
+      INFO: 1,
+      WARN: 2,
+      ERROR: 3,
+      level: 3,
+
+      // can be overridden in the host environment
+      log: function(level, obj) {
+        if (logger.level <= level) {
+          var method = logger.methodMap[level];
+          if (typeof console !== 'undefined' && console[method]) {
+            console[method].call(console, obj);
+          }
+        }
+      }
+    };
+    __exports__.logger = logger;
+    function log(level, obj) { logger.log(level, obj); }
+
+    __exports__.log = log;var createFrame = function(object) {
+      var obj = {};
+      Utils.extend(obj, object);
+      return obj;
+    };
+    __exports__.createFrame = createFrame;
+  });
+define(
+  'handlebars/runtime',["./utils","./exception","./base","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    
+    var Utils = __dependency1__;
+    var Exception = __dependency2__["default"];
+    var COMPILER_REVISION = __dependency3__.COMPILER_REVISION;
+    var REVISION_CHANGES = __dependency3__.REVISION_CHANGES;
+
+    function checkRevision(compilerInfo) {
+      var compilerRevision = compilerInfo && compilerInfo[0] || 1,
+          currentRevision = COMPILER_REVISION;
+
+      if (compilerRevision !== currentRevision) {
+        if (compilerRevision < currentRevision) {
+          var runtimeVersions = REVISION_CHANGES[currentRevision],
+              compilerVersions = REVISION_CHANGES[compilerRevision];
+          throw new Exception("Template was precompiled with an older version of Handlebars than the current runtime. "+
+                "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").");
+        } else {
+          // Use the embedded version info since the runtime doesn't know about this revision yet
+          throw new Exception("Template was precompiled with a newer version of Handlebars than the current runtime. "+
+                "Please update your runtime to a newer version ("+compilerInfo[1]+").");
+        }
+      }
+    }
+
+    __exports__.checkRevision = checkRevision;// TODO: Remove this line and break up compilePartial
+
+    function template(templateSpec, env) {
+      if (!env) {
+        throw new Exception("No environment passed to template");
+      }
+
+      // Note: Using env.VM references rather than local var references throughout this section to allow
+      // for external users to override these as psuedo-supported APIs.
+      var invokePartialWrapper = function(partial, name, context, helpers, partials, data) {
+        var result = env.VM.invokePartial.apply(this, arguments);
+        if (result != null) { return result; }
+
+        if (env.compile) {
+          var options = { helpers: helpers, partials: partials, data: data };
+          partials[name] = env.compile(partial, { data: data !== undefined }, env);
+          return partials[name](context, options);
+        } else {
+          throw new Exception("The partial " + name + " could not be compiled when running in runtime-only mode");
+        }
+      };
+
+      // Just add water
+      var container = {
+        escapeExpression: Utils.escapeExpression,
+        invokePartial: invokePartialWrapper,
+        programs: [],
+        program: function(i, fn, data) {
+          var programWrapper = this.programs[i];
+          if(data) {
+            programWrapper = program(i, fn, data);
+          } else if (!programWrapper) {
+            programWrapper = this.programs[i] = program(i, fn);
+          }
+          return programWrapper;
+        },
+        merge: function(param, common) {
+          var ret = param || common;
+
+          if (param && common && (param !== common)) {
+            ret = {};
+            Utils.extend(ret, common);
+            Utils.extend(ret, param);
+          }
+          return ret;
+        },
+        programWithDepth: env.VM.programWithDepth,
+        noop: env.VM.noop,
+        compilerInfo: null
+      };
+
+      return function(context, options) {
+        options = options || {};
+        var namespace = options.partial ? options : env,
+            helpers,
+            partials;
+
+        if (!options.partial) {
+          helpers = options.helpers;
+          partials = options.partials;
+        }
+        var result = templateSpec.call(
+              container,
+              namespace, context,
+              helpers,
+              partials,
+              options.data);
+
+        if (!options.partial) {
+          env.VM.checkRevision(container.compilerInfo);
+        }
+
+        return result;
+      };
+    }
+
+    __exports__.template = template;function programWithDepth(i, fn, data /*, $depth */) {
+      var args = Array.prototype.slice.call(arguments, 3);
+
+      var prog = function(context, options) {
+        options = options || {};
+
+        return fn.apply(this, [context, options.data || data].concat(args));
+      };
+      prog.program = i;
+      prog.depth = args.length;
+      return prog;
+    }
+
+    __exports__.programWithDepth = programWithDepth;function program(i, fn, data) {
+      var prog = function(context, options) {
+        options = options || {};
+
+        return fn(context, options.data || data);
+      };
+      prog.program = i;
+      prog.depth = 0;
+      return prog;
+    }
+
+    __exports__.program = program;function invokePartial(partial, name, context, helpers, partials, data) {
+      var options = { partial: true, helpers: helpers, partials: partials, data: data };
+
+      if(partial === undefined) {
+        throw new Exception("The partial " + name + " could not be found");
+      } else if(partial instanceof Function) {
+        return partial(context, options);
+      }
+    }
+
+    __exports__.invokePartial = invokePartial;function noop() { return ""; }
+
+    __exports__.noop = noop;
+  });
+define(
+  'handlebars.runtime',["./handlebars/base","./handlebars/safe-string","./handlebars/exception","./handlebars/utils","./handlebars/runtime","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
+    
+    /*globals Handlebars: true */
+    var base = __dependency1__;
+
+    // Each of these augment the Handlebars object. No need to setup here.
+    // (This is done to easily share code between commonjs and browse envs)
+    var SafeString = __dependency2__["default"];
+    var Exception = __dependency3__["default"];
+    var Utils = __dependency4__;
+    var runtime = __dependency5__;
+
+    // For compatibility and usage outside of module systems, make the Handlebars object a namespace
+    var create = function() {
+      var hb = new base.HandlebarsEnvironment();
+
+      Utils.extend(hb, base);
+      hb.SafeString = SafeString;
+      hb.Exception = Exception;
+      hb.Utils = Utils;
+
+      hb.VM = runtime;
+      hb.template = function(spec) {
+        return runtime.template(spec, hb);
+      };
+
+      return hb;
+    };
+
+    var Handlebars = create();
+    Handlebars.create = create;
+
+    __exports__["default"] = Handlebars;
+  });

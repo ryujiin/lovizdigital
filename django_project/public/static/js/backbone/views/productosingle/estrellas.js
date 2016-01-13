@@ -1,1 +1,41 @@
-define(["jquery","underscore","backbone","swig"],function(e,n,s){"use strict";var a=s.View.extend({tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(e){this.$el.empty();for(var n=e,s='<span class="estrella icon-star"></span>',a='<span class="estrella icon-star activo"></span>',i=0;5>i;i++)this.$el.append(i>=n?s:a)}});return a});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+], function ($, _, Backbone, swig,zoom) {
+    'use strict';
+
+    var EstrellasView = Backbone.View.extend({
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {
+        },
+
+        initialize: function () {
+        },
+
+        render: function (num) {
+            this.$el.empty();
+            var valor = num
+            var estre = '<span class="estrella icon-star"></span>'
+            var estre_activo = '<span class="estrella icon-star activo"></span>'
+            for (var i = 0 ; i < 5; i++) {
+                if (valor<=i) {
+                    this.$el.append(estre);
+                }else{
+                    this.$el.append(estre_activo);                    
+                }
+            };
+        },
+    });
+
+    return EstrellasView;
+});

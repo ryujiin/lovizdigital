@@ -855,6 +855,13 @@ h2 .linea {
   width: 140px;
   display: inline-block;
 }
+.catalogo .section-refinamiento .Color li .color-hex {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
 .catalogo .section-refinamiento .Color li a.activo {
   background: #111;
   color: #fff;

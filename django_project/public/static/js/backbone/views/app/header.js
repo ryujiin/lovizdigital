@@ -1,1 +1,39 @@
-define(["jquery","underscore","backbone","swig"],function(e,n,t){"use strict";var i=t.View.extend({el:e("head"),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(e,n){this.$("title").empty().append(e),n?(this.$("meta[name=description]").remove(),this.$el.append('<meta name="description" content="'+n+'">')):(this.$("meta[name=description]").remove(),this.$el.append('<meta name="description" content="'+n+'">'))}}),a=new i;return a});
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig'
+], function ($, _, Backbone, swig) {
+    'use strict';
+
+    var HeaderView = Backbone.View.extend({
+
+        el:$('head'),
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+        },
+
+        render: function (titulo,descripcion) {
+            this.$('title').empty().append(titulo);
+            if (descripcion) {
+                this.$('meta[name=description]').remove();
+                this.$el.append('<meta name="description" content="'+descripcion+'">')    
+            }else{
+                this.$('meta[name=description]').remove();
+                this.$el.append('<meta name="description" content="'+descripcion+'">')
+            }                        
+        },
+    });
+
+    var header = new HeaderView();
+
+    return header;
+});

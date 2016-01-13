@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/page"],function(e,n,o){"use strict";var r=n.Collection.extend({url:"/api/cmsweb/pages/",model:o});return r});

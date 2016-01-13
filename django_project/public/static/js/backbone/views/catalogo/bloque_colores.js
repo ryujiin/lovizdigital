@@ -1,1 +1,72 @@
-define(["jquery","underscore","backbone","swig","../../views/catalogo/categorias_link","../../collections/colores","../../collections/catalogo/filtros"],function(o,t,e,r,l,i,c){"use strict";var a=e.View.extend({template:r.compile(o("#categoria_bloque_tlp").html()),id:"",className:"",events:{"click a.no_activo":"filtrar_color","click a.activo":"rm_filtrar_color"},collection:i,initialize:function(){this.render()},render:function(){var o={nombre:"Colores"};this.$el.html(this.template(o)),this.addColores()},addColores:function(){var o=this;0!==this.collection.length?this.collection.forEach(o.addColor,o):this.collection.fetch().done(function(){o.collection.forEach(o.addColor,o)})},addColor:function(o){o.set({valor:"color"});var t=new l({model:o});this.$(".lista").append(t.render().el)},filtrar_color:function(o){var t=o.target.dataset.valor,e=this.collection.findWhere({nombre:t});e.set("activo",!0),c.add([{tipo:"color",valor:t}])},rm_filtrar_color:function(o){var t=o.target.dataset.valor,e=this.collection.findWhere({nombre:t});e.set("activo",!1);var r=c.findWhere({tipo:"color",valor:t});c.remove(r)}});return a});
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../views/catalogo/categorias_link',    
+    '../../collections/colores',
+    '../../collections/catalogo/filtros'
+], function ($, _, Backbone, swig,CateLink,ColoresCollection,FiltrosCollection) {
+    'use strict';
+
+    var CatalogoBloqueColorView = Backbone.View.extend({
+
+        template: swig.compile($('#categoria_bloque_tlp').html()),                        
+
+        id: '',
+
+        className: '',
+
+        events: {
+            'click a.no_activo':'filtrar_color',
+            'click a.activo':'rm_filtrar_color',
+        },
+
+        collection:ColoresCollection,
+
+        initialize: function () {
+            this.render();
+        },
+
+        render: function () {
+            var dato = {nombre:'Colores'}
+            this.$el.html(this.template(dato));
+            this.addColores();
+        },
+        addColores:function () {
+            var self = this;
+            if (this.collection.length!==0) {
+                this.collection.forEach(self.addColor,self);
+            }else{
+                this.collection.fetch().done(function () {
+                    self.collection.forEach(self.addColor,self);
+                })
+            }
+        },
+        addColor:function(modelo){
+            modelo.set({valor:'color'});
+            var vista = new CateLink({model:modelo});
+            this.$('.lista').append(vista.render().el);
+        },
+
+        filtrar_color:function (e) {
+            
+            var color = e.target.dataset.valor;
+            var coincidencia = this.collection.findWhere({nombre:color});
+            coincidencia.set('activo',true)
+            FiltrosCollection.add([
+                {tipo:'color',valor:color}
+            ]);
+        },
+        rm_filtrar_color:function(e){
+            
+            var color = e.target.dataset.valor;
+            var coincidencia = this.collection.findWhere({nombre:color});
+            coincidencia.set('activo',false)
+            var modelo = FiltrosCollection.findWhere({tipo:'color',valor:color});
+            FiltrosCollection.remove(modelo);
+        },
+    });
+
+    return CatalogoBloqueColorView;
+});

@@ -1,1 +1,26 @@
-define(["underscore","backbone"],function(e,n){"use strict";var t=n.Model.extend({initialize:function(){},defaults:{},validate:function(){},parse:function(e){return e}});return t});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
+    'use strict';
+
+    var FiltroModel = Backbone.Model.extend({
+
+        initialize: function() {
+        },
+
+        defaults: {
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
+        }
+    });
+
+    return FiltroModel;
+});

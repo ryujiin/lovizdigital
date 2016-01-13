@@ -1,1 +1,160 @@
-define(["jquery","underscore","backbone","swig","../../collections/ubigeos","../../models/direccion","../../models/user"],function(e,i,t,a,n,o,r){"use strict";var s=t.View.extend({template:a.compile(e("#nueva_direccion_tlp").html()),tagName:"div",id:"",className:"",events:{"change #departamentos":"add_provincias","change #provincias":"add_distritos","submit #form_nueva_direccion":"verificar_inputs","blur input":"get_datos","blur select":"get_datos"},initialize:function(){this.direccion=new o,this.render()},render:function(){this.$el.html(this.template()),this.add_departamentos()},add_departamentos:function(){var e=this,i=new n;i.fetch().done(function(){i.forEach(e.addOneDepa,e)})},addOneDepa:function(e){var i=e.toJSON(),t="<option value='"+i.id+"' data-nombre='"+i.name+"'>"+i.name+"</option>";this.$("#departamentos").append(t)},add_provincias:function(){var i=this,t=this.$("#departamentos").val();this.$("#provincias").empty();var a=new n;a.fetch({data:e.param({region:t})}).done(function(){a.forEach(i.addOneProvi,i)})},addOneProvi:function(e){var i=e.toJSON(),t="<option value='"+i.id+"' data-nombre='"+i.name+"'>"+i.name+"</option>";this.$("#provincias").append(t)},add_distritos:function(){var i=this,t=this.$("#provincias").val();this.$("#distritos").empty();var a=new n;a.fetch({data:e.param({region:t})}).done(function(){a.forEach(i.addOneDistri,i)})},addOneDistri:function(e){var i=e.toJSON(),t="<option value='"+i.id+"' data-nombre='"+i.name+"'>"+i.name+"</option>";this.$("#distritos").append(t)},get_datos:function(e){var i=e.target.value,t="."+e.target.dataset.contenedor,a=this.validar_vacio(i,t);a&&".campo_correo"===t&&this.validar_email(i,t)},validar_vacio:function(e,i){var t=this.$(i+" .error");return t.empty(),""===e?(this.$(i).addClass("has-error").removeClass("has-success"),t.append('<p class="text-danger">Este campo es Requerido *</p>'),!1):(this.$(i).addClass("has-success").removeClass("has-error"),!0)},verificar_inputs:function(e){var i=this;e.preventDefault(),this.$("input").each(function(e,t){var a="."+t.dataset.contenedor,n=i.validar_vacio(t.value,a);return n===!1?!1:void 0}),this.$("select").each(function(e,t){var a="."+t.dataset.contenedor,n=i.validar_vacio(t.value,a);return n===!1?!1:void 0}),this.crear_nueva_direccion()},crear_nueva_direccion:function(){self=this;var i=r.id,t=this.$(".f_depas select option:selected").data("nombre"),a=this.$(".f_provi select option:selected").data("nombre"),n=this.$(".f_distri select option:selected").data("nombre"),o=this.$(".f_distri select").val(),s=this.$(".direcciones input").val();i&&t&&a&&n&&o&&s&&(this.direccion.set({tipo:null,departamento:t,provincia:a,distrito:n,direccion:s,referencia:"",codigo_postal:"",telefono:"",usuario:i,ubigeo:o}),this.direccion.save().done(function(i){self.collection.add(self.direccion),e(".form_addDirec").slideUp(),e(".metodo_envio_form").slideDown(),self.model.set("direccion_envio",i.id)}))}});return s});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../collections/ubigeos',
+    '../../models/direccion',
+    '../../models/user'
+], function ($, _, Backbone, swig,Ubigeos,DireccionModel,UserModel) {
+    'use strict';
+
+    var PasoMetodoEnvioView = Backbone.View.extend({
+
+        template: swig.compile($('#nueva_direccion_tlp').html()), 
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {
+            'change #departamentos':'add_provincias',
+            'change #provincias':'add_distritos',
+            'submit #form_nueva_direccion':'verificar_inputs',
+            'blur input':'get_datos',
+            'blur select':'get_datos',
+        },
+
+        initialize: function () {
+            this.direccion = new DireccionModel();
+            this.render();
+        },
+
+        render: function () {
+            this.$el.html(this.template());
+            this.add_departamentos();
+        },
+        add_departamentos:function () {
+            var self = this;
+            var ubigeos = new Ubigeos();
+            ubigeos.fetch().done(function () {
+                ubigeos.forEach(self.addOneDepa,self)
+            })
+        },
+        addOneDepa:function (modelo) {
+            var datos = modelo.toJSON();
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
+            this.$('#departamentos').append(option);
+        },
+        add_provincias:function () {
+            var self = this;
+            var parent = this.$('#departamentos').val();
+            this.$('#provincias').empty();
+            var ubigeos = new Ubigeos();
+            ubigeos.fetch({
+                data:$.param({region:parent})
+            }).done(function () {
+                ubigeos.forEach(self.addOneProvi,self)
+            })
+        },
+        addOneProvi:function (modelo) {
+            var datos = modelo.toJSON();
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
+            this.$('#provincias').append(option);
+        },
+        add_distritos:function () {
+            var self = this;
+            var parent = this.$('#provincias').val();
+            this.$('#distritos').empty();            
+            var ubigeos = new Ubigeos();
+            ubigeos.fetch({
+                data:$.param({region:parent})
+            }).done(function () {
+                ubigeos.forEach(self.addOneDistri,self)
+            })
+        },
+        addOneDistri:function (modelo) {
+            var datos = modelo.toJSON();
+            var option = "<option value='"+datos.id+"' data-nombre='"+datos.name+"'>"+datos.name+"</option>";          
+            this.$('#distritos').append(option);            
+        },
+        get_datos:function (e) {
+            var valor = e.target.value;
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+            if (validar_vacio) {
+                if (contenedor==='.campo_correo') {
+                    this.validar_email(valor,contenedor);
+                };
+            };
+        },
+        validar_vacio:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
+        },
+        verificar_inputs:function (e) {
+            var self = this;
+            e.preventDefault();
+            this.$('input').each(function (e,i) {
+                var conte = '.'+i.dataset.contenedor;
+                var campo = self.validar_vacio(i.value,conte);
+                if (campo===false) {                    
+                    return false
+                };
+            })
+            this.$('select').each(function (e,i) {
+                var conte = '.'+i.dataset.contenedor;
+                var campo = self.validar_vacio(i.value,conte);
+                if (campo===false) {                    
+                    return false
+                };
+            })
+            this.crear_nueva_direccion();
+        },
+        crear_nueva_direccion:function () {
+            self = this;
+            var user = UserModel.id;
+            var depa = this.$('.f_depas select option:selected').data('nombre')
+            var provi = this.$('.f_provi select option:selected').data('nombre')
+            var distrito = this.$('.f_distri select option:selected').data('nombre')
+            var ubigeo = this.$('.f_distri select').val();
+            var direccion = this.$('.direcciones input').val();
+            if (user && depa && provi && distrito && ubigeo && direccion) {
+                this.direccion.set({
+                    "tipo": null,
+                    "departamento": depa,
+                    "provincia": provi,
+                    "distrito": distrito,
+                    "direccion": direccion,
+                    "referencia": "",
+                    "codigo_postal": "",
+                    "telefono": "",
+                    "usuario": user,
+                    "ubigeo": ubigeo
+                })
+
+                this.direccion.save().done(function (data) {
+                    self.collection.add(self.direccion);
+                    $('.form_addDirec').slideUp();
+                    $('.metodo_envio_form').slideDown();
+                    self.model.set('direccion_envio',data.id);
+                });
+            };
+            
+        }
+    });
+
+    return PasoMetodoEnvioView;
+});

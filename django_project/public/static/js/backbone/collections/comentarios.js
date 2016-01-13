@@ -1,1 +1,21 @@
-define(["underscore","backbone","../models/comentario"],function(o,e,t){"use strict";var r=e.Collection.extend({model:t,url:"/api/comentarios/",buscar_producto:function(o){this.fetch({data:$.param({producto:o})})}});return r});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/comentario'
+], function (_, Backbone, ComentarioModel) {
+    'use strict';
+
+    var ComentarioCollection = Backbone.Collection.extend({
+        model: ComentarioModel,
+        url: '/api/comentarios/',
+        buscar_producto : function (id) {
+        	this.fetch({
+        		data:$.param({producto:id})
+        	})
+        }
+    });
+
+    return ComentarioCollection;
+});

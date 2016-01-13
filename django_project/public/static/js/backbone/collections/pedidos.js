@@ -1,1 +1,22 @@
-define(["underscore","backbone","../models/pedido","../models/user"],function(e,i,n){"use strict";var o=i.Collection.extend({url:"/api/pedidos/",model:n,initialize:function(){}}),d=new o;return d});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/pedido',
+    '../models/user',
+], function (_, Backbone, PedidoModel,UserModel) {
+    'use strict';
+
+    var PedidoCollection = Backbone.Collection.extend({
+        url: '/api/pedidos/',
+        model: PedidoModel,
+        initialize: function() {
+            //this.buscar_user();
+        },
+    });
+
+    var pedidos = new PedidoCollection();
+
+    return pedidos;
+});

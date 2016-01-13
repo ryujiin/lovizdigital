@@ -1,1 +1,357 @@
-var DateTimeShortcuts={calendars:[],calendarInputs:[],clockInputs:[],dismissClockFunc:[],dismissCalendarFunc:[],calendarDivName1:"calendarbox",calendarDivName2:"calendarin",calendarLinkName:"calendarlink",clockDivName:"clockbox",clockLinkName:"clocklink",shortCutsClass:"datetimeshortcuts",timezoneWarningClass:"timezonewarning",timezoneOffset:0,admin_media_prefix:"",init:function(){if(DateTimeShortcuts.admin_media_prefix=void 0!=window.__admin_media_prefix__?window.__admin_media_prefix__:"/missing-admin-media-prefix/",void 0!=window.__admin_utc_offset__){var e=window.__admin_utc_offset__,t=-60*(new Date).getTimezoneOffset();DateTimeShortcuts.timezoneOffset=t-e}var a=document.getElementsByTagName("input");for(i=0;i<a.length;i++){var n=a[i];"text"==n.getAttribute("type")&&n.className.match(/vTimeField/)?(DateTimeShortcuts.addClock(n),DateTimeShortcuts.addTimezoneWarning(n)):"text"==n.getAttribute("type")&&n.className.match(/vDateField/)&&(DateTimeShortcuts.addCalendar(n),DateTimeShortcuts.addTimezoneWarning(n))}},now:function(){if(void 0!=window.__admin_utc_offset__){var e=window.__admin_utc_offset__,t=new Date,a=-60*t.getTimezoneOffset();return t.setTime(t.getTime()+1e3*(e-a)),t}return new Date},addTimezoneWarning:function(e){var t=django.jQuery,a=DateTimeShortcuts.timezoneWarningClass,i=DateTimeShortcuts.timezoneOffset/3600;if(i&&!t(e).siblings("."+a).length){var n;i>0?n=ngettext("Note: You are %s hour ahead of server time.","Note: You are %s hours ahead of server time.",i):(i*=-1,n=ngettext("Note: You are %s hour behind server time.","Note: You are %s hours behind server time.",i)),n=interpolate(n,[i]);var c=t("<span>");c.attr("class",a),c.text(n),t(e).parent().append(t("<br>")).append(c)}},addClock:function(e){var t=DateTimeShortcuts.clockInputs.length;DateTimeShortcuts.clockInputs[t]=e,DateTimeShortcuts.dismissClockFunc[t]=function(){return DateTimeShortcuts.dismissClock(t),!0};var a=document.createElement("span");a.className=DateTimeShortcuts.shortCutsClass,e.parentNode.insertBefore(a,e.nextSibling);var i=document.createElement("a");i.setAttribute("href","javascript:DateTimeShortcuts.handleClockQuicklink("+t+", -1);"),i.appendChild(document.createTextNode(gettext("Now")));var n=document.createElement("a");n.setAttribute("href","javascript:DateTimeShortcuts.openClock("+t+");"),n.id=DateTimeShortcuts.clockLinkName+t,quickElement("img",n,"","src",DateTimeShortcuts.admin_media_prefix+"img/icon_clock.gif","alt",gettext("Clock")),a.appendChild(document.createTextNode(" ")),a.appendChild(i),a.appendChild(document.createTextNode(" | ")),a.appendChild(n);var c=document.createElement("div");c.style.display="none",c.style.position="absolute",c.className="clockbox module",c.setAttribute("id",DateTimeShortcuts.clockDivName+t),document.body.appendChild(c),addEvent(c,"click",cancelEventPropagation),quickElement("h2",c,gettext("Choose a time"));var r=quickElement("ul",c);r.className="timelist",quickElement("a",quickElement("li",r),gettext("Now"),"href","javascript:DateTimeShortcuts.handleClockQuicklink("+t+", -1);"),quickElement("a",quickElement("li",r),gettext("Midnight"),"href","javascript:DateTimeShortcuts.handleClockQuicklink("+t+", 0);"),quickElement("a",quickElement("li",r),gettext("6 a.m."),"href","javascript:DateTimeShortcuts.handleClockQuicklink("+t+", 6);"),quickElement("a",quickElement("li",r),gettext("Noon"),"href","javascript:DateTimeShortcuts.handleClockQuicklink("+t+", 12);");var o=quickElement("p",c);o.className="calendar-cancel",quickElement("a",o,gettext("Cancel"),"href","javascript:DateTimeShortcuts.dismissClock("+t+");"),django.jQuery(document).bind("keyup",function(e){27==e.which&&(DateTimeShortcuts.dismissClock(t),e.preventDefault())})},openClock:function(e){var t=document.getElementById(DateTimeShortcuts.clockDivName+e),a=document.getElementById(DateTimeShortcuts.clockLinkName+e);t.style.left="rtl"!=getStyle(document.body,"direction")?findPosX(a)+17+"px":findPosX(a)-110+"px",t.style.top=Math.max(0,findPosY(a)-30)+"px",t.style.display="block",addEvent(document,"click",DateTimeShortcuts.dismissClockFunc[e])},dismissClock:function(e){document.getElementById(DateTimeShortcuts.clockDivName+e).style.display="none",removeEvent(document,"click",DateTimeShortcuts.dismissClockFunc[e])},handleClockQuicklink:function(e,t){var a;a=-1==t?DateTimeShortcuts.now():new Date(1970,1,1,t,0,0,0),DateTimeShortcuts.clockInputs[e].value=a.strftime(get_format("TIME_INPUT_FORMATS")[0]),DateTimeShortcuts.clockInputs[e].focus(),DateTimeShortcuts.dismissClock(e)},addCalendar:function(e){var t=DateTimeShortcuts.calendars.length;DateTimeShortcuts.calendarInputs[t]=e,DateTimeShortcuts.dismissCalendarFunc[t]=function(){return DateTimeShortcuts.dismissCalendar(t),!0};var a=document.createElement("span");a.className=DateTimeShortcuts.shortCutsClass,e.parentNode.insertBefore(a,e.nextSibling);var i=document.createElement("a");i.setAttribute("href","javascript:DateTimeShortcuts.handleCalendarQuickLink("+t+", 0);"),i.appendChild(document.createTextNode(gettext("Today")));var n=document.createElement("a");n.setAttribute("href","javascript:DateTimeShortcuts.openCalendar("+t+");"),n.id=DateTimeShortcuts.calendarLinkName+t,quickElement("img",n,"","src",DateTimeShortcuts.admin_media_prefix+"img/icon_calendar.gif","alt",gettext("Calendar")),a.appendChild(document.createTextNode(" ")),a.appendChild(i),a.appendChild(document.createTextNode(" | ")),a.appendChild(n);var c=document.createElement("div");c.style.display="none",c.style.position="absolute",c.className="calendarbox module",c.setAttribute("id",DateTimeShortcuts.calendarDivName1+t),document.body.appendChild(c),addEvent(c,"click",cancelEventPropagation);var r=quickElement("div",c),o=quickElement("a",r,"<","href","javascript:DateTimeShortcuts.drawPrev("+t+");");o.className="calendarnav-previous";var s=quickElement("a",r,">","href","javascript:DateTimeShortcuts.drawNext("+t+");");s.className="calendarnav-next";var d=quickElement("div",c,"","id",DateTimeShortcuts.calendarDivName2+t);d.className="calendar",DateTimeShortcuts.calendars[t]=new Calendar(DateTimeShortcuts.calendarDivName2+t,DateTimeShortcuts.handleCalendarCallback(t)),DateTimeShortcuts.calendars[t].drawCurrent();var l=quickElement("div",c);l.className="calendar-shortcuts",quickElement("a",l,gettext("Yesterday"),"href","javascript:DateTimeShortcuts.handleCalendarQuickLink("+t+", -1);"),l.appendChild(document.createTextNode(" | ")),quickElement("a",l,gettext("Today"),"href","javascript:DateTimeShortcuts.handleCalendarQuickLink("+t+", 0);"),l.appendChild(document.createTextNode(" | ")),quickElement("a",l,gettext("Tomorrow"),"href","javascript:DateTimeShortcuts.handleCalendarQuickLink("+t+", +1);");var m=quickElement("p",c);m.className="calendar-cancel",quickElement("a",m,gettext("Cancel"),"href","javascript:DateTimeShortcuts.dismissCalendar("+t+");"),django.jQuery(document).bind("keyup",function(e){27==e.which&&(DateTimeShortcuts.dismissCalendar(t),e.preventDefault())})},openCalendar:function(e){var t=document.getElementById(DateTimeShortcuts.calendarDivName1+e),a=document.getElementById(DateTimeShortcuts.calendarLinkName+e),i=DateTimeShortcuts.calendarInputs[e];if(i.value){var n=get_format("DATE_INPUT_FORMATS")[0],c=i.value.strptime(n),r=c.getFullYear(),o=c.getMonth()+1,s=/\d{4}/;s.test(r.toString())&&o>=1&&12>=o&&DateTimeShortcuts.calendars[e].drawDate(o,r,c)}t.style.left="rtl"!=getStyle(document.body,"direction")?findPosX(a)+17+"px":findPosX(a)-180+"px",t.style.top=Math.max(0,findPosY(a)-75)+"px",t.style.display="block",addEvent(document,"click",DateTimeShortcuts.dismissCalendarFunc[e])},dismissCalendar:function(e){document.getElementById(DateTimeShortcuts.calendarDivName1+e).style.display="none",removeEvent(document,"click",DateTimeShortcuts.dismissCalendarFunc[e])},drawPrev:function(e){DateTimeShortcuts.calendars[e].drawPreviousMonth()},drawNext:function(e){DateTimeShortcuts.calendars[e].drawNextMonth()},handleCalendarCallback:function(e){var t=get_format("DATE_INPUT_FORMATS")[0];return t=t.replace("\\","\\\\"),t=t.replace("\r","\\r"),t=t.replace("\n","\\n"),t=t.replace("	","\\t"),t=t.replace("'","\\'"),["function(y, m, d) { DateTimeShortcuts.calendarInputs[",e,"].value = new Date(y, m-1, d).strftime('",t,"');DateTimeShortcuts.calendarInputs[",e,"].focus();document.getElementById(DateTimeShortcuts.calendarDivName1+",e,").style.display='none';}"].join("")},handleCalendarQuickLink:function(e,t){var a=DateTimeShortcuts.now();a.setDate(a.getDate()+t),DateTimeShortcuts.calendarInputs[e].value=a.strftime(get_format("DATE_INPUT_FORMATS")[0]),DateTimeShortcuts.calendarInputs[e].focus(),DateTimeShortcuts.dismissCalendar(e)}};addEvent(window,"load",DateTimeShortcuts.init);
+// Inserts shortcut buttons after all of the following:
+//     <input type="text" class="vDateField">
+//     <input type="text" class="vTimeField">
+
+var DateTimeShortcuts = {
+    calendars: [],
+    calendarInputs: [],
+    clockInputs: [],
+    dismissClockFunc: [],
+    dismissCalendarFunc: [],
+    calendarDivName1: 'calendarbox', // name of calendar <div> that gets toggled
+    calendarDivName2: 'calendarin',  // name of <div> that contains calendar
+    calendarLinkName: 'calendarlink',// name of the link that is used to toggle
+    clockDivName: 'clockbox',        // name of clock <div> that gets toggled
+    clockLinkName: 'clocklink',      // name of the link that is used to toggle
+    shortCutsClass: 'datetimeshortcuts', // class of the clock and cal shortcuts
+    timezoneWarningClass: 'timezonewarning', // class of the warning for timezone mismatch
+    timezoneOffset: 0,
+    admin_media_prefix: '',
+    init: function() {
+        // Get admin_media_prefix by grabbing it off the window object. It's
+        // set in the admin/base.html template, so if it's not there, someone's
+        // overridden the template. In that case, we'll set a clearly-invalid
+        // value in the hopes that someone will examine HTTP requests and see it.
+        if (window.__admin_media_prefix__ != undefined) {
+            DateTimeShortcuts.admin_media_prefix = window.__admin_media_prefix__;
+        } else {
+            DateTimeShortcuts.admin_media_prefix = '/missing-admin-media-prefix/';
+        }
+
+        if (window.__admin_utc_offset__ != undefined) {
+            var serverOffset = window.__admin_utc_offset__;
+            var localOffset = new Date().getTimezoneOffset() * -60;
+            DateTimeShortcuts.timezoneOffset = localOffset - serverOffset;
+        }
+
+        var inputs = document.getElementsByTagName('input');
+        for (i=0; i<inputs.length; i++) {
+            var inp = inputs[i];
+            if (inp.getAttribute('type') == 'text' && inp.className.match(/vTimeField/)) {
+                DateTimeShortcuts.addClock(inp);
+                DateTimeShortcuts.addTimezoneWarning(inp);
+            }
+            else if (inp.getAttribute('type') == 'text' && inp.className.match(/vDateField/)) {
+                DateTimeShortcuts.addCalendar(inp);
+                DateTimeShortcuts.addTimezoneWarning(inp);
+            }
+        }
+    },
+    // Return the current time while accounting for the server timezone.
+    now: function() {
+        if (window.__admin_utc_offset__ != undefined) {
+            var serverOffset = window.__admin_utc_offset__;
+            var localNow = new Date();
+            var localOffset = localNow.getTimezoneOffset() * -60;
+            localNow.setTime(localNow.getTime() + 1000 * (serverOffset - localOffset));
+            return localNow;
+        } else {
+            return new Date();
+        }
+    },
+    // Add a warning when the time zone in the browser and backend do not match.
+    addTimezoneWarning: function(inp) {
+        var $ = django.jQuery;
+        var warningClass = DateTimeShortcuts.timezoneWarningClass;
+        var timezoneOffset = DateTimeShortcuts.timezoneOffset / 3600;
+
+        // Only warn if there is a time zone mismatch.
+        if (!timezoneOffset)
+            return;
+
+        // Check if warning is already there.
+        if ($(inp).siblings('.' + warningClass).length)
+            return;
+
+        var message;
+        if (timezoneOffset > 0) {
+            message = ngettext(
+                'Note: You are %s hour ahead of server time.',
+                'Note: You are %s hours ahead of server time.',
+                timezoneOffset
+            );
+        }
+        else {
+            timezoneOffset *= -1
+            message = ngettext(
+                'Note: You are %s hour behind server time.',
+                'Note: You are %s hours behind server time.',
+                timezoneOffset
+            );
+        }
+        message = interpolate(message, [timezoneOffset]);
+
+        var $warning = $('<span>');
+        $warning.attr('class', warningClass);
+        $warning.text(message);
+
+        $(inp).parent()
+            .append($('<br>'))
+            .append($warning)
+    },
+    // Add clock widget to a given field
+    addClock: function(inp) {
+        var num = DateTimeShortcuts.clockInputs.length;
+        DateTimeShortcuts.clockInputs[num] = inp;
+        DateTimeShortcuts.dismissClockFunc[num] = function() { DateTimeShortcuts.dismissClock(num); return true; };
+
+        // Shortcut links (clock icon and "Now" link)
+        var shortcuts_span = document.createElement('span');
+        shortcuts_span.className = DateTimeShortcuts.shortCutsClass;
+        inp.parentNode.insertBefore(shortcuts_span, inp.nextSibling);
+        var now_link = document.createElement('a');
+        now_link.setAttribute('href', "javascript:DateTimeShortcuts.handleClockQuicklink(" + num + ", -1);");
+        now_link.appendChild(document.createTextNode(gettext('Now')));
+        var clock_link = document.createElement('a');
+        clock_link.setAttribute('href', 'javascript:DateTimeShortcuts.openClock(' + num + ');');
+        clock_link.id = DateTimeShortcuts.clockLinkName + num;
+        quickElement('img', clock_link, '', 'src', DateTimeShortcuts.admin_media_prefix + 'img/icon_clock.gif', 'alt', gettext('Clock'));
+        shortcuts_span.appendChild(document.createTextNode('\240'));
+        shortcuts_span.appendChild(now_link);
+        shortcuts_span.appendChild(document.createTextNode('\240|\240'));
+        shortcuts_span.appendChild(clock_link);
+
+        // Create clock link div
+        //
+        // Markup looks like:
+        // <div id="clockbox1" class="clockbox module">
+        //     <h2>Choose a time</h2>
+        //     <ul class="timelist">
+        //         <li><a href="#">Now</a></li>
+        //         <li><a href="#">Midnight</a></li>
+        //         <li><a href="#">6 a.m.</a></li>
+        //         <li><a href="#">Noon</a></li>
+        //     </ul>
+        //     <p class="calendar-cancel"><a href="#">Cancel</a></p>
+        // </div>
+
+        var clock_box = document.createElement('div');
+        clock_box.style.display = 'none';
+        clock_box.style.position = 'absolute';
+        clock_box.className = 'clockbox module';
+        clock_box.setAttribute('id', DateTimeShortcuts.clockDivName + num);
+        document.body.appendChild(clock_box);
+        addEvent(clock_box, 'click', cancelEventPropagation);
+
+        quickElement('h2', clock_box, gettext('Choose a time'));
+        var time_list = quickElement('ul', clock_box);
+        time_list.className = 'timelist';
+        quickElement("a", quickElement("li", time_list), gettext("Now"), "href", "javascript:DateTimeShortcuts.handleClockQuicklink(" + num + ", -1);");
+        quickElement("a", quickElement("li", time_list), gettext("Midnight"), "href", "javascript:DateTimeShortcuts.handleClockQuicklink(" + num + ", 0);");
+        quickElement("a", quickElement("li", time_list), gettext("6 a.m."), "href", "javascript:DateTimeShortcuts.handleClockQuicklink(" + num + ", 6);");
+        quickElement("a", quickElement("li", time_list), gettext("Noon"), "href", "javascript:DateTimeShortcuts.handleClockQuicklink(" + num + ", 12);");
+
+        var cancel_p = quickElement('p', clock_box);
+        cancel_p.className = 'calendar-cancel';
+        quickElement('a', cancel_p, gettext('Cancel'), 'href', 'javascript:DateTimeShortcuts.dismissClock(' + num + ');');
+        django.jQuery(document).bind('keyup', function(event) {
+            if (event.which == 27) {
+                // ESC key closes popup
+                DateTimeShortcuts.dismissClock(num);
+                event.preventDefault();
+            }
+        });
+    },
+    openClock: function(num) {
+        var clock_box = document.getElementById(DateTimeShortcuts.clockDivName+num)
+        var clock_link = document.getElementById(DateTimeShortcuts.clockLinkName+num)
+
+        // Recalculate the clockbox position
+        // is it left-to-right or right-to-left layout ?
+        if (getStyle(document.body,'direction')!='rtl') {
+            clock_box.style.left = findPosX(clock_link) + 17 + 'px';
+        }
+        else {
+            // since style's width is in em, it'd be tough to calculate
+            // px value of it. let's use an estimated px for now
+            // TODO: IE returns wrong value for findPosX when in rtl mode
+            //       (it returns as it was left aligned), needs to be fixed.
+            clock_box.style.left = findPosX(clock_link) - 110 + 'px';
+        }
+        clock_box.style.top = Math.max(0, findPosY(clock_link) - 30) + 'px';
+
+        // Show the clock box
+        clock_box.style.display = 'block';
+        addEvent(document, 'click', DateTimeShortcuts.dismissClockFunc[num]);
+    },
+    dismissClock: function(num) {
+       document.getElementById(DateTimeShortcuts.clockDivName + num).style.display = 'none';
+       removeEvent(document, 'click', DateTimeShortcuts.dismissClockFunc[num]);
+    },
+    handleClockQuicklink: function(num, val) {
+       var d;
+       if (val == -1) {
+           d = DateTimeShortcuts.now();
+       }
+       else {
+           d = new Date(1970, 1, 1, val, 0, 0, 0)
+       }
+       DateTimeShortcuts.clockInputs[num].value = d.strftime(get_format('TIME_INPUT_FORMATS')[0]);
+       DateTimeShortcuts.clockInputs[num].focus();
+       DateTimeShortcuts.dismissClock(num);
+    },
+    // Add calendar widget to a given field.
+    addCalendar: function(inp) {
+        var num = DateTimeShortcuts.calendars.length;
+
+        DateTimeShortcuts.calendarInputs[num] = inp;
+        DateTimeShortcuts.dismissCalendarFunc[num] = function() { DateTimeShortcuts.dismissCalendar(num); return true; };
+
+        // Shortcut links (calendar icon and "Today" link)
+        var shortcuts_span = document.createElement('span');
+        shortcuts_span.className = DateTimeShortcuts.shortCutsClass;
+        inp.parentNode.insertBefore(shortcuts_span, inp.nextSibling);
+        var today_link = document.createElement('a');
+        today_link.setAttribute('href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', 0);');
+        today_link.appendChild(document.createTextNode(gettext('Today')));
+        var cal_link = document.createElement('a');
+        cal_link.setAttribute('href', 'javascript:DateTimeShortcuts.openCalendar(' + num + ');');
+        cal_link.id = DateTimeShortcuts.calendarLinkName + num;
+        quickElement('img', cal_link, '', 'src', DateTimeShortcuts.admin_media_prefix + 'img/icon_calendar.gif', 'alt', gettext('Calendar'));
+        shortcuts_span.appendChild(document.createTextNode('\240'));
+        shortcuts_span.appendChild(today_link);
+        shortcuts_span.appendChild(document.createTextNode('\240|\240'));
+        shortcuts_span.appendChild(cal_link);
+
+        // Create calendarbox div.
+        //
+        // Markup looks like:
+        //
+        // <div id="calendarbox3" class="calendarbox module">
+        //     <h2>
+        //           <a href="#" class="link-previous">&lsaquo;</a>
+        //           <a href="#" class="link-next">&rsaquo;</a> February 2003
+        //     </h2>
+        //     <div class="calendar" id="calendarin3">
+        //         <!-- (cal) -->
+        //     </div>
+        //     <div class="calendar-shortcuts">
+        //          <a href="#">Yesterday</a> | <a href="#">Today</a> | <a href="#">Tomorrow</a>
+        //     </div>
+        //     <p class="calendar-cancel"><a href="#">Cancel</a></p>
+        // </div>
+        var cal_box = document.createElement('div');
+        cal_box.style.display = 'none';
+        cal_box.style.position = 'absolute';
+        cal_box.className = 'calendarbox module';
+        cal_box.setAttribute('id', DateTimeShortcuts.calendarDivName1 + num);
+        document.body.appendChild(cal_box);
+        addEvent(cal_box, 'click', cancelEventPropagation);
+
+        // next-prev links
+        var cal_nav = quickElement('div', cal_box);
+        var cal_nav_prev = quickElement('a', cal_nav, '<', 'href', 'javascript:DateTimeShortcuts.drawPrev('+num+');');
+        cal_nav_prev.className = 'calendarnav-previous';
+        var cal_nav_next = quickElement('a', cal_nav, '>', 'href', 'javascript:DateTimeShortcuts.drawNext('+num+');');
+        cal_nav_next.className = 'calendarnav-next';
+
+        // main box
+        var cal_main = quickElement('div', cal_box, '', 'id', DateTimeShortcuts.calendarDivName2 + num);
+        cal_main.className = 'calendar';
+        DateTimeShortcuts.calendars[num] = new Calendar(DateTimeShortcuts.calendarDivName2 + num, DateTimeShortcuts.handleCalendarCallback(num));
+        DateTimeShortcuts.calendars[num].drawCurrent();
+
+        // calendar shortcuts
+        var shortcuts = quickElement('div', cal_box);
+        shortcuts.className = 'calendar-shortcuts';
+        quickElement('a', shortcuts, gettext('Yesterday'), 'href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', -1);');
+        shortcuts.appendChild(document.createTextNode('\240|\240'));
+        quickElement('a', shortcuts, gettext('Today'), 'href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', 0);');
+        shortcuts.appendChild(document.createTextNode('\240|\240'));
+        quickElement('a', shortcuts, gettext('Tomorrow'), 'href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', +1);');
+
+        // cancel bar
+        var cancel_p = quickElement('p', cal_box);
+        cancel_p.className = 'calendar-cancel';
+        quickElement('a', cancel_p, gettext('Cancel'), 'href', 'javascript:DateTimeShortcuts.dismissCalendar(' + num + ');');
+        django.jQuery(document).bind('keyup', function(event) {
+            if (event.which == 27) {
+                // ESC key closes popup
+                DateTimeShortcuts.dismissCalendar(num);
+                event.preventDefault();
+            }
+        });
+    },
+    openCalendar: function(num) {
+        var cal_box = document.getElementById(DateTimeShortcuts.calendarDivName1+num)
+        var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName+num)
+        var inp = DateTimeShortcuts.calendarInputs[num];
+
+        // Determine if the current value in the input has a valid date.
+        // If so, draw the calendar with that date's year and month.
+        if (inp.value) {
+            var format = get_format('DATE_INPUT_FORMATS')[0];
+            var selected = inp.value.strptime(format);
+            var year = selected.getFullYear();
+            var month = selected.getMonth() + 1;
+            var re = /\d{4}/
+            if (re.test(year.toString()) && month >= 1 && month <= 12) {
+                DateTimeShortcuts.calendars[num].drawDate(month, year, selected);
+            }
+        }
+
+        // Recalculate the clockbox position
+        // is it left-to-right or right-to-left layout ?
+        if (getStyle(document.body,'direction')!='rtl') {
+            cal_box.style.left = findPosX(cal_link) + 17 + 'px';
+        }
+        else {
+            // since style's width is in em, it'd be tough to calculate
+            // px value of it. let's use an estimated px for now
+            // TODO: IE returns wrong value for findPosX when in rtl mode
+            //       (it returns as it was left aligned), needs to be fixed.
+            cal_box.style.left = findPosX(cal_link) - 180 + 'px';
+        }
+        cal_box.style.top = Math.max(0, findPosY(cal_link) - 75) + 'px';
+
+        cal_box.style.display = 'block';
+        addEvent(document, 'click', DateTimeShortcuts.dismissCalendarFunc[num]);
+    },
+    dismissCalendar: function(num) {
+        document.getElementById(DateTimeShortcuts.calendarDivName1+num).style.display = 'none';
+        removeEvent(document, 'click', DateTimeShortcuts.dismissCalendarFunc[num]);
+    },
+    drawPrev: function(num) {
+        DateTimeShortcuts.calendars[num].drawPreviousMonth();
+    },
+    drawNext: function(num) {
+        DateTimeShortcuts.calendars[num].drawNextMonth();
+    },
+    handleCalendarCallback: function(num) {
+        var format = get_format('DATE_INPUT_FORMATS')[0];
+        // the format needs to be escaped a little
+        format = format.replace('\\', '\\\\');
+        format = format.replace('\r', '\\r');
+        format = format.replace('\n', '\\n');
+        format = format.replace('\t', '\\t');
+        format = format.replace("'", "\\'");
+        return ["function(y, m, d) { DateTimeShortcuts.calendarInputs[",
+               num,
+               "].value = new Date(y, m-1, d).strftime('",
+               format,
+               "');DateTimeShortcuts.calendarInputs[",
+               num,
+               "].focus();document.getElementById(DateTimeShortcuts.calendarDivName1+",
+               num,
+               ").style.display='none';}"].join('');
+    },
+    handleCalendarQuickLink: function(num, offset) {
+       var d = DateTimeShortcuts.now();
+       d.setDate(d.getDate() + offset)
+       DateTimeShortcuts.calendarInputs[num].value = d.strftime(get_format('DATE_INPUT_FORMATS')[0]);
+       DateTimeShortcuts.calendarInputs[num].focus();
+       DateTimeShortcuts.dismissCalendar(num);
+    }
+}
+
+addEvent(window, 'load', DateTimeShortcuts.init);

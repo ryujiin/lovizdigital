@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/ubigeo"],function(e,o,n){"use strict";var i=o.Collection.extend({url:"/api/ubigeo/",model:n});return i});

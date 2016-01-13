@@ -1,1 +1,17 @@
-define(["underscore","backbone","../../models/catalogo/filtro"],function(e,o,n){"use strict";var t=o.Collection.extend({model:n}),r=new t;return r});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../../models/catalogo/filtro'
+], function (_, Backbone, FiltroModel) {
+    'use strict';
+
+    var FiltroCollection = Backbone.Collection.extend({
+        model: FiltroModel
+    });
+
+    var filtros = new FiltroCollection();
+
+    return filtros;
+});

@@ -1,1 +1,31 @@
-define(["jquery","underscore","backbone","swig"],function(e,t,i,n){"use strict";var a=i.View.extend({el:e("#content"),template:n.compile(e("#pedidos_oficna_tlp").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){this.$el.html(this.template())}}),c=new a;return c});
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+], function ($, _, Backbone, swig) {
+    'use strict';
+
+    var PagePedidosView = Backbone.View.extend({
+        el:$('#content'),
+        template: swig.compile($('#pedidos_oficna_tlp').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+        },
+        render:function () {
+            this.$el.html(this.template());
+        },
+    });
+
+    var vista = new PagePedidosView();
+
+    return vista;
+});

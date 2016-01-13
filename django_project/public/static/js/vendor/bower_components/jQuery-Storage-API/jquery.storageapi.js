@@ -12,5 +12,440 @@
  * Version: 1.7.3
  *
  */
+(function (factory) {
+  if(typeof define==='function' && define.amd){
+    // AMD
+    define(['jquery'],factory);
+  }else if(typeof exports==='object') {
+    // CommonJS
+    factory(require('jquery'));
+  }else {
+    // Browser globals
+    factory(jQuery);
+  }
+}(function($){
+  // Prefix to use with cookie fallback
+  var cookie_local_prefix="ls_";
+  var cookie_session_prefix="ss_";
 
-!function(e){"function"==typeof define&&define.amd?define(["jquery"],e):e("object"==typeof exports?require("jquery"):jQuery)}(function(e){function t(t){var r,n,i,o=arguments.length,s=window[t],a=arguments,u=a[1];if(2>o)throw new Error("Minimum 2 arguments must be given");if(e.isArray(u)){n={};for(var f in u){r=u[f];try{n[r]=JSON.parse(s.getItem(r))}catch(c){n[r]=s.getItem(r)}}return n}if(2!=o){try{n=JSON.parse(s.getItem(u))}catch(c){throw new ReferenceError(u+" is not defined in this storage")}for(var f=2;o-1>f;f++)if(n=n[a[f]],void 0===n)throw new ReferenceError([].slice.call(a,1,f+1).join(".")+" is not defined in this storage");if(e.isArray(a[f])){i=n,n={};for(var m in a[f])n[a[f][m]]=i[a[f][m]];return n}return n[a[f]]}try{return JSON.parse(s.getItem(u))}catch(c){return s.getItem(u)}}function r(t){var r,n,i=arguments.length,o=window[t],s=arguments,a=s[1],u=s[2],f={};if(2>i||!e.isPlainObject(a)&&3>i)throw new Error("Minimum 3 arguments must be given or second parameter must be an object");if(e.isPlainObject(a)){for(var c in a)r=a[c],e.isPlainObject(r)?o.setItem(c,JSON.stringify(r)):o.setItem(c,r);return a}if(3==i)return"object"==typeof u?o.setItem(a,JSON.stringify(u)):o.setItem(a,u),u;try{n=o.getItem(a),null!=n&&(f=JSON.parse(n))}catch(m){}n=f;for(var c=2;i-2>c;c++)r=s[c],n[r]&&e.isPlainObject(n[r])||(n[r]={}),n=n[r];return n[s[c]]=s[c+1],o.setItem(a,JSON.stringify(f)),f}function n(t){var r,n,i=arguments.length,o=window[t],s=arguments,a=s[1];if(2>i)throw new Error("Minimum 2 arguments must be given");if(e.isArray(a)){for(var u in a)o.removeItem(a[u]);return!0}if(2==i)return o.removeItem(a),!0;try{r=n=JSON.parse(o.getItem(a))}catch(f){throw new ReferenceError(a+" is not defined in this storage")}for(var u=2;i-1>u;u++)if(n=n[s[u]],void 0===n)throw new ReferenceError([].slice.call(s,1,u).join(".")+" is not defined in this storage");if(e.isArray(s[u]))for(var c in s[u])delete n[s[u][c]];else delete n[s[u]];return o.setItem(a,JSON.stringify(r)),!0}function i(t,r){var i=a(t);for(var o in i)n(t,i[o]);if(r)for(var o in e.namespaceStorages)u(o)}function o(r){var n=arguments.length,i=arguments,s=(window[r],i[1]);if(1==n)return 0==a(r).length;if(e.isArray(s)){for(var u=0;u<s.length;u++)if(!o(r,s[u]))return!1;return!0}try{var f=t.apply(this,arguments);e.isArray(i[n-1])||(f={totest:f});for(var u in f)if(!(e.isPlainObject(f[u])&&e.isEmptyObject(f[u])||e.isArray(f[u])&&!f[u].length)&&f[u])return!1;return!0}catch(c){return!0}}function s(r){var n=arguments.length,i=arguments,o=(window[r],i[1]);if(2>n)throw new Error("Minimum 2 arguments must be given");if(e.isArray(o)){for(var a=0;a<o.length;a++)if(!s(r,o[a]))return!1;return!0}try{var u=t.apply(this,arguments);e.isArray(i[n-1])||(u={totest:u});for(var a in u)if(void 0===u[a]||null===u[a])return!1;return!0}catch(f){return!1}}function a(r){var n=arguments.length,i=window[r],o=arguments,s=(o[1],[]),a={};if(a=n>1?t.apply(this,o):i,a._cookie)for(var u in e.cookie())""!=u&&s.push(u.replace(a._prefix,""));else for(var f in a)s.push(f);return s}function u(t){if(!t||"string"!=typeof t)throw new Error("First parameter must be a string");g?(window.localStorage.getItem(t)||window.localStorage.setItem(t,"{}"),window.sessionStorage.getItem(t)||window.sessionStorage.setItem(t,"{}")):(window.localCookieStorage.getItem(t)||window.localCookieStorage.setItem(t,"{}"),window.sessionCookieStorage.getItem(t)||window.sessionCookieStorage.setItem(t,"{}"));var r={localStorage:e.extend({},e.localStorage,{_ns:t}),sessionStorage:e.extend({},e.sessionStorage,{_ns:t})};return e.cookie&&(window.cookieStorage.getItem(t)||window.cookieStorage.setItem(t,"{}"),r.cookieStorage=e.extend({},e.cookieStorage,{_ns:t})),e.namespaceStorages[t]=r,r}function f(e){var t="jsapi";try{return window[e]?(window[e].setItem(t,t),window[e].removeItem(t),!0):!1}catch(r){return!1}}var c="ls_",m="ss_",g=f("localStorage"),h={_type:"",_ns:"",_callMethod:function(e,t){var r=[this._type],t=Array.prototype.slice.call(t),n=t[0];return this._ns&&r.push(this._ns),"string"==typeof n&&-1!==n.indexOf(".")&&(t.shift(),[].unshift.apply(t,n.split("."))),[].push.apply(r,t),e.apply(this,r)},get:function(){return this._callMethod(t,arguments)},set:function(){var t=arguments.length,n=arguments,i=n[0];if(1>t||!e.isPlainObject(i)&&2>t)throw new Error("Minimum 2 arguments must be given or first parameter must be an object");if(e.isPlainObject(i)&&this._ns){for(var o in i)r(this._type,this._ns,o,i[o]);return i}var s=this._callMethod(r,n);return this._ns?s[i.split(".")[0]]:s},remove:function(){if(arguments.length<1)throw new Error("Minimum 1 argument must be given");return this._callMethod(n,arguments)},removeAll:function(e){return this._ns?(r(this._type,this._ns,{}),!0):i(this._type,e)},isEmpty:function(){return this._callMethod(o,arguments)},isSet:function(){if(arguments.length<1)throw new Error("Minimum 1 argument must be given");return this._callMethod(s,arguments)},keys:function(){return this._callMethod(a,arguments)}};if(e.cookie){window.name||(window.name=Math.floor(1e8*Math.random()));var l={_cookie:!0,_prefix:"",_expires:null,_path:null,_domain:null,setItem:function(t,r){e.cookie(this._prefix+t,r,{expires:this._expires,path:this._path,domain:this._domain})},getItem:function(t){return e.cookie(this._prefix+t)},removeItem:function(t){return e.removeCookie(this._prefix+t)},clear:function(){for(var t in e.cookie())""!=t&&(!this._prefix&&-1===t.indexOf(c)&&-1===t.indexOf(m)||this._prefix&&0===t.indexOf(this._prefix))&&e.removeCookie(t)},setExpires:function(e){return this._expires=e,this},setPath:function(e){return this._path=e,this},setDomain:function(e){return this._domain=e,this},setConf:function(e){return e.path&&(this._path=e.path),e.domain&&(this._domain=e.domain),e.expires&&(this._expires=e.expires),this},setDefaultConf:function(){this._path=this._domain=this._expires=null}};g||(window.localCookieStorage=e.extend({},l,{_prefix:c,_expires:3650}),window.sessionCookieStorage=e.extend({},l,{_prefix:m+window.name+"_"})),window.cookieStorage=e.extend({},l),e.cookieStorage=e.extend({},h,{_type:"cookieStorage",setExpires:function(e){return window.cookieStorage.setExpires(e),this},setPath:function(e){return window.cookieStorage.setPath(e),this},setDomain:function(e){return window.cookieStorage.setDomain(e),this},setConf:function(e){return window.cookieStorage.setConf(e),this},setDefaultConf:function(){return window.cookieStorage.setDefaultConf(),this}})}e.initNamespaceStorage=function(e){return u(e)},g?(e.localStorage=e.extend({},h,{_type:"localStorage"}),e.sessionStorage=e.extend({},h,{_type:"sessionStorage"})):(e.localStorage=e.extend({},h,{_type:"localCookieStorage"}),e.sessionStorage=e.extend({},h,{_type:"sessionCookieStorage"})),e.namespaceStorages={},e.removeAllStorages=function(t){e.localStorage.removeAll(t),e.sessionStorage.removeAll(t),e.cookieStorage&&e.cookieStorage.removeAll(t),t||(e.namespaceStorages={})}});
+  // Get items from a storage
+  function _get(storage){
+    var l=arguments.length,s=window[storage],a=arguments,a1=a[1],vi,ret,tmp;
+    if(l<2) throw new Error('Minimum 2 arguments must be given');
+    else if($.isArray(a1)){
+      // If second argument is an array, return an object with value of storage for each item in this array
+      ret={};
+      for(var i in a1){
+        vi=a1[i];
+        try{
+          ret[vi]=JSON.parse(s.getItem(vi));
+        }catch(e){
+          ret[vi]=s.getItem(vi);
+        }
+      }
+      return ret;
+    }else if(l==2){
+      // If only 2 arguments, return value directly
+      try{
+        return JSON.parse(s.getItem(a1));
+      }catch(e){
+        return s.getItem(a1);
+      }
+    }else{
+      // If more than 2 arguments, parse storage to retrieve final value to return it
+      // Get first level
+      try{
+        ret=JSON.parse(s.getItem(a1));
+      }catch(e){
+        throw new ReferenceError(a1+' is not defined in this storage');
+      }
+      // Parse next levels
+      for(var i=2;i<l-1;i++){
+        ret=ret[a[i]];
+        if(ret===undefined) throw new ReferenceError([].slice.call(a,1,i+1).join('.')+' is not defined in this storage');
+      }
+      // If last argument is an array, return an object with value for each item in this array
+      // Else return value normally
+      if($.isArray(a[i])){
+        tmp=ret;
+        ret={};
+        for(var j in a[i]){
+          ret[a[i][j]]=tmp[a[i][j]];
+        }
+        return ret;
+      }else{
+        return ret[a[i]];
+      }
+    }
+  }
+
+  // Set items of a storage
+  function _set(storage){
+    var l=arguments.length,s=window[storage],a=arguments,a1=a[1],a2=a[2],vi,to_store={},tmp;
+    if(l<2 || !$.isPlainObject(a1) && l<3) throw new Error('Minimum 3 arguments must be given or second parameter must be an object');
+    else if($.isPlainObject(a1)){
+      // If first argument is an object, set values of storage for each property of this object
+      for(var i in a1){
+        vi=a1[i];
+        if(!$.isPlainObject(vi)) s.setItem(i,vi);
+        else s.setItem(i,JSON.stringify(vi));
+      }
+      return a1;
+    }else if(l==3){
+      // If only 3 arguments, set value of storage directly
+      if(typeof a2==='object') s.setItem(a1,JSON.stringify(a2));
+      else s.setItem(a1,a2);
+      return a2;
+    }else{
+      // If more than 3 arguments, parse storage to retrieve final node and set value
+      // Get first level
+      try{
+        tmp=s.getItem(a1);
+        if(tmp!=null) {
+          to_store=JSON.parse(tmp);
+        }
+      }catch(e){
+      }
+      tmp=to_store;
+      // Parse next levels and set value
+      for(var i=2;i<l-2;i++){
+        vi=a[i];
+        if(!tmp[vi] || !$.isPlainObject(tmp[vi])) tmp[vi]={};
+        tmp=tmp[vi];
+      }
+      tmp[a[i]]=a[i+1];
+      s.setItem(a1,JSON.stringify(to_store));
+      return to_store;
+    }
+  }
+
+  // Remove items from a storage
+  function _remove(storage){
+    var l=arguments.length,s=window[storage],a=arguments,a1=a[1],to_store,tmp;
+    if(l<2) throw new Error('Minimum 2 arguments must be given');
+    else if($.isArray(a1)){
+      // If first argument is an array, remove values from storage for each item of this array
+      for(var i in a1){
+        s.removeItem(a1[i]);
+      }
+      return true;
+    }else if(l==2){
+      // If only 2 arguments, remove value from storage directly
+      s.removeItem(a1);
+      return true;
+    }else{
+      // If more than 2 arguments, parse storage to retrieve final node and remove value
+      // Get first level
+      try{
+        to_store=tmp=JSON.parse(s.getItem(a1));
+      }catch(e){
+        throw new ReferenceError(a1+' is not defined in this storage');
+      }
+      // Parse next levels and remove value
+      for(var i=2;i<l-1;i++){
+        tmp=tmp[a[i]];
+        if(tmp===undefined) throw new ReferenceError([].slice.call(a,1,i).join('.')+' is not defined in this storage');
+      }
+      // If last argument is an array,remove value for each item in this array
+      // Else remove value normally
+      if($.isArray(a[i])){
+        for(var j in a[i]){
+          delete tmp[a[i][j]];
+        }
+      }else{
+        delete tmp[a[i]];
+      }
+      s.setItem(a1,JSON.stringify(to_store));
+      return true;
+    }
+  }
+
+  // Remove all items from a storage
+  function _removeAll(storage, reinit_ns){
+    var keys=_keys(storage);
+    for(var i in keys){
+      _remove(storage,keys[i]);
+    }
+    // Reinitialize all namespace storages
+    if(reinit_ns){
+      for(var i in $.namespaceStorages){
+        _createNamespace(i);
+      }
+    }
+  }
+
+  // Check if items of a storage are empty
+  function _isEmpty(storage){
+    var l=arguments.length,a=arguments,s=window[storage],a1=a[1];
+    if(l==1){
+      // If only one argument, test if storage is empty
+      return (_keys(storage).length==0);
+    }else if($.isArray(a1)){
+      // If first argument is an array, test each item of this array and return true only if all items are empty
+      for(var i=0; i<a1.length;i++){
+        if(!_isEmpty(storage,a1[i])) return false;
+      }
+      return true;
+    }else{
+      // If more than 1 argument, try to get value and test it
+      try{
+        var v=_get.apply(this, arguments);
+        // Convert result to an object (if last argument is an array, _get return already an object) and test each item
+        if(!$.isArray(a[l-1])) v={'totest':v};
+        for(var i in v){
+          if(!(
+            ($.isPlainObject(v[i]) && $.isEmptyObject(v[i])) ||
+            ($.isArray(v[i]) && !v[i].length) ||
+            (!v[i])
+          )) return false;
+        }
+        return true;
+      }catch(e){
+        return true;
+      }
+    }
+  }
+
+  // Check if items of a storage exist
+  function _isSet(storage){
+    var l=arguments.length,a=arguments,s=window[storage],a1=a[1];
+    if(l<2) throw new Error('Minimum 2 arguments must be given');
+    if($.isArray(a1)){
+      // If first argument is an array, test each item of this array and return true only if all items exist
+      for(var i=0; i<a1.length;i++){
+        if(!_isSet(storage,a1[i])) return false;
+      }
+      return true;
+    }else{
+      // For other case, try to get value and test it
+      try{
+        var v=_get.apply(this, arguments);
+        // Convert result to an object (if last argument is an array, _get return already an object) and test each item
+        if(!$.isArray(a[l-1])) v={'totest':v};
+        for(var i in v){
+          if(!(v[i]!==undefined && v[i]!==null)) return false;
+        }
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+  }
+
+  // Get keys of a storage or of an item of the storage
+  function _keys(storage){
+    var l=arguments.length,s=window[storage],a=arguments,a1=a[1],keys=[],o={};
+    // If more than 1 argument, get value from storage to retrieve keys
+    // Else, use storage to retrieve keys
+    if(l>1){
+      o=_get.apply(this,a);
+    }else{
+      o=s;
+    }
+    if(o._cookie){
+      // If storage is a cookie, use $.cookie to retrieve keys
+      for(var key in $.cookie()){
+        if(key!='') {
+          keys.push(key.replace(o._prefix,''));
+        }
+      }
+    }else{
+      for(var i in o){
+        keys.push(i);
+      }
+    }
+    return keys;
+  }
+
+  // Create new namespace storage
+  function _createNamespace(name){
+    if(!name || typeof name!="string") throw new Error('First parameter must be a string');
+    if(storage_available){
+      if(!window.localStorage.getItem(name)) window.localStorage.setItem(name,'{}');
+      if(!window.sessionStorage.getItem(name)) window.sessionStorage.setItem(name,'{}');
+    }else{
+      if(!window.localCookieStorage.getItem(name)) window.localCookieStorage.setItem(name,'{}');
+      if(!window.sessionCookieStorage.getItem(name)) window.sessionCookieStorage.setItem(name,'{}');
+    }
+    var ns={
+      localStorage:$.extend({},$.localStorage,{_ns:name}),
+      sessionStorage:$.extend({},$.sessionStorage,{_ns:name})
+    };
+    if($.cookie){
+      if(!window.cookieStorage.getItem(name)) window.cookieStorage.setItem(name,'{}');
+      ns.cookieStorage=$.extend({},$.cookieStorage,{_ns:name});
+    }
+    $.namespaceStorages[name]=ns;
+    return ns;
+  }
+
+  // Test if storage is natively available on browser
+  function _testStorage(name){
+    var foo='jsapi';
+    try{
+      if(!window[name]) return false;
+      window[name].setItem(foo,foo);
+      window[name].removeItem(foo);
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+  
+  // Check if storages are natively available on browser
+  var storage_available=_testStorage('localStorage');
+  
+  // Namespace object
+  var storage={
+    _type:'',
+    _ns:'',
+    _callMethod:function(f,a){
+      var p=[this._type],a=Array.prototype.slice.call(a),a0=a[0];
+      if(this._ns) p.push(this._ns);
+      if(typeof a0==='string' && a0.indexOf('.')!==-1){
+        a.shift();
+        [].unshift.apply(a,a0.split('.'));
+      }
+      [].push.apply(p,a);
+      return f.apply(this,p);
+    },
+    // Get items. If no parameters and storage have a namespace, return all namespace
+    get:function(){
+      return this._callMethod(_get,arguments);
+    },
+    // Set items
+    set:function(){
+      var l=arguments.length,a=arguments,a0=a[0];
+      if(l<1 || !$.isPlainObject(a0) && l<2) throw new Error('Minimum 2 arguments must be given or first parameter must be an object');
+      // If first argument is an object and storage is a namespace storage, set values individually
+      if($.isPlainObject(a0) && this._ns){
+        for(var i in a0){
+          _set(this._type,this._ns,i,a0[i]);
+        }
+        return a0;
+      }else{
+        var r=this._callMethod(_set,a);
+        if(this._ns) return r[a0.split('.')[0]];
+        else return r;
+      }
+    },
+    // Delete items
+    remove:function(){
+      if(arguments.length<1) throw new Error('Minimum 1 argument must be given');
+      return this._callMethod(_remove,arguments);
+    },
+    // Delete all items
+    removeAll:function(reinit_ns){
+      if(this._ns){
+        _set(this._type,this._ns,{});
+        return true;
+      }else{
+        return _removeAll(this._type, reinit_ns);
+      }
+    },
+    // Items empty
+    isEmpty:function(){
+      return this._callMethod(_isEmpty,arguments);
+    },
+    // Items exists
+    isSet:function(){
+      if(arguments.length<1) throw new Error('Minimum 1 argument must be given');
+      return this._callMethod(_isSet,arguments);
+    },
+    // Get keys of items
+    keys:function(){
+      return this._callMethod(_keys,arguments);
+    }
+  };
+
+  // Use jquery.cookie for compatibility with old browsers and give access to cookieStorage
+  if($.cookie){
+    // sessionStorage is valid for one window/tab. To simulate that with cookie, we set a name for the window and use it for the name of the cookie
+    if(!window.name) window.name=Math.floor(Math.random()*100000000);
+    var cookie_storage={
+      _cookie:true,
+      _prefix:'',
+      _expires:null,
+      _path:null,
+      _domain:null,
+      setItem:function(n,v){
+        $.cookie(this._prefix+n,v,{expires:this._expires,path:this._path,domain:this._domain});
+      },
+      getItem:function(n){
+        return $.cookie(this._prefix+n);
+      },
+      removeItem:function(n){
+        return $.removeCookie(this._prefix+n);
+      },
+      clear:function(){
+        for(var key in $.cookie()){
+          if(key!=''){
+            if(!this._prefix && key.indexOf(cookie_local_prefix)===-1 && key.indexOf(cookie_session_prefix)===-1 || this._prefix && key.indexOf(this._prefix)===0) {
+              $.removeCookie(key);
+            }
+          }
+        }
+      },
+      setExpires:function(e){
+        this._expires=e;
+        return this;
+      },
+      setPath:function(p){
+        this._path=p;
+        return this;
+      },
+      setDomain:function(d){
+        this._domain=d;
+        return this;
+      },
+      setConf:function(c){
+        if(c.path) this._path=c.path;
+        if(c.domain) this._domain=c.domain;
+        if(c.expires) this._expires=c.expires;
+        return this;
+      },
+      setDefaultConf:function(){
+        this._path=this._domain=this._expires=null;
+      }
+    };
+    if(!storage_available){
+      window.localCookieStorage=$.extend({},cookie_storage,{_prefix:cookie_local_prefix,_expires:365*10});
+      window.sessionCookieStorage=$.extend({},cookie_storage,{_prefix:cookie_session_prefix+window.name+'_'});
+    }
+    window.cookieStorage=$.extend({},cookie_storage);
+    // cookieStorage API
+    $.cookieStorage=$.extend({},storage,{
+      _type:'cookieStorage',
+      setExpires:function(e){window.cookieStorage.setExpires(e); return this;},
+      setPath:function(p){window.cookieStorage.setPath(p); return this;},
+      setDomain:function(d){window.cookieStorage.setDomain(d); return this;},
+      setConf:function(c){window.cookieStorage.setConf(c); return this;},
+      setDefaultConf:function(){window.cookieStorage.setDefaultConf(); return this;}
+    });
+  }
+
+  // Get a new API on a namespace
+  $.initNamespaceStorage=function(ns){ return _createNamespace(ns); };
+  if(storage_available) {
+    // localStorage API
+    $.localStorage=$.extend({},storage,{_type:'localStorage'});
+    // sessionStorage API
+    $.sessionStorage=$.extend({},storage,{_type:'sessionStorage'});
+  }else{
+    // localStorage API
+    $.localStorage=$.extend({},storage,{_type:'localCookieStorage'});
+    // sessionStorage API
+    $.sessionStorage=$.extend({},storage,{_type:'sessionCookieStorage'});
+  }
+  // List of all namespace storage
+  $.namespaceStorages={};
+  // Remove all items in all storages
+  $.removeAllStorages=function(reinit_ns){
+    $.localStorage.removeAll(reinit_ns);
+    $.sessionStorage.removeAll(reinit_ns);
+    if($.cookieStorage) $.cookieStorage.removeAll(reinit_ns);
+    if(!reinit_ns){
+      $.namespaceStorages={};
+    }
+  }
+}));

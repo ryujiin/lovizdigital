@@ -1,1 +1,0 @@
-define(["jquery","underscore","backbone","swig"],function(e,t,i,n){"use strict";var r=i.View.extend({template:n.compile(e("#mini_compra_tlp").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){this.render()},render:function(){this.$el.html(this.template(this.model.toJSON()))},mostrar:function(){this.$el.modal("show")}});return r});

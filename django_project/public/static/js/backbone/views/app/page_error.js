@@ -1,1 +1,43 @@
-define(["jquery","underscore","backbone","swig","../../views/app/header"],function(e,n,t,o,a){"use strict";var i=t.View.extend({el:e("#contenido"),template:o.compile(e("#page_error_template").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){this.$el.html(this.template()),this.change_head()},change_head:function(){var e="Opps No se encontro lo que buscabas, | Loviz DelCarpio® :: lovizdc.com",n="Ups no se encontro lo que buscabas, nuestro error.",t=a;t.render(e,n)}}),r=new i;return r});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../views/app/header',
+], function ($, _, Backbone, swig,Head) {
+    'use strict';
+
+    var ErrorPageView = Backbone.View.extend({
+        el:$('#contenido'),
+
+        template: swig.compile($('#page_error_template').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+        },
+
+        render: function () {
+            this.$el.html(this.template());          
+            this.change_head();
+        },
+        change_head:function () {
+            var titulo = 'Opps No se encontro lo que buscabas, | Loviz DelCarpio® :: lovizdc.com';
+            var descripcion = 'Ups no se encontro lo que buscabas, nuestro error.';
+            var header = Head;
+            header.render(titulo,descripcion);
+        }
+    });
+
+    var vista = new ErrorPageView();
+
+    return vista;
+});

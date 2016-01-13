@@ -1,1 +1,130 @@
-function html_unescape(e){return e=e.replace(/&lt;/g,"<"),e=e.replace(/&gt;/g,">"),e=e.replace(/&quot;/g,'"'),e=e.replace(/&#39;/g,"'"),e=e.replace(/&amp;/g,"&")}function id_to_windowname(e){return e=e.replace(/\./g,"__dot__"),e=e.replace(/\-/g,"__dash__")}function windowname_to_id(e){return e=e.replace(/__dot__/g,"."),e=e.replace(/__dash__/g,"-")}function showAdminPopup(e,n){var o=e.id.replace(n,"");o=id_to_windowname(o);var t=e.href;t+=-1==t.indexOf("?")?"?_popup=1":"&_popup=1";var a=window.open(t,o,"height=500,width=800,resizable=yes,scrollbars=yes");return a.focus(),!1}function showRelatedObjectLookupPopup(e){return showAdminPopup(e,/^lookup_/)}function dismissRelatedLookupPopup(e,n){var o=windowname_to_id(e.name),t=document.getElementById(o);-1!=t.className.indexOf("vManyToManyRawIdAdminField")&&t.value?t.value+=","+n:document.getElementById(o).value=n,e.close()}function showRelatedObjectPopup(e){var n=e.id.replace(/^(change|add|delete)_/,"");n=id_to_windowname(n);var o=e.href,t=window.open(o,n,"height=500,width=800,resizable=yes,scrollbars=yes");return t.focus(),!1}function dismissAddRelatedObjectPopup(e,n,o){n=html_unescape(n),o=html_unescape(o);var t,a=windowname_to_id(e.name),d=document.getElementById(a);if(d){var i=d.nodeName.toUpperCase();"SELECT"==i?(t=new Option(o,n),d.options[d.options.length]=t,t.selected=!0):"INPUT"==i&&(-1!=d.className.indexOf("vManyToManyRawIdAdminField")&&d.value?d.value+=","+n:d.value=n),django.jQuery(d).trigger("change")}else{var s=a+"_to";t=new Option(o,n),SelectBox.add_to_cache(s,t),SelectBox.redisplay(s)}e.close()}function dismissChangeRelatedObjectPopup(e,n,o,t){n=html_unescape(n),o=html_unescape(o);var a=windowname_to_id(e.name).replace(/^edit_/,""),d=interpolate("#%s, #%s_from, #%s_to",[a,a,a]),i=django.jQuery(d);i.find("option").each(function(){this.value==n&&(this.innerHTML=o,this.value=t)}),e.close()}function dismissDeleteRelatedObjectPopup(e,n){n=html_unescape(n);var o=windowname_to_id(e.name).replace(/^delete_/,""),t=interpolate("#%s, #%s_from, #%s_to",[o,o,o]),a=django.jQuery(t);a.find("option").each(function(){this.value==n&&django.jQuery(this).remove()}).trigger("change"),e.close()}showAddAnotherPopup=showRelatedObjectPopup,dismissAddAnotherPopup=dismissAddRelatedObjectPopup;
+// Handles related-objects functionality: lookup link for raw_id_fields
+// and Add Another links.
+
+function html_unescape(text) {
+    // Unescape a string that was escaped using django.utils.html.escape.
+    text = text.replace(/&lt;/g, '<');
+    text = text.replace(/&gt;/g, '>');
+    text = text.replace(/&quot;/g, '"');
+    text = text.replace(/&#39;/g, "'");
+    text = text.replace(/&amp;/g, '&');
+    return text;
+}
+
+// IE doesn't accept periods or dashes in the window name, but the element IDs
+// we use to generate popup window names may contain them, therefore we map them
+// to allowed characters in a reversible way so that we can locate the correct
+// element when the popup window is dismissed.
+function id_to_windowname(text) {
+    text = text.replace(/\./g, '__dot__');
+    text = text.replace(/\-/g, '__dash__');
+    return text;
+}
+
+function windowname_to_id(text) {
+    text = text.replace(/__dot__/g, '.');
+    text = text.replace(/__dash__/g, '-');
+    return text;
+}
+
+function showAdminPopup(triggeringLink, name_regexp) {
+    var name = triggeringLink.id.replace(name_regexp, '');
+    name = id_to_windowname(name);
+    var href = triggeringLink.href;
+    if (href.indexOf('?') == -1) {
+        href += '?_popup=1';
+    } else {
+        href  += '&_popup=1';
+    }
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function showRelatedObjectLookupPopup(triggeringLink) {
+    return showAdminPopup(triggeringLink, /^lookup_/);
+}
+
+function dismissRelatedLookupPopup(win, chosenId) {
+    var name = windowname_to_id(win.name);
+    var elem = document.getElementById(name);
+    if (elem.className.indexOf('vManyToManyRawIdAdminField') != -1 && elem.value) {
+        elem.value += ',' + chosenId;
+    } else {
+        document.getElementById(name).value = chosenId;
+    }
+    win.close();
+}
+
+function showRelatedObjectPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^(change|add|delete)_/, '');
+    name = id_to_windowname(name);
+    var href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function dismissAddRelatedObjectPopup(win, newId, newRepr) {
+    // newId and newRepr are expected to have previously been escaped by
+    // django.utils.html.escape.
+    newId = html_unescape(newId);
+    newRepr = html_unescape(newRepr);
+    var name = windowname_to_id(win.name);
+    var elem = document.getElementById(name);
+    var o;
+    if (elem) {
+        var elemName = elem.nodeName.toUpperCase();
+        if (elemName == 'SELECT') {
+            o = new Option(newRepr, newId);
+            elem.options[elem.options.length] = o;
+            o.selected = true;
+        } else if (elemName == 'INPUT') {
+            if (elem.className.indexOf('vManyToManyRawIdAdminField') != -1 && elem.value) {
+                elem.value += ',' + newId;
+            } else {
+                elem.value = newId;
+            }
+        }
+        // Trigger a change event to update related links if required.
+        django.jQuery(elem).trigger('change');
+    } else {
+        var toId = name + "_to";
+        o = new Option(newRepr, newId);
+        SelectBox.add_to_cache(toId, o);
+        SelectBox.redisplay(toId);
+    }
+    win.close();
+}
+
+function dismissChangeRelatedObjectPopup(win, objId, newRepr, newId) {
+    objId = html_unescape(objId);
+    newRepr = html_unescape(newRepr);
+    var id = windowname_to_id(win.name).replace(/^edit_/, '');
+    var selectsSelector = interpolate('#%s, #%s_from, #%s_to', [id, id, id]);
+    var selects = django.jQuery(selectsSelector);
+    selects.find('option').each(function() {
+        if (this.value == objId) {
+            this.innerHTML = newRepr;
+            this.value = newId;
+        }
+    });
+    win.close();
+};
+
+function dismissDeleteRelatedObjectPopup(win, objId) {
+    objId = html_unescape(objId);
+    var id = windowname_to_id(win.name).replace(/^delete_/, '');
+    var selectsSelector = interpolate('#%s, #%s_from, #%s_to', [id, id, id]);
+    var selects = django.jQuery(selectsSelector);
+    selects.find('option').each(function() {
+        if (this.value == objId) {
+            django.jQuery(this).remove();
+        }
+    }).trigger('change');
+    win.close();
+};
+
+// Kept for backward compatibility
+showAddAnotherPopup = showRelatedObjectPopup;
+dismissAddAnotherPopup = dismissAddRelatedObjectPopup;

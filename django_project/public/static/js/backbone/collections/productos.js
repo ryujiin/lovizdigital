@@ -1,1 +1,17 @@
-define(["underscore","backbone","../models/productos"],function(e,o,n){"use strict";var r=o.Collection.extend({url:"/api/catalogo/",model:n});return r});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/productos'
+], function (_, Backbone, ProductosModel) {
+    'use strict';
+
+    var ProductosCollection = Backbone.Collection.extend({
+    	url: '/api/catalogo/',
+
+        model: ProductosModel,
+    });
+
+    return ProductosCollection;
+});

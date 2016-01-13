@@ -1,1 +1,0 @@
-define(["jquery","underscore","backbone"],function(e,n,a){"use strict";var r=a.View.extend({el:e("body"),className:"",events:{"click .link":"navegar","click .no-link":"no_navegar"},initialize:function(){},navegar:function(e){e.preventDefault();var n=e.currentTarget.pathname;a.history.navigate(n,{trigger:!0})},nos_navegar:function(e){e.preventDefault()}});return r});

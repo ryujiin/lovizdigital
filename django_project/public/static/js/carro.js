@@ -1,1 +1,10 @@
-define(["jquery","../js/backbone/models/carro"],function(e,r){"use strict";var n=new r;return n});
+define([
+    'jquery',
+    '../js/backbone/models/carro',
+], function ($,CarroModel) {
+    'use strict';
+
+    var carromodelo = new CarroModel();
+
+    return carromodelo;
+});

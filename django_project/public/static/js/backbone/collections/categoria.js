@@ -1,1 +1,17 @@
-define(["underscore","backbone","../models/categoria"],function(e,n,o){"use strict";var r=n.Collection.extend({model:o,url:"/api/categoria/"}),t=new r;return t});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/categoria'
+], function (_, Backbone, CategoriaModel) {
+    'use strict';
+
+    var CategoriaCollection = Backbone.Collection.extend({
+        model: CategoriaModel,
+        url: '/api/categoria/',
+    });
+    var categorias =  new CategoriaCollection();
+    
+    return categorias;
+});

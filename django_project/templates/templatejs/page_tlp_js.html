@@ -3,10 +3,12 @@
 <script id="page_tema1_template" type="text/template">
 	<section id="seccion_top">
 	</section>	
-	<section id="middle">
-		<section id="seccion_left"></section>
-		<section id="seccion_center"></section>
-		<section id="seccion_rigth"></section>
+	<section id="middle" class="container-fluid">
+		<div class="row">
+			<section id="seccion_left" class="col-md-2"></section>
+			<section id="seccion_center" class="col-md-8">{{cuerpo|safe}}</section>	
+			<section id="seccion_right" class="col-md-2"></section>
+		</div>		
 	</section>	
 	<section id="seccion_bottom"></section>
 </script>
@@ -18,7 +20,7 @@
 </script>
 
 <script id="menu_template" type="text/template">
-	<h4 class="titulo-footer-menu">{{titulo}}</h4>
+	<h4 class="titulo_menu">{{titulo}}</h4>
     <ul class="nav nav-pills nav-stacked">    
     </ul> 
 </script>
@@ -29,8 +31,7 @@
 </script>
 
 <script id="bloque_carrusel_img" type="text/template">
-	{%for img in imagenes_carrusel%}
-	
+	{%for img in imagenes_carrusel%}	
 		<div class="item">
 			<a href="{{img.link}}" class="link {{img.estilo}}">
 				<img src="{{img.imagen}}" alt="{{img.titulo}}">

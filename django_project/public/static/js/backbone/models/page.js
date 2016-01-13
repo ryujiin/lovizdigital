@@ -1,1 +1,33 @@
-define(["underscore","backbone"],function(t,e){"use strict";var n=e.Model.extend({urlRoot:"/api/cmsweb/pages/",url:function(){var t=this.urlRoot;return t+("/"==t.charAt(t.length-1)?"":"/")+this.id+"/"},initialize:function(){},defaults:{},validate:function(){},parse:function(t){return t}});return n});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone'
+], function (_, Backbone) {
+    'use strict';
+
+    var PageModel = Backbone.Model.extend({
+
+        urlRoot : '/api/cmsweb/pages/',
+        
+        url: function(){
+            var base = this.urlRoot;
+            return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id+'/';
+        },
+
+        initialize: function() {
+        },
+
+        defaults: {
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
+        }
+    });
+
+    return PageModel;
+});

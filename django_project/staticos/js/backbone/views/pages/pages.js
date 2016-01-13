@@ -1,20 +1,21 @@
 /*global define*/
-/*global define*/
 
 define([
     'jquery',
     'underscore',
     'backbone',
     'swig',
-    '../../app/header',
-    '../../../collections/pages',
-    '../../../models/page',
+    '../app/header',
+    '../../collections/pages',
+    '../../models/page',
     'paginas',
-    '../../pages/bloque',
-    '../../pages/carrusel_producto',
+    '../pages/bloque',
+    '../pages/carrusel_producto',
     'productosTotal',
-    '../../../collections/productos'
-], function ($, _, Backbone, swig,Head,PagesCollection,PaginaModel,PaginasTotal,BloqueView,CarruselProducto,ProductosTotal,Productos) {
+    '../../collections/productos',
+    '../../models/menu',    
+    '../app/menu',
+], function ($, _, Backbone, swig,Head,PagesCollection,PaginaModel,PaginasTotal,BloqueView,CarruselProducto,ProductosTotal,Productos,MenuModel,Menu) {
     'use strict';
 
     var PageView = Backbone.View.extend({
@@ -32,12 +33,12 @@ define([
 
         initialize: function () {
             this.listenTo(this.model, 'change', this.rellenar);
+            this.listenTo(this.model, 'change:cuerpo', this.render);
             this.paginas = PaginasTotal;
         },
 
         render: function (slug) {            
-            this.$el.html(this.template());
-            this.buscar_datos(slug);
+            this.$el.html(this.template(this.model.toJSON()));
         },
         render_front:function () {
             this.$el.html(this.template());
@@ -50,6 +51,13 @@ define([
         },
         buscar_datos:function (slug) {
             if (slug) {
+                var coincidencia = this.paginas.findWhere({'slug':slug});
+                if (coincidencia === undefined) {
+                    var busqueda ={'slug':slug}
+                    this.buscar_server(busqueda);
+                }else{
+                    this.model.set(coincidencia.toJSON())
+                }
             }else{
                 var coincidencia = this.paginas.findWhere({'front':true})
                 if (coincidencia===undefined) {
@@ -67,13 +75,19 @@ define([
                 data:$.param(busqueda)
             }).done(function  (data) {
                 self.paginas.add(data);
-                self.buscar_datos();
+                if (data[0].front===true) {
+                    self.buscar_datos()
+                }else{
+                    self.buscar_datos(data[0].slug);
+                }
             })
         },
         rellenar:function () {
             Head.render(this.model.toJSON().titulo,this.model.toJSON().descripcion);
             var bloques = this.model.attributes.bloques;
+            var menus = this.model.attributes.menus;
             bloques.forEach(this.addBloque,this);
+            menus.forEach(this.addMenu,this);
         },
         addBloque:function (modelo) {
             var bloque = new BloqueView({
@@ -92,6 +106,14 @@ define([
             }).done(function () {
                 carrusel_producto.add_Carrusel();
             })
+        },
+        addMenu:function (modelo) {
+            var menu_modelo = new MenuModel();
+            var vista = new Menu({
+                model:menu_modelo
+            });
+            menu_modelo.set(modelo);
+            vista.render()
         }
     });
 

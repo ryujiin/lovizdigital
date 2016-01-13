@@ -1,1 +1,17 @@
-define(["underscore","backbone","../models/ubigeo"],function(e,o,n){"use strict";var i=o.Collection.extend({url:"/api/ubigeo/",model:n});return i});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/ubigeo'
+], function (_, Backbone, UbigeoModel) {
+    'use strict';
+
+    var UbigeoCollection = Backbone.Collection.extend({
+        url: '/api/ubigeo/',
+        
+        model: UbigeoModel,
+    });
+
+    return UbigeoCollection;
+});

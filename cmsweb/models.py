@@ -24,6 +24,7 @@ class SeccionesCMS(models.Model):
 
 class Page(models.Model):
 	titulo = models.CharField(max_length=100,help_text='El titulo de la pagina web')
+	slug = models.SlugField(unique=True,max_length=120)
 	descripcion = models.CharField(max_length=150,help_text='La descripcion que se vera en la pagina para el buscador')
 	titulo_activo = models.BooleanField(default=True)
 	front = models.BooleanField(default=False)
@@ -33,6 +34,9 @@ class Page(models.Model):
 
 	def __unicode__(self):
 		return self.slug
+
+	def save(self, *args, **kwargs):		
+		super(Page, self).save(*args, **kwargs)
 
 class TemplateBloque(models.Model):
 	nombre=models.CharField(max_length=100,blank=True)
@@ -52,6 +56,7 @@ class Bloque(models.Model):
 
 	def __unicode__(self):
 		return "%s de %s " %(self.titulo,self.page)
+	
 
     
 class ImageCarrusel(models.Model):
@@ -65,8 +70,9 @@ class ImageCarrusel(models.Model):
 class Menu(models.Model):
 	titulo = models.CharField(max_length=100,blank=True)
 	estilo = models.CharField(max_length=100,blank=True)
+	template = models.CharField(max_length=100,blank=True)
 	seccion = models.CharField(max_length=100,blank=True,help_text='El id donde se colocara')
-	paginas = models.ManyToManyField(Page,blank=True)
+	paginas = models.ManyToManyField(Page,blank=True,related_name='menus')
 	activo = models.BooleanField(default=True)
 
 	def __unicode__(self):
@@ -78,4 +84,5 @@ class LinkMenu(models.Model):
 	icono = models.CharField(max_length=100,blank=True)
 	link = models.CharField(max_length=100,blank=True)
 	estilo = models.CharField(max_length=100,blank=True)
+	orden = models.PositiveIntegerField(default=0)
 

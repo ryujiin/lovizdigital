@@ -1,1 +1,39 @@
-!function(n){n.fn.prepopulate=function(a,c){return this.each(function(){var t=n(this),e=function(){if(!t.data("_changed")){var e=[];n.each(a,function(a,c){c=n(c),c.val().length>0&&e.push(c.val())}),t.val(URLify(e.join(" "),c))}};t.data("_changed",!1),t.change(function(){t.data("_changed",!0)}),t.val()||n(a.join(",")).keyup(e).change(e).focus(e)})}}(django.jQuery);
+(function($) {
+    $.fn.prepopulate = function(dependencies, maxLength) {
+        /*
+            Depends on urlify.js
+            Populates a selected field with the values of the dependent fields,
+            URLifies and shortens the string.
+            dependencies - array of dependent fields ids
+            maxLength - maximum length of the URLify'd string
+        */
+        return this.each(function() {
+            var prepopulatedField = $(this);
+
+            var populate = function () {
+                // Bail if the field's value has been changed by the user
+                if (prepopulatedField.data('_changed')) {
+                    return;
+                }
+
+                var values = [];
+                $.each(dependencies, function(i, field) {
+                    field = $(field);
+                    if (field.val().length > 0) {
+                        values.push(field.val());
+                    }
+                });
+                prepopulatedField.val(URLify(values.join(' '), maxLength));
+            };
+
+            prepopulatedField.data('_changed', false);
+            prepopulatedField.change(function() {
+                prepopulatedField.data('_changed', true);
+            });
+
+            if (!prepopulatedField.val()) {
+                $(dependencies.join(',')).keyup(populate).change(populate).focus(populate);
+            }
+        });
+    };
+})(django.jQuery);

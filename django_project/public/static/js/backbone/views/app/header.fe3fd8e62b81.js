@@ -1,1 +1,0 @@
-define(["jquery","underscore","backbone","swig"],function(e,n,t){"use strict";var i=t.View.extend({el:e("head"),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(e,n){this.$("title").empty().append(e),this.$("meta[name=description]").remove(),this.$el.append('<meta name="description" content="'+n+'">')}}),a=new i;return a});

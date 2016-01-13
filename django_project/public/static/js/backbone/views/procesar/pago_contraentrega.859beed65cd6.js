@@ -1,1 +1,0 @@
-define(["jquery","underscore","backbone","swig"],function(e,n,i){"use strict";var t=i.View.extend({tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){}});return t});

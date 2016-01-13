@@ -1,1 +1,0 @@
-define(["underscore","backbone"],function(e,n){"use strict";var t=n.Model.extend({url:"",initialize:function(){},defaults:{},validate:function(){},parse:function(e){return e}});return t});

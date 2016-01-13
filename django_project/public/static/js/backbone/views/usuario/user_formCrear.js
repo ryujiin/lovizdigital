@@ -1,1 +1,148 @@
-define(["jquery","underscore","backbone","swig","../../models/user"],function(a,r,e,s,t){"use strict";var o=e.View.extend({template:s.compile(a("#user_formCrear").html()),id:"",className:"",events:{"click .boton-crear":"mostrar_form","blur input":"get_datos","submit form":"antes_enviar"},initialize:function(){this.render()},render:function(){this.$el.html(this.template())},mostrar_form:function(){this.$(".datos_crear").hide(),this.$("form").slideDown()},get_datos:function(a){var r=a.target.value,e="."+a.target.dataset.contenedor,s=this.validar_vacio(r,e);s&&(".campo_correo"===e&&this.validar_email(r,e),".campo_pass"===e&&this.validar_longitud(r,e))},validar_vacio:function(a,r){var e=this.$(r+" .error");return e.empty(),""===a?(this.$(r).addClass("has-error").removeClass("has-success"),e.append('<p class="text-danger">Este campo es Requerido *</p>'),!1):(this.$(r).addClass("has-success").removeClass("has-error"),!0)},validar_email:function(a,r){function e(a){return/(\w+)(\.?)(\w*)(\@{1})(\w+)(\.?)(\w*)(\.{1})(\w{2,3})/.test(a)?!0:!1}var s=this.$(r+" .error");return s.empty(),a=e(a),a===!1?(this.$(r).addClass("has-error").removeClass("has-success"),s.append('<p class="text-danger">Este no es un correo valido *</p>'),!1):(this.$(r).addClass("has-success").removeClass("has-error"),!0)},validar_longitud:function(a,r){var e=this.$(r+" .error");return e.empty(),a.length<6?(this.$(r).addClass("has-error").removeClass("has-success"),e.append('<p class="text-danger">La contraseña es muy corta, minimo son 6 caracteres *</p>'),!1):(this.$(r).addClass("has-success").removeClass("has-error"),!0)},antes_enviar:function(a){a.preventDefault();var r,e,s,t,o;r=this.$(".campo_nombre input"),e=this.$(".campo_apellido input"),s=this.$(".campo_correo input"),t=this.$(".campo_pass input"),o=this.validar_vacio(r.val(),".campo_nombre"),1==o&&(o=this.validar_vacio(e.val(),".campo_apellido"),1==o&&(o=this.validar_vacio(s.val(),".campo_correo"),1==o&&(o=this.validar_email(s.val(),".campo_correo"),1==o&&(o=this.validar_vacio(t.val(),".campo_pass"),1==o&&(o=this.validar_longitud(t.val(),".campo_pass"),1==o&&this.crear_cuenta(s,t,e,r))))))},crear_cuenta:function(r,e,s,o){var i=this,r=r.val(),e=e.val();a.post("/ajax/crear/",{username:r,password:e,nombre:o.val(),apellido:s.val()}).done(function(a){if(a.creado===!0){var s=t;s.ingresar_user(r,e,i)}}).fail(function(){i.error_crear()}),this.crear_cuenta},error_crear:function(){this.$(".error_form").empty();var r='<p class="bg-warning text-danger">Lo sentimos parece que ya existe un usuario usando ese correo electronico</p>';this.$(".error_form").append(r),this.$("input").each(function(){var r=a("."+this.dataset.contenedor);a(this).val(""),r.removeClass("has-success has-error")})}});return o});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../models/user',
+], function ($, _, Backbone, swig,UserModel) {
+    'use strict';
+
+    var UserFormCrearView = Backbone.View.extend({
+
+        template: swig.compile($('#user_formCrear').html()),        
+
+        id: '',
+        className: '',
+        events: {
+            'click .boton-crear': 'mostrar_form',
+            'blur input':'get_datos',
+            'submit form':'antes_enviar',
+        },
+        initialize: function () {
+            this.render();
+        },
+        render: function () {
+            this.$el.html(this.template());
+        },
+        mostrar_form:function(){
+            this.$('.datos_crear').hide();
+            this.$('form').slideDown();
+
+        },
+        get_datos:function (e) {
+            var valor = e.target.value;
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+            if (validar_vacio) {
+                if (contenedor==='.campo_correo') {
+                    this.validar_email(valor,contenedor);
+                };
+                if (contenedor==='.campo_pass') {
+                    this.validar_longitud(valor,contenedor);
+                };
+            };
+        },
+        validar_vacio:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
+        },
+        validar_email:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            function validarEmail(valor) {
+                if (/(\w+)(\.?)(\w*)(\@{1})(\w+)(\.?)(\w*)(\.{1})(\w{2,3})/.test(valor)){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            valor = validarEmail(valor);
+            if (valor===false) {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este no es un correo valido *</p>');
+                return false
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');
+                return true;
+            }
+        },
+        validar_longitud:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor.length<6) {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">La contraseña es muy corta, minimo son 6 caracteres *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }
+        },
+        antes_enviar:function (e) {
+            e.preventDefault();
+            var self = this;
+            var nombre,apellido,correo,pass,verificado;
+            nombre=this.$('.campo_nombre input');
+            apellido=this.$('.campo_apellido input');
+            correo=this.$('.campo_correo input');
+            pass=this.$('.campo_pass input');
+
+            verificado = this.validar_vacio(nombre.val(),'.campo_nombre');
+            if (verificado==true) {
+                verificado = this.validar_vacio(apellido.val(),'.campo_apellido');
+                if (verificado==true) {
+                    verificado = this.validar_vacio(correo.val(),'.campo_correo');
+                    if (verificado==true) {
+                        verificado = this.validar_email(correo.val(),'.campo_correo');
+                        if (verificado==true) {
+                            verificado = this.validar_vacio(pass.val(),'.campo_pass');
+                            if (verificado == true ) {
+                                verificado = this.validar_longitud(pass.val(),'.campo_pass');
+                                if (verificado==true) {
+                                    this.crear_cuenta(correo,pass,apellido,nombre)
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        },
+        crear_cuenta:function (correo,pass,apellido,nombre) {
+            var self = this;
+            var correo = correo.val();
+            var pass = pass.val();
+            $.post('/ajax/crear/',{username:correo,password:pass,nombre:nombre.val(),apellido:apellido.val()})
+            .done(function (data) {
+                if (data.creado===true) {
+                    var modelo = UserModel;
+                    modelo.ingresar_user(correo,pass,self);
+                };
+            }).fail(function (data) {
+                self.error_crear();
+            })
+            this.crear_cuenta;
+        },
+        error_crear:function () {
+            this.$('.error_form').empty();
+            var error = '<p class="bg-warning text-danger">Lo sentimos parece que ya existe un usuario usando ese correo electronico</p>';
+            this.$('.error_form').append(error);
+            this.$('input').each(function () {
+                var contenedor = $('.'+this.dataset.contenedor);                
+                $(this).val('');
+                contenedor.removeClass('has-success has-error');
+            })
+        }
+    });
+
+    return UserFormCrearView;
+});

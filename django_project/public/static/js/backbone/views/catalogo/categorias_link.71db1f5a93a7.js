@@ -1,1 +1,0 @@
-define(["jquery","underscore","backbone","swig"],function(e,t,i,n){"use strict";var s=i.View.extend({template:n.compile(e("#categoria_link_tlp").html()),tagName:"li",id:"",className:"",events:{},initialize:function(){this.listenTo(this.model,"change",this.render)},render:function(){return this.$el.html(this.template(this.model.toJSON())),this}});return s});

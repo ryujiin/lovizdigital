@@ -1,1 +1,24 @@
-!function(e){e(document).ready(function(){e("fieldset.collapse").each(function(t,s){0==e(s).find("div.errors").length&&e(s).addClass("collapsed").find("h2").first().append(' (<a id="fieldsetcollapser'+t+'" class="collapse-toggle" href="#">'+gettext("Show")+"</a>)")}),e("fieldset.collapse a.collapse-toggle").click(function(){return e(this).closest("fieldset").hasClass("collapsed")?e(this).text(gettext("Hide")).closest("fieldset").removeClass("collapsed").trigger("show.fieldset",[e(this).attr("id")]):e(this).text(gettext("Show")).closest("fieldset").addClass("collapsed").trigger("hide.fieldset",[e(this).attr("id")]),!1})})}(django.jQuery);
+(function($) {
+	$(document).ready(function() {
+		// Add anchor tag for Show/Hide link
+		$("fieldset.collapse").each(function(i, elem) {
+			// Don't hide if fields in this fieldset have errors
+			if ($(elem).find("div.errors").length == 0) {
+				$(elem).addClass("collapsed").find("h2").first().append(' (<a id="fieldsetcollapser' +
+					i +'" class="collapse-toggle" href="#">' + gettext("Show") +
+					'</a>)');
+			}
+		});
+		// Add toggle to anchor tag
+		$("fieldset.collapse a.collapse-toggle").click(function(ev) {
+			if ($(this).closest("fieldset").hasClass("collapsed")) {
+				// Show
+				$(this).text(gettext("Hide")).closest("fieldset").removeClass("collapsed").trigger("show.fieldset", [$(this).attr("id")]);
+			} else {
+				// Hide
+				$(this).text(gettext("Show")).closest("fieldset").addClass("collapsed").trigger("hide.fieldset", [$(this).attr("id")]);
+			}
+			return false;
+		});
+	});
+})(django.jQuery);

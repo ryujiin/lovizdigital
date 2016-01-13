@@ -1,1 +1,0 @@
-define(["jquery","../js/backbone/collections/productos"],function(e,n){"use strict";var c=new n;return c});

@@ -1,1 +1,67 @@
-define(["jquery","underscore","backbone","swig","carro","../../views/carro/page_carro_titulo","../../views/carro/lineas_carro","../../views/carro/carro_total","../../views/carro/boton_checkout","../../views/app/breadcrumb","../../views/app/header"],function(e,t,o,r,a,i,c,n,l,s,h){"use strict";var d=o.View.extend({el:e("#contenido"),template:r.compile(e("#page_carro_template").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){this.titulo=new i({model:a}),this.lineas_carro=new c({model:a}),this.total_carro=new n({model:a}),this.botoncheckout=new l({model:a})},render:function(){this.$el.html(this.template()),this.$(".titulo").html(this.titulo.$el),this.$(".lineas_carro").html(this.lineas_carro.$el),this.$(".total_carro").html(this.total_carro.$el),this.$(".boton_checkout").html(this.botoncheckout.$el),this.addBread(),this.change_head()},addBread:function(){this.breadVista=new s({el:e(".nav-breadcrumb")}),this.breadVista.collection.add([{nombre:"Home",link:"/"},{nombre:"Carro"}]),this.breadVista.render()},change_head:function(){var e="Mi carro de compras | Loviz DelCarpio® :: lovizdc.com",t="Mi carro de compras en Loviz DelCarpio®, lovizdc.com",o=h;o.render(e,t)}}),m=new d;return m});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    'carro',
+    '../../views/carro/page_carro_titulo',
+    '../../views/carro/lineas_carro',
+    '../../views/carro/carro_total',
+    '../../views/carro/boton_checkout',
+    '../../views/app/breadcrumb',
+    '../../views/app/header',
+], function ($, _, Backbone, swig,CarroModel,CarroTitulo,PageLineas,CarroTotal,BotonCheckout,BreadViews,Head) {
+    'use strict';
+
+    var CarroPageView = Backbone.View.extend({
+        el:$('#contenido'),
+
+        template: swig.compile($('#page_carro_template').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+            this.titulo = new CarroTitulo({model:CarroModel});        
+            this.lineas_carro = new PageLineas({model:CarroModel});       
+            this.total_carro = new CarroTotal({model:CarroModel}); 
+            this.botoncheckout = new BotonCheckout({model:CarroModel});
+        },
+
+        render: function () {
+            this.$el.html(this.template());
+            this.$('.titulo').html(this.titulo.$el);
+            this.$('.lineas_carro').html(this.lineas_carro.$el);
+            this.$('.total_carro').html(this.total_carro.$el);
+            this.$('.boton_checkout').html(this.botoncheckout.$el);
+            this.addBread();                        
+            this.change_head();            
+        },
+        addBread:function () {
+            this.breadVista = new BreadViews({el:$('.nav-breadcrumb')});
+
+            this.breadVista.collection.add([
+                {nombre:'Home', link:'/'},
+                {nombre:'Carro',},
+            ]);
+            this.breadVista.render();
+        },
+        change_head:function () {
+            var titulo = 'Mi carro de compras | Loviz DelCarpio® :: lovizdc.com';
+            var descripcion = 'Mi carro de compras en Loviz DelCarpio®, lovizdc.com';
+            var header = Head;
+            header.render(titulo,descripcion);
+        }
+    });
+
+    var vista = new CarroPageView();
+
+    return vista;
+});

@@ -1,1 +1,102 @@
-define(["jquery","underscore","backbone","swig","../../models/user","../../views/app/loader_full"],function(e,a,s,r,t,i){"use strict";var o=s.View.extend({template:r.compile(e("#user_formLogin_tlp").html()),id:"",className:"",events:{"blur input":"get_datos","submit form":"antes_enviar"},initialize:function(){this.render()},render:function(){this.$el.html(this.template())},get_datos:function(e){var a=e.target.value,s="."+e.target.dataset.contenedor,r=this.validar_vacio(a,s);r&&".campo_correo"===s&&this.validar_email(a,s)},validar_vacio:function(e,a){var s=this.$(a+" .error");return s.empty(),""===e?(this.$(a).addClass("has-error").removeClass("has-success"),s.append('<p class="text-danger">Este campo es Requerido *</p>'),!1):(this.$(a).addClass("has-success").removeClass("has-error"),!0)},validar_email:function(e,a){function s(e){return/(\w+)(\.?)(\w*)(\@{1})(\w+)(\.?)(\w*)(\.{1})(\w{2,3})/.test(e)?!0:!1}var r=this.$(a+" .error");return r.empty(),e=s(e),e===!1?(this.$(a).addClass("has-error").removeClass("has-success"),r.append('<p class="text-danger">Este no es un correo valido *</p>'),!1):(this.$(a).addClass("has-success").removeClass("has-error"),!0)},antes_enviar:function(e){e.preventDefault();var a,s,r;a=this.$(".campo_correo input"),s=this.$(".campo_pass input"),r=this.validar_email(a.val(),".campo_correo"),1==r&&(r=this.validar_vacio(s.val(),".campo_pass"),1==r&&(this.loader=new i,t.ingresar_user(a.val(),s.val(),this)))},error_login:function(){this.loader.remove(),this.$(".error_form").empty();var a='<p class="bg-warning text-danger">El usuario o contraseña no coiciden, vuelva a intentarlo</p>';this.$(".error_form").append(a),this.$("input").each(function(){var a=e("."+this.dataset.contenedor);e(this).val(""),a.removeClass("has-success has-error")})}});return o});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../models/user',
+    '../../views/app/loader_full'
+], function ($, _, Backbone, swig,UserModel,LoaderFull) {
+    'use strict';
+
+    var UserFormLoginView = Backbone.View.extend({
+
+        template: swig.compile($('#user_formLogin_tlp').html()),        
+
+        id: '',
+        className: '',
+        events: {
+            'blur input':'get_datos',
+            'submit form':'antes_enviar',
+        },
+        initialize: function () {
+            this.render();
+        },
+        render: function () {
+            this.$el.html(this.template());
+        },
+        get_datos:function (e) {            
+            var valor = e.target.value;
+            var contenedor = '.'+e.target.dataset.contenedor;
+            var validar_vacio = this.validar_vacio(valor,contenedor);
+            if (validar_vacio) {
+                if (contenedor==='.campo_correo') {
+                    this.validar_email(valor,contenedor);
+                };
+            };
+        },
+        validar_vacio:function (valor,contenedor) {
+
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            if (valor==='') {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este campo es Requerido *</p>');
+                return false;
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');                
+                return true;
+            }      
+        },
+        validar_email:function (valor,contenedor) {
+            var error_contenedor = this.$(contenedor +' .error');
+            error_contenedor.empty();
+            function validarEmail(valor) {
+                if (/(\w+)(\.?)(\w*)(\@{1})(\w+)(\.?)(\w*)(\.{1})(\w{2,3})/.test(valor)){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            valor = validarEmail(valor);
+            if (valor===false) {
+                this.$(contenedor).addClass('has-error').removeClass('has-success');
+                error_contenedor.append('<p class="text-danger">Este no es un correo valido *</p>');
+                return false
+            }else{
+                this.$(contenedor).addClass('has-success').removeClass('has-error');
+                return true;
+            }
+        },
+        antes_enviar:function (e) {
+            e.preventDefault();
+            var self = this;
+            var nombre,apellido,correo,pass,verificado;            
+            correo=this.$('.campo_correo input');
+            pass=this.$('.campo_pass input');
+
+            verificado = this.validar_email(correo.val(),'.campo_correo');
+            if (verificado==true) {
+                verificado = this.validar_vacio(pass.val(),'.campo_pass');
+                if (verificado == true ) {
+                    this.loader = new LoaderFull();
+                    UserModel.ingresar_user(correo.val(),pass.val(),this);                
+                };
+            };
+        },
+        error_login:function(){
+            this.loader.remove();
+            this.$('.error_form').empty();
+            var error = '<p class="bg-warning text-danger">El usuario o contraseña no coiciden, vuelva a intentarlo</p>';
+            this.$('.error_form').append(error);
+            this.$('input').each(function () {
+                var contenedor = $('.'+this.dataset.contenedor);
+                $(this).val('');
+                contenedor.removeClass('has-success has-error');
+            })
+        },
+    });
+
+    return UserFormLoginView;
+});

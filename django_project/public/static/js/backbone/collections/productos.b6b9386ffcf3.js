@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/productos"],function(e,o,n){"use strict";var r=o.Collection.extend({url:"/api/catalogo/",model:n});return r});

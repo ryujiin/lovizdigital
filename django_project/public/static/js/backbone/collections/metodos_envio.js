@@ -1,1 +1,15 @@
-define(["underscore","backbone","../models/metodo_envio"],function(e,o,n){"use strict";var t=o.Collection.extend({model:n,url:"/api/metodos_envio/"});return t});
+/*global define*/
+
+define([
+    'underscore',
+    'backbone',
+    '../models/metodo_envio'
+], function (_, Backbone, MetodoEnvioModel) {
+    'use strict';
+
+    var MetodoEnvioCollection = Backbone.Collection.extend({
+        model: MetodoEnvioModel,
+        url: '/api/metodos_envio/',
+    });    
+    return MetodoEnvioCollection;
+});

@@ -1,1 +1,0 @@
-define(["underscore","backbone","../../models/catalogo/filtro"],function(e,o,n){"use strict";var t=o.Collection.extend({model:n}),r=new t;return r});

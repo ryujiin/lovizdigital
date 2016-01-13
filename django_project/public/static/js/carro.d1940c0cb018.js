@@ -1,1 +1,0 @@
-define(["jquery","../js/backbone/models/carro"],function(e,r){"use strict";var n=new r;return n});

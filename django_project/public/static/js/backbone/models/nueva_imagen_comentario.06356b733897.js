@@ -1,1 +1,0 @@
-define(["underscore","backbone"],function(t,i){"use strict";var n=i.Model.extend({urlRoot:"/api/comentarioimgs/",url:function(){var t=this.urlRoot;return this.isNew()?t:t+("/"==t.charAt(t.length-1)?"":"/")+this.id+"/"},initialize:function(){},defaults:{},validate:function(){},parse:function(t){return t}});return n});

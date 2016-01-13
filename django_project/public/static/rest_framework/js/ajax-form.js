@@ -1,1 +1,97 @@
-function replaceDocument(t){var e=document.open("text/html");e.write(t),e.close()}function doAjaxSubmit(t){var e=$(this),a=$(this.clk),n=a.data("method")||e.data("method")||e.attr("method")||"GET";if(n=n.toUpperCase(),"GET"!==n){var o=e.find('input[data-override="content-type"]').val()||e.find('select[data-override="content-type"] option:selected').text();if("POST"!==n||o){t.preventDefault();var r,i=e.attr("action");if(o)r=e.find('[data-override="content"]').val()||"";else if(o=e.attr("enctype")||e.attr("encoding"),"multipart/form-data"===o){if(!window.FormData)return void alert("Your browser does not support AJAX multipart form submissions");o=!1,r=new FormData(e[0])}else o="application/x-www-form-urlencoded; charset=UTF-8",r=e.serialize();var c=$.ajax({url:i,method:n,data:r,contentType:o,processData:!1,headers:{Accept:"text/html; q=1.0, */*"}});return c.always(function(t,e,a){"success"!=e&&(a=t);var n=a.getResponseHeader("content-type")||"";if(0===n.toLowerCase().indexOf("text/html")){replaceDocument(a.responseText);try{history.replaceState({},"",i),scroll(0,0)}catch(o){window.location=i}}else window.location=i}),c}}}function captureSubmittingElement(t){var e=t.target,a=this;a.clk=e}$.fn.ajaxForm=function(){var t={};return this.unbind("submit.form-plugin  click.form-plugin").bind("submit.form-plugin",t,doAjaxSubmit).bind("click.form-plugin",t,captureSubmittingElement)};
+function replaceDocument(docString) {
+    var doc = document.open("text/html");
+    doc.write(docString);
+    doc.close();
+}
+
+
+function doAjaxSubmit(e) {
+    var form = $(this);
+    var btn = $(this.clk);
+    var method = btn.data('method') || form.data('method') || form.attr('method') || 'GET';
+    method = method.toUpperCase()
+    if (method === 'GET') {
+        // GET requests can always use standard form submits.
+        return;
+    }
+
+    var contentType =
+        form.find('input[data-override="content-type"]').val() ||
+        form.find('select[data-override="content-type"] option:selected').text();
+    if (method === 'POST' && !contentType) {
+        // POST requests can use standard form submits, unless we have
+        // overridden the content type.
+        return;
+    }
+
+    // At this point we need to make an AJAX form submission.
+    e.preventDefault();
+
+    var url = form.attr('action');
+    var data;
+    if (contentType) {
+        data = form.find('[data-override="content"]').val() || ''
+    } else {
+        contentType = form.attr('enctype') || form.attr('encoding')
+        if (contentType === 'multipart/form-data') {
+            if (!window.FormData) {
+                alert('Your browser does not support AJAX multipart form submissions');
+                return;
+            }
+            // Use the FormData API and allow the content type to be set automatically,
+            // so it includes the boundary string.
+            // See https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+            contentType = false;
+            data = new FormData(form[0]);
+        } else {
+            contentType = 'application/x-www-form-urlencoded; charset=UTF-8'
+            data = form.serialize();
+        }
+    }
+
+    var ret = $.ajax({
+        url: url,
+        method: method,
+        data: data,
+        contentType: contentType,
+        processData: false,
+        headers: {'Accept': 'text/html; q=1.0, */*'},
+    });
+    ret.always(function(data, textStatus, jqXHR) {
+        if (textStatus != 'success') {
+            jqXHR = data;
+        }
+        var responseContentType = jqXHR.getResponseHeader("content-type") || "";
+        if (responseContentType.toLowerCase().indexOf('text/html') === 0) {
+            replaceDocument(jqXHR.responseText);
+            try {
+                // Modify the location and scroll to top, as if after page load.
+                history.replaceState({}, '', url);
+                scroll(0,0);
+            } catch(err) {
+                // History API not supported, so redirect.
+                window.location = url;
+            }
+        } else {
+            // Not HTML content. We can't open this directly, so redirect.
+            window.location = url;
+        }
+    });
+    return ret;
+}
+
+
+function captureSubmittingElement(e) {
+    var target = e.target;
+    var form = this;
+    form.clk = target;
+}
+
+
+$.fn.ajaxForm = function() {
+    var options = {}
+    return this
+        .unbind('submit.form-plugin  click.form-plugin')
+        .bind('submit.form-plugin', options, doAjaxSubmit)
+        .bind('click.form-plugin', options, captureSubmittingElement);
+};

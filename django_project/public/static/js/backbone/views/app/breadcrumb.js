@@ -1,1 +1,47 @@
-define(["jquery","underscore","backbone","swig","../../views/app/breadcrumbLink","../../collections/breadcrumb"],function(e,i,t,n,c,l){"use strict";var o=t.View.extend({template:n.compile(e("#breadcrumb_tlp").html()),id:"",className:"",events:{},collection:new l,initialize:function(){this.collection.reset()},render:function(){this.$el.html(this.template()),this.$("ol").empty(),this.collection.forEach(this.addLink,this)},addLink:function(e){var i=new c({model:e});this.$("ol").append(i.$el)},desaparecer:function(){this.$el.hide()}});return o});
+/*global define*/
+
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+    '../../views/app/breadcrumbLink',
+    '../../collections/breadcrumb',
+], function ($, _, Backbone, swig,BreadLink,BreadCollection) {
+    'use strict';
+
+    var BreadcrumbView = Backbone.View.extend({
+        
+        template: swig.compile($('#breadcrumb_tlp').html()),        
+
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        collection: new BreadCollection(),
+
+        initialize: function () {
+            this.collection.reset();
+        },
+
+        render: function () {
+            this.$el.html(this.template());
+            this.$('ol').empty()
+            this.collection.forEach(this.addLink,this);
+        },
+
+        addLink:function(modelo){
+            var link = new BreadLink({model:modelo});
+            this.$('ol').append(link.$el);
+
+        },
+        desaparecer:function () {
+            this.$el.hide();
+        }
+    });
+
+    return BreadcrumbView;
+});

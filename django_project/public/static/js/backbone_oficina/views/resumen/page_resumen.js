@@ -1,1 +1,31 @@
-define(["jquery","underscore","backbone","swig"],function(e,t,n,i){"use strict";var a=n.View.extend({el:e("#content"),template:i.compile(e("#resumen_oficina_tlp").html()),tagName:"div",id:"",className:"",events:{},initialize:function(){},render:function(){this.$el.html(this.template())}}),c=new a;return c});
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'swig',
+], function ($, _, Backbone, swig) {
+    'use strict';
+
+    var PageResumenView = Backbone.View.extend({
+        el:$('#content'),
+        template: swig.compile($('#resumen_oficina_tlp').html()),        
+
+        tagName: 'div',
+
+        id: '',
+
+        className: '',
+
+        events: {},
+
+        initialize: function () {
+        },
+        render:function () {
+            this.$el.html(this.template());
+        },
+    });
+
+    var vista = new PageResumenView();
+
+    return vista;
+});

@@ -1,1 +1,0 @@
-define(["underscore","backbone","../models/categoria"],function(e,n,o){"use strict";var r=n.Collection.extend({model:o,url:"/api/categoria/"}),t=new r;return t});

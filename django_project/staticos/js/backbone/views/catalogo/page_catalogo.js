@@ -114,24 +114,24 @@ define([
             });
         },
         efecto_estatico:function () {
-            console.log($(window).scrollTop());
-            if ($(window).scrollTop()> 87) {
+            console.log(this.altura);
+            if ($(window).scrollTop()> this.altura) {
                 this.$('.js-panel.from-right').addClass('siguiendo');
             }else{
                 this.$('.js-panel.from-right').removeClass('siguiendo');
             };
         },
-        efectos:function() {            
-            $(window).scroll(this.efecto_estatico);
-            //var altura = this.$('.js-panel.from-right').offset().top;
-            //if ($(window).scrollTop()> altura) {
-                //debugger;
-                //this.$('.js-panel.from-right').addClass('siguiendo');
-            //}else{
-                //debugger;
-                //this.$('.js-panel.from-right').removeClass('siguiendo');
-            //};
-
+        efectos:function() {     
+            var altura = this.$('.js-panel.from-right').offset().top;
+            altura = altura -110
+            $(window).scroll(function () {
+                console.log($(window).scrollTop());
+                if ($(window).scrollTop()> altura) {
+                    this.$('.js-panel.from-right').addClass('siguiendo');
+                }else{             
+                    this.$('.js-panel.from-right').removeClass('siguiendo');
+                };
+            });
         }
     });
 

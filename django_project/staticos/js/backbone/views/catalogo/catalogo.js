@@ -55,11 +55,14 @@ define([
                 self.render();                
             });
         },
-        filtrar:function (filtro) {     
-
-            var colores = this.con_facetas.facet('color');
-
-            colores.value(filtro.toJSON().valor);
+        filtrar:function (filtro) {
+            var tipo_faceta
+            if (filtro.toJSON().tipo==='color') {
+                tipo_faceta = this.con_facetas.facet('color');
+            }else if(filtro.toJSON().tipo === 'talla'){
+                tipo_faceta = this.con_facetas.facet('variaciones.talla');                
+            }
+            tipo_faceta.value(filtro.toJSON().valor);
             this.render();
         },
         quitar_filtro:function (filtro) {

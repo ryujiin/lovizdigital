@@ -8,8 +8,9 @@ define([
     'productosTotal',    
     '../../views/catalogo/productoLista',
     '../../views/app/bloque_ajax',
-    '../../collections/catalogo/filtros'
-], function ($, _, Backbone,Productos,ProductosTotal,ProductoLista,Bloque_Ajax,FiltrosCollection) {
+    '../../collections/catalogo/filtros',
+    'facetr'
+], function ($, _, Backbone,Productos,ProductosTotal,ProductoLista,Bloque_Ajax,FiltrosCollection,Facetas) {
     'use strict';
 
     var CatalogoView = Backbone.View.extend({
@@ -18,21 +19,18 @@ define([
 
         className: '',
 
-        collection:new Productos(),
-
         events: {},
 
         initialize: function () {
+            this.busqueda={}
             this.listenTo(FiltrosCollection, 'add', this.filtrar);
-            this.listenTo(FiltrosCollection, 'remove', this.filtrar);
+            this.listenTo(FiltrosCollection, 'remove', this.quitar_filtro);
         },
 
         render: function () {
-            
+            this.$el.empty();
             var chocolateado = this.collection.shuffle();
             chocolateado.forEach(this.addOne,this);
-            var productos = ProductosTotal;
-            productos.add([this.collection]);
         },
         addOne:function (modelo) {
             modelo.set({visible:true});
@@ -40,48 +38,41 @@ define([
             this.$el.append(producto.$el);
             producto.$el.addClass('col-md-4 col-sm-6 col-xs-6')
         },
-        buscar_productos:function (slug) {
+        saber_categoria:function (slug) {
+            this.busqueda.categoria = slug;
+            this.buscar_productos(this.busqueda)
+        },
+        buscar_productos:function (busqueda) {
+            this.collection = new Productos()
+            this.con_facetas = Facetas(this.collection);
             var self=this;
-            var bloque_ajax = new Bloque_Ajax();
-
             this.collection.fetch({
-                data:$.param({categoria:slug})
+                data:$.param(busqueda)
             }).always(function(){
-                self.render();
-                self.ver_filtros();
-                bloque_ajax.remove();                
+                if (FiltrosCollection.length>0) {
+                    FiltrosCollection.reset();
+                }                
+                self.render();                
             });
         },
-        ver_filtros:function () {
-            if (FiltrosCollection.length>0) {
-                this.filtrar();
+        filtrar:function (filtro) {
+            var tipo_faceta
+            if (filtro.toJSON().tipo==='color') {
+                tipo_faceta = this.con_facetas.facet('color');
+            }else if(filtro.toJSON().tipo === 'talla'){
+                tipo_faceta = this.con_facetas.facet('variaciones.talla');                
             }
+            tipo_faceta.value(filtro.toJSON().valor);
+            this.render();
         },
-        filtrar:function () {
-            var filtros = FiltrosCollection;
+        quitar_filtro:function (filtro) {
+            var con_facetas = Facetas(this.collection);
 
-            if (filtros.length>0) {
-                this.collection.forEach(function (modelo) {
-                    modelo.set('visible',false);
-                })
-                var self = this;
+            var colores = con_facetas.facet('color');
 
-                filtros.forEach(function (e,i) {
-                    if (e.toJSON().tipo==='color') {
-                        self.filtrar_color(e.toJSON().valor);
-                    };
-                })
-            }else{
-                this.collection.forEach(function (modelo) {
-                    modelo.set('visible',true);
-                })
-            }
+            colores.removeValue(filtro.toJSON().valor);
+            this.render();
         },
-        filtrar_color:function (color) {
-            this.collection.where({color:color}).forEach(function (e) {
-                e.set('visible',true)
-            })
-        }
     });
 
     return CatalogoView;

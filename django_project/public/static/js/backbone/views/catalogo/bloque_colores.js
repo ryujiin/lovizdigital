@@ -5,7 +5,7 @@ define([
     'swig',
     '../../views/catalogo/categorias_link',    
     '../../collections/colores',
-    '../../collections/catalogo/filtros'
+    '../../collections/catalogo/filtros',
 ], function ($, _, Backbone, swig,CateLink,ColoresCollection,FiltrosCollection) {
     'use strict';
 
@@ -44,13 +44,13 @@ define([
             }
         },
         addColor:function(modelo){
-            modelo.set({valor:'color'});
+
+            modelo.set({'valor':'color',activo:false});
             var vista = new CateLink({model:modelo});
             this.$('.lista').append(vista.render().el);
         },
 
         filtrar_color:function (e) {
-            
             var color = e.target.dataset.valor;
             var coincidencia = this.collection.findWhere({nombre:color});
             coincidencia.set('activo',true)
@@ -59,7 +59,6 @@ define([
             ]);
         },
         rm_filtrar_color:function(e){
-            
             var color = e.target.dataset.valor;
             var coincidencia = this.collection.findWhere({nombre:color});
             coincidencia.set('activo',false)

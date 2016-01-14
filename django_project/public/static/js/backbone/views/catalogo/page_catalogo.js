@@ -13,8 +13,9 @@ define([
     '../../views/catalogo/catalogo',
     '../../views/catalogo/bloque_colores',
     '../../views/catalogo/imagen_catalogo',
-    '../../views/app/header'
-], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo,Head) {
+    '../../views/app/header',
+    '../../views/catalogo/bloque_tallas'
+], function ($, _, Backbone, swig,TituloCatalogo,Breadcrumb,CetegoriaBloque,Catalogo,ColoresBloque,ImagenCatalogo,Head,BloqueTalla) {
     'use strict';
 
     var PageCatalogoView = Backbone.View.extend({
@@ -42,13 +43,14 @@ define([
             this.addBread(modelo,Categorias);
             this.crear_bloque_Categoria(modelo,Categorias);
             this.crear_bloque_colores();
+            this.crear_bloque_tallas();
             this.efectos();
         },
         crear_bloque_busqueda:function (modelo) {
             var bloque_productos = new Catalogo({
                 el:this.$('.resultados'),
             });
-            bloque_productos.buscar_productos(modelo.toJSON().slug);
+            bloque_productos.saber_categoria(modelo.toJSON().slug);
         },
         crear_titulo:function (modelo,Categorias) {
             var datos_titulo = this.get_titulo(modelo,Categorias);
@@ -113,6 +115,11 @@ define([
                 el:this.$('.refinement.Color'),
             });
         },
+        crear_bloque_tallas:function () {
+            var bloque_tallas = new BloqueTalla();
+            bloque_tallas.render();
+            this.$('aside').append(bloque_tallas.$el);
+        },
         efecto_estatico:function () {
             console.log(this.altura);
             if ($(window).scrollTop()> this.altura) {
@@ -123,9 +130,8 @@ define([
         },
         efectos:function() {     
             var altura = this.$('.js-panel.from-right').offset().top;
-            altura = altura -110
+            altura = altura -110;
             $(window).scroll(function () {
-                console.log($(window).scrollTop());
                 if ($(window).scrollTop()> altura) {
                     this.$('.js-panel.from-right').addClass('siguiendo');
                 }else{             

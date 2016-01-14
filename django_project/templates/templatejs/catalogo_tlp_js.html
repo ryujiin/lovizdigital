@@ -78,6 +78,12 @@
 
 <script id="productosLista_tlp" type="text/template">
 	<a href="{{link}}" class="link">
+		{%if nuevo%}
+		<div class="nuevo">Nuevo</div>
+		{%endif%}
+		{%if oferta%}
+		<div class="oferta">Oferta</div>
+		{%endif%}
 		<figure class="imagen_lista">
 			{%for img in imagenes_producto%}
 				{%if img.orden <= 1 %}

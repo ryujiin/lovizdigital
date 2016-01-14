@@ -27,7 +27,7 @@ class CatalogoViewsets(viewsets.ReadOnlyModelViewSet):
 			queryset = queryset[:limite]
 		if categoria:
 			if categoria == 'ofertas':
-				queryset = queryset.filter(producto=True)
+				queryset = queryset.filter(is_ofert=True)
 			elif categoria == 'novedades':
 				queryset = queryset.filter(actualizado__gte=datetime.now()-timedelta(days=how_many_days))
 			else:

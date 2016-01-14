@@ -6,6 +6,9 @@ from django.contrib.auth.models import User as User
 from utiles.models import Color,Talla
 from material.models import Material,PrecioMaterial
 
+from datetime import datetime, timedelta, time
+from django.utils import timezone
+
 # Create your models here.
 class Producto(models.Model):
 	nombre = models.CharField(max_length=120,blank=True,null=True)
@@ -44,6 +47,13 @@ class Producto(models.Model):
 		else:
 			self.is_ofert = False
 		self.save()
+
+	def guardar_novedad(self):
+		dia_no_nuevo = timezone.now()-timedelta(days=20)
+		if dia_no_nuevo > self.creado:
+			return False
+		else:
+			return True
 
 	def get_en_oferta(self):
 		variaciones = self.get_variaciones()

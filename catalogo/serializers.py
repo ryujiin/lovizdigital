@@ -102,13 +102,18 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 	num_comentarios=serializers.SerializerMethodField()
 	categorias = CategoriaSerializer(many=True)
 
+	nuevo = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Producto
 		fields = ('id','nombre','full_name','color','slug','activo','descripcion','thum','link',
-				'oferta','precio','precio_venta',
+				'oferta','precio','precio_venta','nuevo',
 				'imagenes_producto','variaciones','relaciones','video','detalles','valoracion','num_comentarios','categorias','material_producto')
 
+	def get_nuevo(self,obj):
+		nuevo = obj.guardar_novedad()
+		return nuevo
+		
 	def get_thum_img(self,obj):
 		thum = obj.get_thum().url
 		return thum

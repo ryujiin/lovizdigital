@@ -2,11 +2,36 @@ rosado = #F7727A
 
 .lista-productos
 	.productos
+		position relative
 		text-align center
+		.nuevo
+			position absolute
+			z-index 9
+			background aquamarine
+			text-transform uppercase
+			color #333
+			width 40px
+			height 40px
+			font-family f_imprenta
+			font-size 0.8em
+			line-height 40px
+			border-radius 40px
+			top 10px
+		.oferta
+			position absolute
+			z-index 9
+			background rosado
+			text-transform uppercase
+			color #fff
+			width 60px
+			height 60px
+			font-family f_imprenta
+			line-height 60px
+			border-radius 60px
+			top 10px
+			right 10px
 		figure
-			width 90%
-			min-height 100px
-			margin 2px auto
+			padding-top 25px
 			img
 				width 100%
 		.imagen_lista

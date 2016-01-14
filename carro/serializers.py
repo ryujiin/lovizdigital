@@ -21,7 +21,6 @@ class CarroSerializer(serializers.ModelSerializer):
 
 	def get_total(self,obj):
 		total =obj.total_carro()
-
 		return '%0.2f' %(total)
 
 	def get_subtotal(self,obj):

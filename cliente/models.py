@@ -14,11 +14,11 @@ class Cliente(models.Model):
 
 class CuponesCliente(models.Model):
 	cliente =models.ForeignKey('Cliente')
-	cupon = models.ForeignKey('CuponesDescuentos')
+	cupon = models.ForeignKey('CuponDescuento')
 	fecha_creacion = models.DateTimeField(auto_now_add=True)
 	fecha_uso = models.DateTimeField(blank=True,null=True)
 
-class CuponesDescuentos(models.Model):
+class CuponDescuento(models.Model):
 	nombre = models.CharField(max_length=100,help_text='El nombre del Cupon, Ejemplo: 2x1')
 	porcentaje_descuento = models.PositiveIntegerField(default=0)
 	dias_duracion = models.PositiveIntegerField(default=0)

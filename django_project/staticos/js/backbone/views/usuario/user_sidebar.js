@@ -6,7 +6,8 @@ define([
     'backbone',
     'swig',
     '../usuario/user_formLogin',
-], function ($, _, Backbone, swig,UserFormLogin) {
+    '../usuario/user_formCrear',
+], function ($, _, Backbone, swig,UserFormLogin,UserFormCrear) {
     'use strict';
 
     var UserSidebarView = Backbone.View.extend({
@@ -38,6 +39,10 @@ define([
                 el:$('#dwfrm_login'),
                 model:this.model
             });
+            var formcrear = new UserFormCrear({
+                el:$('#crear_login_sidebar'),
+                model:this.model
+            })
 
         },
         ver_activo:function(activado){

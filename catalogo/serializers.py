@@ -35,6 +35,8 @@ class ProductoVariacionSerializer(serializers.ModelSerializer):
 		precio = obj.precio_oferta
 		if precio:
 			precio ="%0.2f" %(precio)
+		else:
+			precio = '%0.2f' %(obj.precio_minorista)
 		return precio
 		
 	def get_precio_minorista(self,obj):

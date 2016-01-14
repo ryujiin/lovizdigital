@@ -872,6 +872,9 @@ h2 .linea {
   color: #fff;
   text-decoration: none;
 }
+.catalogo .section-refinamiento .Categoria li {
+  width: 100%;
+}
 .catalogo .section-refinamiento .Color li a {
   width: 140px;
 }

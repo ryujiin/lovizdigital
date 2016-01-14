@@ -32,8 +32,9 @@ class ProductoVariacionSerializer(serializers.ModelSerializer):
 		fields =('id','talla','precio','oferta','precio_venta','stock')
 
 	def get_precio(self,obj):
-		precio = obj.get_precio_venta()
-		precio ="%0.2f" %(precio)
+		precio = obj.precio_oferta
+		if precio:
+			precio ="%0.2f" %(precio)
 		return precio
 		
 	def get_precio_minorista(self,obj):

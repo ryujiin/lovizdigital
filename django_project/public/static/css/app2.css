@@ -582,7 +582,8 @@ h2 .linea {
   position: absolute;
   left: 0;
   padding: 14px;
-  width: 100%;
+  width: 40%;
+  margin: 0 30%;
 }
 .header-mobil a.logo-mobil h2 {
   padding: 0;
@@ -1614,6 +1615,10 @@ h2 .linea {
   font-weight: 400;
 }
 @media (min-width: 480px) {
+  header .header-mobil .logo-mobil {
+    width: 30%;
+    margin: 0 35%;
+  }
   header .header-mobil a .texto {
     display: inline;
   }
@@ -1819,7 +1824,6 @@ h2 .linea {
     font-size: 0.8em;
   }
   .lista-productos .productos figure {
-    height: 200px;
     overflow: hidden;
   }
   #wrapper {

@@ -24,6 +24,9 @@ require.config({
         'bootstrap':{
             deps:['jquery'],
         },
+        'facetr':{
+            deps:['backbone'],
+        }
     },
     paths: {
         jquery: 'vendor/bower_components/jquery/dist/jquery',
@@ -35,6 +38,7 @@ require.config({
         zoom: 'vendor/bower_components/jquery-zoom/jquery.zoom',
         storage: 'vendor/bower_components/jQuery-Storage-API/jquery.storageapi',
         coockie: 'vendor/coockie/jquery.cookie',
+        facetr:'vendor/facetas/backbone.facetr'
     }
 });
 

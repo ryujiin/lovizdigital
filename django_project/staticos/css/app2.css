@@ -861,9 +861,19 @@ h2 .linea {
   text-transform: uppercase;
   font-size: 0.8em;
 }
-.catalogo .section-refinamiento .Color li {
-  width: 140px;
+.catalogo .section-refinamiento .refinement li {
   display: inline-block;
+}
+.catalogo .section-refinamiento .refinement li a {
+  display: inline-block;
+}
+.catalogo .section-refinamiento .refinement li a.activo {
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+}
+.catalogo .section-refinamiento .Color li a {
+  width: 140px;
 }
 .catalogo .section-refinamiento .Color li .color-hex {
   width: 15px;
@@ -872,10 +882,11 @@ h2 .linea {
   -webkit-border-radius: 15px;
   border-radius: 15px;
 }
-.catalogo .section-refinamiento .Color li a.activo {
-  background: #111;
-  color: #fff;
-  text-decoration: none;
+.catalogo .section-refinamiento .Talla li a {
+  margin: 2px 5px;
+  border: 1px solid #111;
+  width: 55px;
+  text-align: center;
 }
 .lista-productos .productos {
   text-align: center;

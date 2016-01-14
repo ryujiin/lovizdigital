@@ -20,6 +20,7 @@ class Color(models.Model):
 class Talla(models.Model):
 	nombre = models.CharField(max_length=100)
 	slug = models.SlugField(max_length=120,unique=True,editable=False,blank=True,null=True)
+	orden = models.PositiveIntegerField(default=0)
 
 	def __unicode__(self):
 		return self.nombre

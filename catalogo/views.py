@@ -32,7 +32,6 @@ class CatalogoViewsets(viewsets.ReadOnlyModelViewSet):
 				queryset = queryset.filter(actualizado__gte=datetime.now()-timedelta(days=how_many_days))
 			else:
 				queryset = queryset.filter(categorias__slug=categoria)
-
 		if slug:
 			queryset = queryset.filter(slug=slug)
 		return queryset

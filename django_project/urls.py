@@ -6,7 +6,7 @@ import settings
 from catalogo import views
 from carro.views import LineasViewsets,CarroViewsets
 from cmsweb.views import CarruselViewsets,PageViewsets,MenuViewsets,VerificarView
-from utiles.views import ColorViewsets
+from utiles.views import ColorViewsets,TallasViewsets
 from pedido.views import PedidoViewSet,MetodoEnvioViewSet
 from ubigeo.views import RegionViewset
 from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,ComentarioImagenViewSet,SuscritoViewset
@@ -20,6 +20,7 @@ router.register(r'cmsweb/carrusel',CarruselViewsets,'carruseles')
 router.register(r'cmsweb/pages',PageViewsets,'pages')
 router.register(r'cmsweb/menus',MenuViewsets,'menus')
 router.register(r'colores',ColorViewsets,'coleres')
+router.register(r'tallas',TallasViewsets,'tallas')
 router.register(r'pedidos',PedidoViewSet,'pedidos')
 router.register(r'ubigeo',RegionViewset,'ubigeo')
 router.register(r'cliente/direcciones',DireccionViewsets,'direcciones')

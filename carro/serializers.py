@@ -5,6 +5,7 @@ from catalogo.models import Producto
 from pedido.models import MetodoEnvio,Pedido
 
 class CarroSerializer(serializers.ModelSerializer):
+	pedido = serializers.CharField(read_only=True)
 	lineas = serializers.SerializerMethodField()
 	total = serializers.SerializerMethodField()
 	subtotal = serializers.SerializerMethodField()

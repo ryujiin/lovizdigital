@@ -71,6 +71,7 @@ define([
             }
         },
         buscar_carro:function () {
+
             var self = this;
             if (UserModel.id) {
                 

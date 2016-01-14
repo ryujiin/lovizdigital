@@ -61,8 +61,9 @@ class Carro(models.Model):
 
 	def envio_carro(self):
 		costo_envio = 0
-		if self.pedido.metodoenvio:
-			costo_envio = self.pedido.metodoenvio.precio
+		if self.pedido:
+			if self.pedido.metodoenvio:
+				costo_envio = self.pedido.metodoenvio.precio
 		return costo_envio
 
 	def save(self, *args, **kwargs):

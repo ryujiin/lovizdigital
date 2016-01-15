@@ -925,6 +925,17 @@ h2 .linea {
   border-radius: 60px;
   top: 10px;
   right: 10px;
+  font-size: 1.25em;
+  -webkit-transform: rotate(25deg);
+  -moz-transform: rotate(25deg);
+  -o-transform: rotate(25deg);
+  -ms-transform: rotate(25deg);
+  transform: rotate(25deg);
+  -webkit-transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear;
+  -o-transition: all 0.5s linear;
+  -ms-transition: all 0.5s linear;
+  transition: all 0.5s linear;
 }
 .lista-productos .productos figure {
   padding-top: 25px;
@@ -1000,6 +1011,13 @@ h2 .linea {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+.lista-productos .productos:hover .oferta {
+  -webkit-transform: rotate(-25deg);
+  -moz-transform: rotate(-25deg);
+  -o-transform: rotate(-25deg);
+  -ms-transform: rotate(-25deg);
+  transform: rotate(-25deg);
 }
 #galeria_full {
   display: none;

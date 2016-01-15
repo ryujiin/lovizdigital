@@ -173,6 +173,7 @@ define([
             })
         },
         comprar_producto:function () {            
+            debugger;
             this.buttonAddCart.verificar_compra(this)
         }
     });

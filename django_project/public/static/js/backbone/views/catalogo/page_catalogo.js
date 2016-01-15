@@ -28,7 +28,9 @@ define([
 
         className: '',
 
-        events: {},
+        events: {
+            'click .refinar':'mostrar_refinar',
+        },
 
         initialize: function () {
         },
@@ -138,6 +140,9 @@ define([
                     this.$('.js-panel.from-right').removeClass('siguiendo');
                 };
             });
+        },
+        mostrar_refinar:function () {
+            debugger;
         }
     });
 

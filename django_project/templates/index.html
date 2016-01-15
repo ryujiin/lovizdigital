@@ -1,5 +1,7 @@
 {% load static from staticfiles %}
 
+{% load django_seo_js %}
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -13,6 +15,9 @@
     <meta name="description" content="Loviz DelCarpio® , Encontraras lo mejor en pantuflas, sandalias, botas, flats y demas. Envio Gratis para todo el peru por compras mayores a S/.60.00" />
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="prerender-status-code" content="404">
+    <meta name="prerender-status-code" content="301">
+    <meta name="prerender-header" content="Location: https://lovizdc.com">
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic|BenchNine:400,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
     <link rel="stylesheet" href="{% static "css/iconos.css" %}" />
@@ -22,6 +27,7 @@
     <link rel="stylesheet" href="{% static "css/app2.css" %}" />
 
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    {% seo_js_head %}
 
 </head>
 <body id="default" class="mobile-layout">

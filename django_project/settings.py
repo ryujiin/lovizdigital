@@ -210,6 +210,16 @@ EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY = config.SENDGRID_API_KEY
 
 
+MIDDLEWARE_CLASSES = (
+    'django_seo_js.middleware.EscapedFragmentMiddleware',  # If you're using #!
+    'django_seo_js.middleware.UserAgentMiddleware',  # If you want to detect by user agent
+) + MIDDLEWARE_CLASSES
+
+INSTALLED_APPS += ('django_seo_js',)
+
+SEO_JS_PRERENDER_TOKEN = config.SEO_JS_PRERENDER_TOKEN
+
+
 try:
     from .local import *
 except ImportError:

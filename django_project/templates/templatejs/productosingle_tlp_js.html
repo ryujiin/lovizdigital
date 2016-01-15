@@ -112,7 +112,7 @@
 					<section id="product-sub-details-anchor" class="product-sub-details col-md-7">
 				        <div class="product-long-description">
 				          <h2>Descripccion</h2>
-				          <p>{{descripcion}}</p>
+				          <p>{{descripcion|safe}}</p>
 
 				          {%for material in material_producto%}
 				          	 {% if loop.first %}

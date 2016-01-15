@@ -1112,6 +1112,9 @@ h2 .linea {
   background: #f4f4f4;
   margin-bottom: 2em;
 }
+#producto_detalles .materiales {
+  font-size: 13px;
+}
 .product-long-description {
   width: 90%;
   padding-right: 30px;

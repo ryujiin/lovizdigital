@@ -42,11 +42,17 @@ class MaterialTipo(models.Model):
 	nombre = models.CharField(max_length=100)
 	descripcion = models.TextField(blank=True)
 
+	def __unicode__(self):
+		return self.nombre
+
 class Proveedor(models.Model):
 	nombre = models.CharField(max_length=100,blank=True)
 	ruc = models.CharField(max_length=11,blank=True)
 	telefono = models.CharField(max_length=11,blank=True)
 	direccion = models.CharField(max_length=100,blank=True)
+
+	def __unicode__(self):
+		return self.nombre
 
 class PlantaPVC(models.Model):
 	nombre = models.CharField(max_length=100,blank=True)

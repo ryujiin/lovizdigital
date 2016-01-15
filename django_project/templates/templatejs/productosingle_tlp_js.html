@@ -23,7 +23,7 @@
 					</h1>
 					<div class="categorias_productos">
 						{% for categoria in categorias %}
-						<a href="{{categoria.link}}" class="btn btn-default">{{categoria.nombre}}</a>
+						<a href="{{categoria.link}}" class="btn btn-default link">{{categoria.nombre}}</a>
 						{% endfor %}
 					</div>
 					<div class="product-content">
@@ -105,24 +105,33 @@
 				</div>
 			</div>
 		</div>	
-		{%if detalles%}
+		{%if descripcion%}
 		<div id="producto_detalles" class="">
 			<div class="container">
 				<div class="row">
 					<section id="product-sub-details-anchor" class="product-sub-details col-md-7">
 				        <div class="product-long-description">
-				          <h2>Detalles</h2>
-				          <p>{{detalles}}</p>
-				          <h4>Materiales</h4>
-				          <ul class="list">
-				          	{%for material in material_producto%}
-				          	<li>{{material.descripcion}}</li>
-				          	{%endfor%}
-				          </ul>
+				          <h2>Descripccion</h2>
+				          <p>{{descripcion}}</p>
+
+				          {%for material in material_producto%}
+				          	 {% if loop.first %}
+				          	 <h4>Detalles</h4>
+				          	 <ul class="list">				          	 
+				          	 {% endif %}
+				          	 <li>{{material.descripcion}}</li>
+				          	 {% if loop.last %}</ul>{% endif %}
+				          {%endfor%}				         
 				        </div>
 				    </section>
 				    <div class="product-fit segundo_producto col-md-5">
-				        <div><img src="https://smassets.stevemadden.com/content/styletips/2015/promo/styletip-US_2015.08.07_SMFREE50.gif"/></div>
+				    	{%if detalles%}
+				    		{{detalles}}
+				    	{%else%}
+				    	<div>
+				    		<img clas="img_bloque" src="/media/tienda//bloque/banner-envio-gratis.jpg"/>
+				    	</div>
+				    	{%endif%}				        
 				    </div>
 				</div>
 			</div>
@@ -323,7 +332,7 @@
 
 <script id="seccion_comentarios" type="text/template">
 	<h2 class="titulo">Comentarios
-		<button class="btn btn-default btn-contraste pull-right"><span>Escribe un Comentario</span></button>
+		<button class="btn btn-default btn-contraste pull-right" data-toggle="modal" data-target="#nuevo_comentario"><span>Escribe un Comentario</span></button>
 	</h2>
 
 	{%if num_comentarios%}

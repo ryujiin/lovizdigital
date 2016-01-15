@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User as User
 from catalogo.models import Producto,ProductoVariacion
 from ubigeo.models import *
+from django.template.defaultfilters import slugify
+
 
 # Create your models here.
 class Cliente(models.Model):
@@ -20,10 +22,17 @@ class CuponesCliente(models.Model):
 
 class CuponDescuento(models.Model):
 	nombre = models.CharField(max_length=100,help_text='El nombre del Cupon, Ejemplo: 2x1')
+	slug = models.CharField(max_length=100,blank=True,unique=True)
 	porcentaje_descuento = models.PositiveIntegerField(default=0)
 	dias_duracion = models.PositiveIntegerField(default=0)
 	activo = models.BooleanField(default=True)
 	fecha_creacion =models.DateTimeField(auto_now_add=True)
+
+	def save(self, *args, **kwargs):
+		full_name = "%s_%s" %(self.nombre,self.porcentaje_descuento)
+		if not self.slug:
+			self.slug = slugify(full_name)
+		super(CuponDescuento, self).save(*args, **kwargs)
     
 class Direccion(models.Model):
 	TIPO = (('envio','Direccion de envio'),('facturacion','Direccion de Facturacion'))

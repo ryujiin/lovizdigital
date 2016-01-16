@@ -5,7 +5,7 @@ from catalogo.models import Producto
 from pedido.models import MetodoEnvio,Pedido
 
 class CarroSerializer(serializers.ModelSerializer):
-	pedido = serializers.CharField(read_only=True)
+	pedido = serializers.SerializerMethodField()
 	lineas = serializers.SerializerMethodField()
 	total = serializers.SerializerMethodField()
 	subtotal = serializers.SerializerMethodField()
@@ -30,6 +30,10 @@ class CarroSerializer(serializers.ModelSerializer):
 	def get_envio(self,obj):
 		envio =obj.envio_carro();
 		return "%0.2f" %(envio)
+
+	def get_pedido(self,obj):
+		pedido = obj.pedido.pk
+		return pedido
 
 class LineaSerializer(serializers.ModelSerializer):
 

@@ -42,7 +42,8 @@ define([
             this.$('.total_carro').html(this.total_carro.$el);
             this.$('.boton_checkout').html(this.botoncheckout.$el);
             this.addBread();                        
-            this.change_head();            
+            this.change_head();    
+            this.finaizo();
         },
         addBread:function () {
             this.breadVista = new BreadViews({el:$('.nav-breadcrumb')});
@@ -58,7 +59,11 @@ define([
             var descripcion = 'Mi carro de compras en Loviz DelCarpio®, lovizdc.com';
             var header = Head;
             header.render(titulo,descripcion);
+        },
+        finaizo:function () {
+            window.prerenderReady = true;
         }
+
     });
 
     var vista = new CarroPageView();

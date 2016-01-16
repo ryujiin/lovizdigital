@@ -52,7 +52,8 @@ define([
                 if (FiltrosCollection.length>0) {
                     FiltrosCollection.reset();
                 }                
-                self.render();                
+                self.render();
+                self.finalizo();
             });
         },
         filtrar:function (filtro) {
@@ -73,6 +74,9 @@ define([
             colores.removeValue(filtro.toJSON().valor);
             this.render();
         },
+        finalizo:function () {
+            window.prerenderReady = true;
+        }
     });
 
     return CatalogoView;

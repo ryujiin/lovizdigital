@@ -35,6 +35,7 @@ define([
             this.$el.removeClass();            
             this.addBread();
             this.change_head();
+            this:finalizo();
         },
         verificar_login:function () {
             if (this.model.id) {
@@ -89,6 +90,9 @@ define([
                 el:this.$('#usuario_lista_deseos'),
                 model:this.model
             })
+        },
+        finalizo:function () {
+            window.prerenderReady = true;
         }
     });
     var page = new PageUserView({model:UserModel})

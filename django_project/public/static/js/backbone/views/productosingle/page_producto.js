@@ -55,6 +55,7 @@ define([
             this.add_relacionados();
             this.add_estrellas();
             this.add_lista_comentarios();
+            this.finalizo();
         },
         change_header:function () {
             var titulo = this.model.toJSON().full_name + ' | Loviz DelCarpio® :: lovizdc.com'
@@ -173,8 +174,10 @@ define([
             })
         },
         comprar_producto:function () {            
-            debugger;
             this.buttonAddCart.verificar_compra(this)
+        },
+        finalizo:function () {
+            window.prerenderReady = true;
         }
     });
     var modelo = new ProductoModel();

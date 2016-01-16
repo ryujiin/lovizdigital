@@ -28,13 +28,18 @@ define([
         render: function () {
             this.$el.html(this.template());          
             this.change_head();
+            this.finalizo();
         },
         change_head:function () {
             var titulo = 'Opps No se encontro lo que buscabas, | Loviz DelCarpio® :: lovizdc.com';
             var descripcion = 'Ups no se encontro lo que buscabas, nuestro error.';
             var header = Head;
             header.render(titulo,descripcion);
+        },
+        finalizo:function () {
+            window.prerenderReady = true;
         }
+
     });
 
     var vista = new ErrorPageView();

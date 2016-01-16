@@ -187,7 +187,7 @@ define([
             var dimensionValue = metricValue;
             ga('set', 'dimension3', dimensionValue);
             //enviar q tipo de pagina
-            var dimensionValue = 'pagina_producto';
+            var dimensionValue = 'paroduct';
             ga('set', 'dimension2', dimensionValue);
             window.prerenderReady = true;
 

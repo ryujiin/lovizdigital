@@ -73,10 +73,11 @@ define([
             Pages.buscar_page(page_slug);
         },
         felicidades:function () {
-            
+            var dimensionValue = 'proceso_pagado';                   
+            ga('set', 'dimension2', dimensionValue);            
         },
         notFound:function () {
-            $('body').removeClass();            
+            $('body').removeClass();           
 
             PageError.render();
         },

@@ -106,6 +106,12 @@ define([
             })
         },
         finalizorender:function () {
+            //enviar pagina a google analitycs
+            var dimensionValue = 'home_page';
+            if (this.model.toJSON().front!==true) {
+                dimensionValue = 'static_page';
+            };            
+            ga('set', 'dimension2', dimensionValue);
             window.prerenderReady = true;
         }
     });

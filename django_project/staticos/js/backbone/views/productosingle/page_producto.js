@@ -177,7 +177,20 @@ define([
             this.buttonAddCart.verificar_compra(this)
         },
         finalizo:function () {
+            debugger;
+            //enviar id
+            var dimensionValue = this.model.toJSON().id;
+            ga('set', 'dimension1', dimensionValue);
+            //enviar precio
+            var metricValue = this.model.toJSON().precio_venta;
+            ga('set', 'metric1', metricValue);
+            var dimensionValue = metricValue;
+            ga('set', 'dimension3', dimensionValue);
+            //enviar q tipo de pagina
+            var dimensionValue = 'pagina_producto';
+            ga('set', 'dimension2', dimensionValue);
             window.prerenderReady = true;
+
         }
     });
     var modelo = new ProductoModel();

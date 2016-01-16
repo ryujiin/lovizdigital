@@ -92,13 +92,19 @@ define([
             });
         },
         ver_paso_actual:function () {
+            var dimensionValue = 'carro_page';                   
             if (this.model.id===undefined) {
+                var dimensionValue = 'proceso_sin_autenticar';                   
                 this.model.set('paso_actual',1)
             }else if (this.model.toJSON().estado_pedido==='autenticado'){
+                var dimensionValue = 'proceso_sin_metodo_envio';                                   
                 this.model.set('paso_actual',2)
             }else if (this.model.toJSON().estado_pedido==='metodo_envio') {
+                var dimensionValue = 'proceso_sin_metodo_pago';                   
                 this.model.set('paso_actual',3)
             };
+            ga('set', 'dimension2', dimensionValue);
+            window.prerenderReady = true;
         },
         finalizo:function () {
             window.prerenderReady = true;

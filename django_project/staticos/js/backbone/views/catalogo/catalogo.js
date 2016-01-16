@@ -75,6 +75,9 @@ define([
             this.render();
         },
         finalizo:function () {
+            //enviar pagina a google analitycs
+            var dimensionValue = this.busqueda.categoria;                   
+            ga('set', 'dimension2', dimensionValue);
             window.prerenderReady = true;
         }
     });

@@ -56,7 +56,6 @@ class Bloque(models.Model):
 
 	def __unicode__(self):
 		return "%s de %s " %(self.titulo,self.page)
-	
 
     
 class ImageCarrusel(models.Model):
@@ -66,6 +65,9 @@ class ImageCarrusel(models.Model):
 	bloque = models.ForeignKey(Bloque,blank=True,related_name='imagenes_carrusel')
 	orden = models.PositiveIntegerField(default=0)
 	imagen = models.ImageField(upload_to='bloque/carrusel')
+
+	class Meta:
+		ordering = ['orden']
 
 class Menu(models.Model):
 	titulo = models.CharField(max_length=100,blank=True)

@@ -9,7 +9,6 @@ class Material(models.Model):
 	tipo = models.ForeignKey('MaterialTipo',blank=True)
 	creado = models.DateTimeField(auto_now_add=True)
 
-
 	def __unicode__(self):
 		return self.nombre
 

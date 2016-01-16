@@ -80,7 +80,6 @@ define([
         trackPageview:function () {
             var url = Backbone.history.getFragment();
             ga('send', {'hitType': 'pageview','page':'/'+url});
-            debugger;
         },
         notFound:function () {
             $('body').removeClass();           

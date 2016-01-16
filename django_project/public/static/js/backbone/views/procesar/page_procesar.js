@@ -78,7 +78,6 @@ define([
             });
         },
         crear_paso_pago:function () {
-            debugger;
             this.paso_pago = new PasoPago({
                 el:this.$('.paso_pago'),
                 model:this.model,

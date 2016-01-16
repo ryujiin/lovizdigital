@@ -113,6 +113,7 @@ define([
             };            
             ga('set', 'dimension2', dimensionValue);
             window.prerenderReady = true;
+            
         }
     });
 

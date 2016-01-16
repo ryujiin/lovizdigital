@@ -39,6 +39,7 @@ define([
             this.crear_paso_pago();
             this.crear_resumen();
             this.ver_paso_actual();
+            this.finalizo();
         },
         verificar_render:function () {
             var self = this;
@@ -99,6 +100,9 @@ define([
                 this.model.set('paso_actual',3)
             };
         },
+        finalizo:function () {
+            window.prerenderReady = true;
+        }
     });
     var page = new PageProcesarCompraView({
         model: new PedidoModel()

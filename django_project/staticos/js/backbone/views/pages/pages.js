@@ -77,6 +77,7 @@ define([
             if (this.model.toJSON().front===true) {
                 this.addTopSeller();
             };
+            this.finalizorender()
         },
         addBloque:function (modelo) {
             var bloque = new BloqueView({
@@ -103,6 +104,9 @@ define([
             }).done(function () {
                 carrusel_producto.add_Carrusel();
             })
+        },
+        finalizorender:function () {
+            window.prerenderReady = true;
         }
     });
 

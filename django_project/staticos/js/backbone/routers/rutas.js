@@ -29,6 +29,7 @@ define([
         },
 
         initialize:function(){
+            this.bind('all', this.trackPageview);
         },
         root:function(){
             $('body').removeClass();            
@@ -74,7 +75,12 @@ define([
         },
         felicidades:function () {
             var dimensionValue = 'proceso_pagado';                   
-            ga('set', 'dimension2', dimensionValue);            
+            ga('set', 'dimension2', dimensionValue);
+        },
+        trackPageview:function () {
+            var url = Backbone.history.getFragment();
+            ga('send', {'hitType': 'pageview','page':'/'+url});
+            debugger;
         },
         notFound:function () {
             $('body').removeClass();           

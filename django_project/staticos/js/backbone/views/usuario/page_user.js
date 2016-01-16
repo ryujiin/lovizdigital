@@ -35,7 +35,7 @@ define([
             this.$el.removeClass();            
             this.addBread();
             this.change_head();
-            this:finalizo();
+            this.finalizo();
         },
         verificar_login:function () {
             if (this.model.id) {

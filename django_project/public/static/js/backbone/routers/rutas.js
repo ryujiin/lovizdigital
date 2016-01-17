@@ -74,8 +74,9 @@ define([
             Pages.buscar_page(page_slug);
         },
         felicidades:function () {
-            var dimensionValue = 'proceso_pagado';                   
-            ga('set', 'dimension2', dimensionValue);
+            ga('displayfeatures.send',{
+                'dimension2':dimensionValue,
+            })
         },
         trackPageview:function () {
             var url = Backbone.history.getFragment();

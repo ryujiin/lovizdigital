@@ -111,9 +111,10 @@ define([
             if (this.model.toJSON().front!==true) {
                 dimensionValue = 'static_page';
             };            
-            ga('set', 'dimension2', dimensionValue);
-            window.prerenderReady = true;
             
+            ga('displayfeatures.send',{'dimension2':dimensionValue})
+            window.prerenderReady = true;
+
         }
     });
 

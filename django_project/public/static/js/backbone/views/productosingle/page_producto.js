@@ -177,18 +177,27 @@ define([
             this.buttonAddCart.verificar_compra(this)
         },
         finalizo:function () {
-            debugger;
+            
             //enviar id
-            var dimensionValue = this.model.toJSON().id;
-            ga('set', 'dimension1', dimensionValue);
+            //var dimensionValue = this.model.toJSON().id;
+            //ga('set', 'dimension1', dimensionValue);
             //enviar precio
-            var metricValue = this.model.toJSON().precio_venta;
-            ga('set', 'metric1', metricValue);
-            var dimensionValue = metricValue;
-            ga('set', 'dimension3', dimensionValue);
+            //var metricValue = this.model.toJSON().precio_venta;
+            //ga('set', 'metric1', metricValue);
+            //var dimensionValue = metricValue;
+            //ga('set', 'dimension3', dimensionValue);
             //enviar q tipo de pagina
-            var dimensionValue = 'paroduct';
-            ga('set', 'dimension2', dimensionValue);
+            //var dimensionValue = 'paroduct';
+            //ga('set', 'dimension2', dimensionValue);
+
+            ga('displayfeatures.send',{
+                'dimension1':this.model.toJSON().id,
+                'dimension2':this.model.toJSON().full_name,
+                'dimension3':this.model.toJSON().precio_venta,
+                'dimension5':'product',
+                'metric1':this.model.toJSON().precio_venta,
+
+            })
             window.prerenderReady = true;
 
         }

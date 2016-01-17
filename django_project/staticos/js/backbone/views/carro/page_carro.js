@@ -64,7 +64,9 @@ define([
             window.prerenderReady = true;
             //enviar pagina a google analitycs
             var dimensionValue = 'cart';                   
-            ga('set', 'dimension2', dimensionValue);
+            ga('displayfeatures.send',{
+                'dimension2':dimensionValue,
+            })
             window.prerenderReady = true;
         }
 

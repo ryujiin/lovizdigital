@@ -178,26 +178,16 @@ define([
         },
         finalizo:function () {
             
-            //enviar id
-            //var dimensionValue = this.model.toJSON().id;
-            //ga('set', 'dimension1', dimensionValue);
-            //enviar precio
-            //var metricValue = this.model.toJSON().precio_venta;
-            //ga('set', 'metric1', metricValue);
-            //var dimensionValue = metricValue;
-            //ga('set', 'dimension3', dimensionValue);
-            //enviar q tipo de pagina
-            //var dimensionValue = 'paroduct';
-            //ga('set', 'dimension2', dimensionValue);
+            var id_producto = this.model.toJSON().id;
+            var full_name = this.model.toJSON().full_name;
+            var valor = this.model.toJSON().precio_venta;            
+            var url = Backbone.history.getFragment();
 
-            ga('displayfeatures.send',{
-                'dimension1':this.model.toJSON().id,
-                'dimension2':this.model.toJSON().full_name,
-                'dimension3':this.model.toJSON().precio_venta,
-                'dimension5':'product',
-                'metric1':this.model.toJSON().precio_venta,
+            ga('set', 'dimension1', id_producto);            
+            ga('set', 'dimension2', full_name);
+            ga('set', 'dimension3', valor);
+            ga('send', {'hitType': 'pageview','page':'/'+url});
 
-            })
             window.prerenderReady = true;
 
         }

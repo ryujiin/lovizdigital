@@ -106,12 +106,7 @@ define([
             })
         },
         finalizorender:function () {
-            //enviar pagina a google analitycs
-            var dimensionValue = 'home_page';
-            if (this.model.toJSON().front!==true) {
-                dimensionValue = 'static_page';
-            };            
-            
+            //enviar pagina a google analitycs            
             ga('displayfeatures.send',{'dimension2':dimensionValue})
             window.prerenderReady = true;
 

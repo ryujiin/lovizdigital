@@ -29,15 +29,21 @@ define([
         },
 
         initialize:function(){
-            this.bind('all', this.trackPageview);
+            //this.bind('all', this.trackPageview);
         },
         root:function(){
             $('body').removeClass();            
             Pages.buscar_page('front');
+            var url = Backbone.history.getFragment();
+            ga('set', 'dimension2', 'home');
+
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         perfil:function(){
             $('body').removeClass();            
             PageUser.render();
+            var url = Backbone.history.getFragment();
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         productoSingle:function (slug) {
             $('body').removeClass();   
@@ -51,13 +57,19 @@ define([
 
             console.log('carro');
             CarroPage.render();
+            var url = Backbone.history.getFragment();
+            ga('set', 'dimension2', 'cart');
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         catalogo:function (slug) {
             $('body').removeClass();            
             $('body').addClass('catalogo');
             var coincidencia = Categorias.findWhere({slug:slug});
+
             if (coincidencia) {
                 CatalogoPage.render(coincidencia,Categorias);
+                var url = Backbone.history.getFragment();
+                ga('send', {'hitType': 'pageview','page':'/'+url});
             }else{
                 this.notFound();
             }           
@@ -65,18 +77,24 @@ define([
         ingresar:function () {
             $('body').removeClass();            
             PageUser.render();
+            var url = Backbone.history.getFragment();
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         procesar_compra:function () {
             $('body').removeClass();              
-            PageProcesar.verificar_render();
+            PageProcesar.verificar_render();            
         },
         pagina_statica:function (page_slug) {
             Pages.buscar_page(page_slug);
+            var url = Backbone.history.getFragment();
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         felicidades:function () {
             ga('displayfeatures.send',{
                 'dimension2':dimensionValue,
             })
+            var url = Backbone.history.getFragment();
+            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         trackPageview:function () {
             var url = Backbone.history.getFragment();

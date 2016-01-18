@@ -103,6 +103,8 @@ define([
                 this.model.set('paso_actual',3)
             };
             ga('set', 'dimension2', dimensionValue);
+            var url = Backbone.history.getFragment();            
+            ga('send', {'hitType': 'pageview','page':'/'+url});
             window.prerenderReady = true;
         },
         finalizo:function () {

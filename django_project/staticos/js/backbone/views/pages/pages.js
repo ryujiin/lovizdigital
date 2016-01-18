@@ -107,7 +107,6 @@ define([
         },
         finalizorender:function () {
             //enviar pagina a google analitycs            
-            ga('displayfeatures.send',{'dimension2':dimensionValue})
             window.prerenderReady = true;
 
         }

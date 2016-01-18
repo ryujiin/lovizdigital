@@ -23,15 +23,58 @@ a
 			background-image url('../imgs/ajaxloader.gif')			
 		.text_ajax
 			background-image url('../imgs/letrajax.gif')						
+.bloque_sus_up
+	display none;
+	position fixed
+	bottom 0
+	background rgba(0,0,0,0.9)
+	color #fff
+	width 100%
+	padding 10px
+	z-index 10
+	.cerrar
+		position absolute
+		width 25px
+		height 25px
+		top -35px
+		right 20%
+		color #000
+		cursor pointer
+		span
+			border 2px solid #000
+			border-radius 20px
+			padding 3px
+			
+	.contenedor
+		width 500px
+		margin 0 auto
+		text-align center
+		position relative			
+		form
+			position relative
+			.submit
+				position absolute
+				padding 6px
+				top 0
+				right 0
+				background #111
+				border none
+		h2
+			font italic 25px Georgia
+			text-transform none
 .box_contraste
 	background #111
 	color #fff
 	a
 		color #fff
-.label
-	color #111
 .clear_both
 	clear both
+img
+	width 100%
+.enlinea
+	display inline-block
+.label
+	color #111
 
 nav	.nav-pills
 	a
@@ -39,17 +82,13 @@ nav	.nav-pills
 		&:hover,&.active,&:focus
 			background none
 			text-decoration underline
-img
-	width 100%
-.pull-right
-	float right
 .overflow
 	overflow hidden
+.pull-right
+	float right
 p.bg-warning
 	padding 10px
 
-.enlinea
-	display inline-block
 .modal-content
 	border-radius 0px
 .sidebar-overlay

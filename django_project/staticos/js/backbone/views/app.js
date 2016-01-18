@@ -11,8 +11,10 @@ define([
     '../views/carro/mini_carro',
     '../views/app/menu',
     '../views/app/bloque_suscrito',
-    '../models/suscrito'
-], function ($, _, Backbone,UserModel,MenuCollection,UserLinkView,CarroModel,MiniCarro,Menu,BloqueSuscrito,ModelSuscrito) {
+    '../models/suscrito',
+    '../views/app/block_suscribir_up',
+
+], function ($, _, Backbone,UserModel,MenuCollection,UserLinkView,CarroModel,MiniCarro,Menu,BloqueSuscrito,ModelSuscrito,BloqueSusUP) {
     'use strict';
 
     var AppView = Backbone.View.extend({
@@ -37,6 +39,7 @@ define([
             });
             this.addMenus();
             this.addBloqueSuscrito();
+            this.addbloque_sus_up();
         },
         navegar:function(e){
             e.preventDefault();
@@ -77,6 +80,13 @@ define([
             }else{
                 window.location.href="/login/facebook/";
             }   
+        },
+        addbloque_sus_up:function () {
+            var bloqueup = new BloqueSusUP({
+                model:new ModelSuscrito(),
+            });
+            this.$el.append(bloqueup.$el);
+            bloqueup.aparecer();
         }
 
     });

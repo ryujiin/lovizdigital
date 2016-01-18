@@ -36,6 +36,11 @@ class MenuViewsets(viewsets.ReadOnlyModelViewSet):
 		queryset = Menu.objects.filter(activo=True).order_by('-pk')
 		return queryset
 
+def sitemap(request):
+	return render(request, 'sitemap.html', {"foo": "bar"},
+        content_type="application/xhtml+xml")
+
+
 
 class TiendaView(TemplateView):
 	template_name = "index.html"

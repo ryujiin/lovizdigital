@@ -4,6 +4,7 @@ from views import *
 
 urlpatterns = patterns('',
 	url(r'^$',TiendaView.as_view() , name='index'),
+	url(r'^sitemap\.xml$', 'cmsweb.views.sitemap',name='sitemap'),
 	url(r'^ingresar/$',TiendaView.as_view() , name='ingresar'),
 	url(r'^catalogo/',TiendaView.as_view() , name='catalogo'),
 	url(r'^producto/',TiendaView.as_view() , name='producto'),
@@ -12,4 +13,5 @@ urlpatterns = patterns('',
 	url(r'^procesar-compra/',TiendaView.as_view() , name='procesar'),
 	url(r'^sp/',TiendaView.as_view() , name='page_static'),
 	url(r'^felicidades/$','pedido.views.felicidades' , name='felicidades'),
+
 )

@@ -32,7 +32,10 @@ class CarroSerializer(serializers.ModelSerializer):
 		return "%0.2f" %(envio)
 
 	def get_pedido(self,obj):
-		pedido = obj.pedido.pk
+		if obj.pedido:
+			pedido = obj.pedido.pk
+		else:
+			pedido = None
 		return pedido
 
 class LineaSerializer(serializers.ModelSerializer):

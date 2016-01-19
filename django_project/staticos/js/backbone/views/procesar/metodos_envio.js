@@ -28,6 +28,7 @@ define([
             this.collection.fetch();
         },
         addMetodo:function (modelo) {     
+            debugger;
             var metodo = new Metodo({model:modelo});
             this.$el.append(metodo.$el);
         },

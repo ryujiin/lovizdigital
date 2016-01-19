@@ -85,7 +85,19 @@ class Suscrito(models.Model):
 
 	def save(self, *args, **kwargs):
 		super(Suscrito, self).save(*args, **kwargs)
-	
+		sg = sendgrid.SendGridClient(settings.SENDGRID_API_KEY)
+		message = sendgrid.Mail()
+		message.add_to(self.email)
+		message.set_subject('Bienvenida a Loviz DelCarpio. Descuento para tu proxima compra')		
+		message.set_text('1')
+		message.set_html('2')
+		message.set_from('Luis Lopez <luis_lopez@lovizdc.com>')
+
+		message.add_filter('templates', 'enable', '1')
+		message.add_filter('templates', 'template_id', '8b156242-0ca1-4f8f-a124-816297cbb2c1')
+
+		status, msg = sg.send(message)
+
 
 class Favorito(models.Model):
 	usuario = models.OneToOneField(User,null=True,blank=True,unique=True)

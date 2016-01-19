@@ -52,7 +52,6 @@ define([
         objtener_model:function () {
             var self = this;
             var pedido_id = CarroModel.toJSON().pedido;
-            debugger;
             if (pedido_id) {
                 this.model.id= pedido_id;
                 this.model.fetch().done(function () {

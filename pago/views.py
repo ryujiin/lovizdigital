@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest,Http404,Htt
 from carro.models import Carro
 from utiles.models import TipoCambio
 from pedido.models import Pago,MetodoPago,Pedido
+from cliente.models import Direccion
 import json
 import stripe
 import urllib2
@@ -170,7 +171,16 @@ def get_pago_contraentrega(request):
 	else:
 		raise Http404("No Hay Pedido")
 
-
-
 def get_stripe_key(request):
 	return HttpResponse(json.dumps({'key':settings.STRIPE_PUBLIC_KEY}),content_type='application/json;charset=utf8')
+
+def definir_pago(request):
+	valor = False
+	if request.POST:
+		try:
+			direccion = Direccion.objects.get(pk=request.POST['direccion']);						
+			if direccion.ubigeo.parent.name == 'Lima':
+				valor = True
+		except Direccion.DoesNotExist:
+			valor = False
+	return HttpResponse(json.dumps({'valor':valor}),content_type='application/json;charset=utf8')

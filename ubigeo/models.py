@@ -19,7 +19,11 @@ class Ubigeo(models.Model):
         return self.qualified_name(self)
 
     def __unicode__(self):
-        return self.name
+        nombre = self.name
+        if self.parent:
+            parent = self.parent.name
+            nombre = '%s - %s' %(parent,self.name)
+        return nombre
 
     @property
     def human_political_division(self,):

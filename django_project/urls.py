@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     #pagos
     url(r'^pago_contraentrega/','pago.views.get_pago_contraentrega',name='pago_contraentrega'),    
+    url(r'^definir_pago/','pago.views.definir_pago',name='definir_pago'),    
     url(r'^retorno_paypal/','pago.views.retorn_paypal',name='retorn_paypal'),    
     url(r'^pago/stripe/$','pago.views.stripe_paymet',name='pago_stripe'),
     url(r'^get_stripe_key/$','pago.views.get_stripe_key',name='get_key'),    

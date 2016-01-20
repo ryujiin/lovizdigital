@@ -67,12 +67,11 @@ class UbigeoSerializer(serializers.ModelSerializer):
 class RegionViewset(viewsets.ReadOnlyModelViewSet):
     model = Ubigeo
     serializer_class = UbigeoSerializer
-    queryset = Ubigeo.objects.filter(parent=None).order_by('name')
+    queryset = Ubigeo.objects.all()
+
     def list(self,request):
         region = request.GET.get('region')
         queryset = Ubigeo.objects.filter(parent=None).order_by('name')
-        if provincia:
-            queryset = Ubigeo.objects.filter(parent=region).order_by('name')
         serializer = UbigeoSerializer(queryset, many=True)
         return Response(serializer.data)
 

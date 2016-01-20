@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from models import * 
 from carro.models import Carro,LineaCarro
+from pedido.models import Pedido
 
 class PedidoViewSet(viewsets.ModelViewSet):
 	serializer_class = PedidoSerializer
@@ -27,7 +28,22 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
 class MetodoEnvioViewSet(viewsets.ModelViewSet):
 	serializer_class = MetodoEnvioSerializer
-	queryset = MetodoEnvio.objects.all()
+
+	def get_queryset(self):
+		if self.request.user.is_authenticated():
+			try:
+				total = Carro.objects.get(propietario=self.request.user,estado="Abierto")
+			except Carro.DoesNotExist:
+				raise Http404
+			print int(total.total_carro())
+			if int(total.total_carro())>50:
+				#si es menor q 50
+				queryset = MetodoEnvio.objects.filter(grupo=0)
+			else:
+				queryset = MetodoEnvio.objects.filter(grupo=1)
+		else:
+			queryset = MetodoEnvio.objects.filter(grupo=1)
+		return queryset
 
 
 @csrf_exempt

@@ -66,6 +66,7 @@
 			<div class="error_metodo hidden">
 				<p class="bg-warning text-warning">Debe seleccionar un metodo de envio</p>
 			</div>
+			<div class="texto_informativo"></div>
 			<div class="lista_metodos">
 			</div>			
 		</div>
@@ -79,7 +80,7 @@
 	<div class="radio">
 		<label>
 			<input type="radio" name="selecion_metodo" value="{{id}}">
-			{{nombre}} {{descripcion}}<strong>
+			<strong>{{nombre}}</strong> - {{descripcion}}<strong>
 			(S/.{{precio}}) {%if precio == 0.00%}<span class="red">Gratis!!</span>{%endif%}
 			</strong>
 		</label>
@@ -123,7 +124,7 @@
 			    <li role="presentation">
 			    	<a href="#paypal" aria-controls="paypal" role="tab" data-toggle="tab" data-selector="paypal">Paypal</a>
 			    </li>
-			    <li role="presentation">
+			    <li role="presentation" class="link_contra_entrega">
 			    	<a href="#entrega" aria-controls="entrega" role="tab" data-toggle="tab" data-selector="contraentrega">Contra entrega</a>
 			    </li>
 			  </ul>

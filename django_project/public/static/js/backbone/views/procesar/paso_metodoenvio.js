@@ -97,7 +97,7 @@ define([
             this.model.set({metodoenvio:metodo});
         },
         verificar_next:function () {
-           
+                       
             var datos = this.model.toJSON();
             if (datos.direccion_envio!==null && datos.metodoenvio!==null) {
                 this.$('.btn-next').removeClass('btn-disban');

@@ -8,8 +8,9 @@ define([
     '../../views/procesar/pago_tarjeta',
     '../../views/procesar/pago_paypal',
     '../../views/procesar/pago_contraentrega',
+    '../../models/ubigeo',    
     'bootstrap',
-], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal,ContraEntrega) {
+], function ($, _, Backbone, swig,PagoTarjeta,PagoPaypal,ContraEntrega,Ubigeo) {
     'use strict';
 
     var PasoPagoView = Backbone.View.extend({
@@ -75,10 +76,19 @@ define([
             })
         },
         addContraEntrega:function () {
-            this.vistaContraEntrega = new ContraEntrega({
-                el:this.$('#entrega'),
-                model:this.model,
-            })
+            var self = this;
+            $.post('/definir_pago/',{direccion:this.model.toJSON().direccion_envio})
+            .done(function (data) {
+                if (data.valor == true) {
+                    self.vistaContraEntrega = new ContraEntrega({
+                        el:self.$('#entrega'),
+                        model:self.model,
+                    })
+                }else{
+                    $('li.link_contra_entrega').hide();
+                }
+            });
+            
         },
         verificar_card:function () {
             this.vistaTarjeta.verificar();

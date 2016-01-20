@@ -52,7 +52,6 @@ define([
         objtener_model:function () {
             var self = this;
             var pedido_id = CarroModel.toJSON().pedido;
-            debugger;
             if (pedido_id) {
                 this.model.id= pedido_id;
                 this.model.fetch().done(function () {
@@ -63,7 +62,6 @@ define([
             }
         },
         crear_paso_identificar:function () {
-
             this.paso_identificar = new PasoIdentificar({
                 el:this.$('.paso_identificar'),
                 model:this.model,

@@ -62,7 +62,6 @@ define([
             }
         },
         crear_paso_identificar:function () {
-
             this.paso_identificar = new PasoIdentificar({
                 el:this.$('.paso_identificar'),
                 model:this.model,

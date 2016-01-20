@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from cliente.models import *
+from ubigeo.models import *
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
 from django.template.defaultfilters import slugify
@@ -80,6 +81,8 @@ class MetodoEnvio(models.Model):
 	nombre = models.CharField(max_length=100)
 	descripcion = models.TextField(blank=True,null=True)
 	precio = models.DecimalField(decimal_places=2,max_digits=12)
+	restricciones = models.ManyToManyField(Ubigeo,blank=True)
+	grupo = models.PositiveIntegerField(default=0)
 
 	def __unicode__(self):
 		return "%s - S/.%s" %(self.nombre, self.precio)

@@ -126,7 +126,8 @@ class LineaCarro(models.Model):
 		return genero
 
 	def __unicode__(self):
-		return "linea de %s con %s articulos de %s" %(self.carro.propietario,self.cantidad,self.variacion)
+		propietario = slugify(self.carro.propietario) 
+		return "linea de %s con %s articulos de %s" %(propietario,self.cantidad,self.variacion)
 
 	def save(self, *args, **kwargs):
 		if self.cantidad == 0:

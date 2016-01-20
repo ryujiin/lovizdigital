@@ -11,6 +11,7 @@ from catalogo.models import *
 from django.contrib.auth.models import User as User
 from pedido.models import Pedido
 from cliente.models import CuponesCliente
+from django.template.defaultfilters import slugify
 
 from decimal import Decimal
 
@@ -33,7 +34,8 @@ class Carro(models.Model):
 	cupon = models.OneToOneField(CuponesCliente,blank=True,null=True)
 	
 	def __unicode__(self):
-		return "Carro de %s - %s" %(self.propietario,self.estado)
+		propietario = slugify(self.propietario)
+		return "Carro de %s - %s" %(propietario,self.estado)
 
 	def all_lineas(self):
 		return LineaCarro.objects.filter(carro=self)

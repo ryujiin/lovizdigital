@@ -63,6 +63,7 @@ define([
                             self.save().done(function(data){
                             });
                         }else{
+                            
                         }
                     }).fail(function(){
                         self.set({propietario:UserModel.id});                        

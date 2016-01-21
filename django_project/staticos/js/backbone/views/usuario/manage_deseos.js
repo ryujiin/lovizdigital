@@ -16,9 +16,7 @@ define([
         events: {
         },
         initialize: function () {
-            this.render();
-            debugger;
-            
+            this.render();            
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));

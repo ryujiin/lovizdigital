@@ -77,13 +77,13 @@ class Carro(models.Model):
 				self.pedido = pedido
 
 		super(Carro, self).save(*args, **kwargs)		
-		if self.estado!='Fusionada':
+		if self.estado=='Abierto':
 			if self.propietario:
 				carros = Carro.objects.filter(propietario=self.propietario,estado=self.ABIERTO).order_by('-pk')
 			else:
 				carros = Carro.objects.filter(sesion_carro=self.sesion_carro,estado=self.ABIERTO).order_by('-pk')
 			#carros = Carro.objects.filter(Q(propietario=self.propietario) | Q(sesion_carro=self.sesion_carro)).filter(estado=self.ABIERTO).order_by('-pk')
-			if carros:				
+			if carros:
 				for carro in carros:
 					if self.pk != carro.pk:
 						lineas = LineaCarro.objects.filter(carro=carro.pk)
@@ -93,9 +93,17 @@ class Carro(models.Model):
 								linea.carro = self
 								linea.save()
 						carro.estado = self.FUCIONADA
+						print carro.estado
 						carro.save()
 
-
+	def fucionar_carros(carro_old):
+		carro_old.estado = self.FUCIONADA
+		lineas_old = LineaCarro.objects.filter(carro=carro_old.pk)
+		if lineas:
+			for linea in lineas:
+				linea.carro = self
+				linea.save()
+		carro_old.save()
 
 class LineaCarro(models.Model):
 	carro = models.ForeignKey(Carro,related_name="lineas")

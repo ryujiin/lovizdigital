@@ -40,6 +40,10 @@ define([
             ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         perfil:function(){
+            if ($.localStorage.get('pagina_procesar')===true) {
+                $.localStorage.remove('pagina_procesar');
+                this.navigate('procesar-compra/',{trigger: true});
+            };
             $('body').removeClass();            
             PageUser.render();
             var url = Backbone.history.getFragment();
@@ -74,7 +78,7 @@ define([
                 this.notFound();
             }           
         },
-        ingresar:function () {
+        ingresar:function () {            
             $('body').removeClass();            
             PageUser.render();
             var url = Backbone.history.getFragment();

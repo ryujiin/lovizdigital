@@ -52,17 +52,18 @@ define([
                     this.fetch({
                         data:$.param({c_f:carro})
                     }).done(function (data) {
-                        self.set({propietario:UserModel.id});
-                        self.save()
+                        debugger;
+                        //self.set({propietario:UserModel.id});
+                        //self.save()
                     })                    
                 }else{
-                    this.fetch().done(function(data){            
-                        
+                    this.fetch().done(function(data){      
                         if (data.propietario===null) {
                             self.set({propietario:UserModel.id});
                             self.save().done(function(data){
                             });
                         }else{
+
                         }
                     }).fail(function(){
                         self.set({propietario:UserModel.id});                        
@@ -72,8 +73,7 @@ define([
         },
         buscar_carro:function () {
             var self = this;
-            if (UserModel.id) {
-                
+            if (UserModel.id) {    
                 this.buscar_carrologin();
             }else{
                 var galleta = this.get_session();

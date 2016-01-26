@@ -33,7 +33,6 @@ define([
             this.$el.html(this.template(this.model.toJSON()));
         },
         verificar_compra:function (vista) {
-            debugger;
             var modeloCarro = CarroModel;
             var self = this;
             var carro = this.model.toJSON().carro;
@@ -41,9 +40,7 @@ define([
             if (carro) {
                 this.comprar(vista);
             }else{
-                debugger;
                 modeloCarro.save().done(function(data){
-                    debugger                    
                     $.localStorage.set({carro:data.id});
                     self.model.set({carro:data.id});
                     self.comprar(vista);

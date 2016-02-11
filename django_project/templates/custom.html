@@ -1,0 +1,33 @@
+{% load static from staticfiles %}
+
+{% load django_seo_js %}
+
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>
+		Loviz DelCarpio | Donde encontras los mejores pantuflas, sandalias y calzado.
+	</title>
+
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta name="created" content="{% now "jS M Y h:i" %}" />
+    <meta name="description" content="Loviz DelCarpio® , Encontraras lo mejor en pantuflas, sandalias, botas, flats y demas. Envio Gratis para todo el peru por compras mayores a S/.50.00" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="prerender-header" content="Location: https://lovizdc.com">
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}" />
+    <link rel="stylesheet" href="{% static "css/app2.css" %}" />
+
+    {% seo_js_head %}
+  
+</head>
+<body id="default" class="mobile-layout">
+  <h1>Custom</h1>
+  <canvas id="lienzo" width="600" height="400"></canvas>
+  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js"></script>
+  <script src="{% static "js/canvas/canvas.js" %}"></script>
+
+</body>
+</html>

@@ -45,7 +45,7 @@ define([
                 this.navigate('procesar-compra/',{trigger: true});
             };
             $('body').removeClass();            
-            PageUser.render();
+            PageUser.verificar_login();
             var url = Backbone.history.getFragment();
             ga('send', {'hitType': 'pageview','page':'/'+url});
         },

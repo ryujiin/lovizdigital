@@ -77,7 +77,6 @@ define([
             if (CarroModel.toJSON().lineas>0) {
                 $.localStorage.set('facebook',true);
                 if (Backbone.history.fragment==='procesar-compra/') {
-                    debugger;
                     $.localStorage.set('pagina_procesar',true);
                 };
                 window.location.href="/login/facebook/";

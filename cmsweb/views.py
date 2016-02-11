@@ -47,3 +47,6 @@ class TiendaView(TemplateView):
 
 class VerificarView(TemplateView):
 	template_name = "veri.html"
+
+class CustomView(TemplateView):
+	template_name = "custom.html"

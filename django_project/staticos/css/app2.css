@@ -1681,6 +1681,9 @@ h2 .linea {
   font-size: 4.5em;
   font-weight: 400;
 }
+canvas {
+  background: #f4f4f4;
+}
 @media (min-width: 480px) {
   header .header-mobil .logo-mobil {
     width: 30%;

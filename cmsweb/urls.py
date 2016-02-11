@@ -13,5 +13,6 @@ urlpatterns = patterns('',
 	url(r'^procesar-compra/',TiendaView.as_view() , name='procesar'),
 	url(r'^sp/',TiendaView.as_view() , name='page_static'),
 	url(r'^felicidades/$','pedido.views.felicidades' , name='felicidades'),
+	url(r'^custom/$',CustomView.as_view(), name='custom'),
 
 )

@@ -28,24 +28,31 @@ define([
         events: {},
 
         initialize: function () {
+            this.listenTo(this.model, 'change', this.verificar_login);
         },
 
         render: function () {
-            this.verificar_login();
+            this.$el.html(this.template(this.model.toJSON()));
             this.$el.removeClass();            
             this.addBread();
             this.change_head();
             this.finalizo();
         },
         verificar_login:function () {
-            if (this.model.id) {
-                this.$el.html(this.template(this.model.toJSON()));
-                this.crear_modales();
-            }else{
-                this.template = swig.compile($('#page_user_Anonimo').html())
-                this.$el.html(this.template(this.model.toJSON()));
-                this.agregarForms();
-            }
+            if (Backbone.history.fragment=="usuario/perfil/") {
+                debugger;
+                this.render();
+            };
+            debugger;
+            //debugger;
+            //if (this.model.id) {
+                //this.$el.html(this.template(this.model.toJSON()));
+                //this.crear_modales();
+            //}else{
+                //this.template = swig.compile($('#page_user_Anonimo').html())
+                //this.$el.html(this.template(this.model.toJSON()));
+                //this.agregarForms();
+            //}
         },
         agregarForms:function () {
             var formlogin = new FormLogin({

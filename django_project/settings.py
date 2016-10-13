@@ -23,7 +23,7 @@ location = lambda x: os.path.join(
 SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     #'paypal_express_checkout',
     'paypal.standard.ipn',
+    'corsheaders',
     #'storages',
     #'boto',
     'carro',
@@ -63,6 +64,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -218,6 +220,9 @@ MIDDLEWARE_CLASSES = (
 INSTALLED_APPS += ('django_seo_js',)
 
 SEO_JS_PRERENDER_TOKEN = config.SEO_JS_PRERENDER_TOKEN
+
+#Cros over Cambiarlo en el server
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 try:

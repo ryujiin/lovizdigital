@@ -11,7 +11,7 @@ class DireccionSerilizer(serializers.ModelSerializer):
 class UsuarioSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ('id','username','first_name','last_name','email')
+		fields = ('id','username','first_name','last_name','email','is_staff','is_superuser')
 
 class PerfilUSerSerializer(serializers.ModelSerializer):
 	email = serializers.SerializerMethodField('get_email')
@@ -35,7 +35,7 @@ class PerfilUSerSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model=User
-		fields = ('username','password', 'first_name', 'last_name', 'email')
+		fields = ('username','password', 'first_name', 'last_name', 'email','is_staff')
 		write_only_fields = ('password',)
 
 	def restore_object(self, attrs, instance=None):

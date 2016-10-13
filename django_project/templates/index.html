@@ -40,74 +40,10 @@
       <!-- End Google Analytics -->
 
 </head>
-<body id="default" class="mobile-layout">
-
-   
+<body id="default" class="mobile-layout">  
 	<div id="header">
       <header>
-        <section class="header-mobil box_contraste">
-          <a href="/" class="logo-mobil link">
-            <h2> Loviz DC </h1>
-          </a>
-          <a href="#" class="menu-mobil-icono no-link">
-            <span class="icon-menu"></span>
-            <span class="texto">Menu</span>
-          </a>          
-
-          <a href="/carro/" class="carro-mobil mini-cart link">
-          
-          <a href="/usuario/perfil/" class="cuenta-mobil link" >
-            <span class="icon-user"></span>
-            <span class="texto">Cuenta</span>
-          </a>
-          
-          </a>
-        </section>
-        <section class="header-utility box_contraste container-fluid">
-          <div class="row">
-            <section class="header-utility-shipping col-md-12"></section>
-            <div id="header-utility-shipping" class="col-md-7">
-              <h6>Envio Gratis para compras mayores a S/.50.00</h6>
-            </div>
-            <nav class="secondary-nav col-md-5">
-              <ul class="menu-utilitys nav nav-pills pull-right">
-                <li><a href="/">Lista Deseos</a></li>
-                <li><a href="/">Chat en vivo</a></li>
-                <li><a href="/">Ayuda</a></li>
-              </ul>
-              <ul id="menu-link-user" class="menu-utilitys-user nav nav-pills pull-right"></ul>
-            </nav>
-          </div>
-        </section>
-        <section class="header-global">
-          <div class="container-fluid">
-            <div class="inner-container row">
-              <h1 class="primary-logo"><a href="/" class="link"><span>Loviz DelCarpio</span></a></h1>
-              <div id="navigation" class="">
-                <nav class="primary-nav">
-                  <ul class="nav nav-pills">
-                    <li><a href="/catalogo/sandalias-mujer/" class="link">Sandalias</a></li>
-                    <li><a href="/catalogo/pantuflas-mujer/" class="link">Pantuflas</a></li>
-                    <!--
-                    <li><a href="/catalogo/nino/" class="link">Niños</a></li>
-                    <li><a href="/catalogo/nina/" class="link">Niñas</a></li>
-                  -->
-                    <li><a href="/catalogo/ofertas/" class="link">Ofertas</a></li>
-                    <li><a href="/catalogo/novedades/" class="link">Novedades</a></li>
-                  </ul>
-                </nav>
-              </div>
-              <div class="right-nav-btns">
-                <div class="mini-cart">                  
-                </div>
-                <div id="mini-Listas"></div>
-                <div id="nav-sidebar-user" class="nav-sidebar top_side">
-                  <!--include ../sidebar_user/template.jade-->
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {% include "includes/header.html"%}        
       </header>
     </div>
     <div id="wrapper">
@@ -118,58 +54,7 @@
         </div>
       </div>      
       <div id="footer">
-        <footer>
-            <div class="container">
-              <div class="row">
-                <div id="footer_colmna1" class="col-md-4 footer-block">
-                  <div id="suscribirse" class="footer-email">
-                    <h4>Se el Primero en saber de loviz delcarpio</h4>
-                    <div id="submit_email_wrapper" class="email_container">
-                      <form id="submit_form_email">
-                        <div class="email_input">
-                          <input class="form-control" type="email" maxlength="50" placeholder="Ingresar tu correo">
-                        </div>
-                        <div class="email_submit">
-                          <button type="submit" class="boton_email_subtit">
-                            <span class="glyphicon glyphicon-menu-right"></span>
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <div id="footer_colmna2"  class="col-md-3 footer-block-menu">                  
-                </div>
-                <div id="footer_colmna3"  class="col-md-3 footer-block-menu" >
-                </div>
-                <div id="footer_colmna4"  class="col-md-2 footer-block-menu">
-                </div>
-                <div id="footer_colmna5"  class="col-md-12 footer-colmna5">
-                  <div class="bloque_social">
-                    <ul class="">
-                      <li>
-                        <a href="https://www.facebook.com/lovizdelcarpio/">
-                          <span class="icon-facebook"></span>
-                        </a>
-                      </li>
-                      <li><span class="icon-twitter"></span></li>
-                      <li><span class="icon-instagram"></span></li>
-                      <li><span class="icon-youtube3"></span></li>
-                      <li><span class="icon-google-plus"></span></li>
-                      <li><span class="icon-pinterest"></span></li>
-                    </ul>
-                  </div>
-                  <div class="pie_pagina">
-                    <ul>
-                      <li class="derechos">
-                        © 2015 Loviz DelCarpio Boutique. Todos los Derechos Reservados
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </footer>
+        {% include "includes/footer.html"%}
       </div>
     </div>
     <div class="modales">

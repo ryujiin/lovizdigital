@@ -3,7 +3,10 @@ from django.contrib import admin
 
 import settings
 
+from rest_framework_jwt.views import obtain_jwt_token,verify_jwt_token
+
 from catalogo import views
+from catalogo import views as oficina_views
 from carro.views import LineasViewsets,CarroViewsets
 from cmsweb.views import CarruselViewsets,PageViewsets,MenuViewsets,VerificarView
 from utiles.views import ColorViewsets,TallasViewsets
@@ -28,8 +31,10 @@ router.register(r'metodos_envio',MetodoEnvioViewSet,'mentodos_envios')
 router.register(r'comentarios',ComentarioViewSet,'comentarios')
 router.register(r'comentarioimgs',ComentarioImagenViewSet,'comentarios_imagenes')
 router.register(r'cliente/suscrito',SuscritoViewset,'suscritos')
-router.register(r'oficina/mayoristas',MayoristaViewset,'mayoristas')
-router.register(r'oficina/catalogo',views.CatalogoOficinaViewsets,'Catalogo_oficina')
+
+router_oficina = DefaultRouter();
+router_oficina.register(r'catalogo/producto',oficina_views.ProductosOficinaViewsets,'productos_oficina')
+router_oficina.register(r'catalogo/productoSingle',oficina_views.ProductoSingleEditableViewsets,'producto_single')
 
 
 urlpatterns = [
@@ -39,7 +44,8 @@ urlpatterns = [
     url(r'^api/user/', include('cliente.urls')),
     url(r'^ajax/crear/', 'cliente.views.nuevo_usuario', name='nuevo_usuario'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
+    url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api-token-verify/', verify_jwt_token),
     url(r'^salir/$','cliente.views.salir',name='salir'),
     url(r'^login/$','cliente.views.ingresar',name='salir'),
     #pagos
@@ -50,9 +56,10 @@ urlpatterns = [
     url(r'^get_stripe_key/$','pago.views.get_stripe_key',name='get_key'),    
     url(r'^pago/paypal/', 'pago.views.paypal_paymet',name = 'pago_paypal'),    
     url(r'^hardcode/get/paypal/', include('paypal.standard.ipn.urls')),
-    #url(r'^google66059436e2b166a0.html/$',VerificarView.as_view(),name='verificar'), 
-    url(r'^oficina/',include('oficina.urls')),    
+    #api oficina
+    url(r'^api_oficina/',include(router_oficina.urls)),
     url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^oficina/',include('oficina.urls')),    
     url(r'^',include('cmsweb.urls')),
 
 ]

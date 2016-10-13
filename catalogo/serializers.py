@@ -154,3 +154,17 @@ class ProductoSingleSereializer(serializers.ModelSerializer):
 	def get_num_comentarios(self,obj):
 		return Comentario.objects.filter(producto=obj.id).count()
 
+#Serializador Oficina
+class ProductoListaSerializer(serializers.ModelSerializer):
+	thum = serializers.SerializerMethodField()
+	class Meta:
+		model = Producto
+		fields = ('id','nombre','full_name','thum')
+
+	def get_thum(self,obj):
+		thum = obj.get_thum().url
+		return thum
+
+class ProductoSingleEditable(serializers.ModelSerializer):
+	class Meta:
+		model = Producto

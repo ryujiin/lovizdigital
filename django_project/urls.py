@@ -16,7 +16,9 @@ from cliente.views import DireccionViewsets,ComentarioViewSet,MayoristaViewset,C
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'catalogo', views.CatalogoViewsets,'catalogo')
+router.register(r'v2/productos', views.CatalogoViewsets,'productos')
+
+#router.register(r'catalogo', views.CatalogoViewsets,'catalogo')
 router.register(r'categoria', views.CategoriaViewsets,'categorias')
 router.register(r'carro/lineas',LineasViewsets,'lineas')
 router.register(r'cmsweb/carrusel',CarruselViewsets,'carruseles')

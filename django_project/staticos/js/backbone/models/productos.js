@@ -7,7 +7,7 @@ define([
     'use strict';
 
     var ProductosModel = Backbone.Model.extend({
-        urlRoot: '/api/catalogo/',
+        urlRoot: '/api/v2/productos/',
 
         url: function(){
             var base = this.urlRoot;

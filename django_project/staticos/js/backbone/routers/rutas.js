@@ -11,6 +11,7 @@ define([
     '../views/procesar/page_procesar',
     '../views/usuario/page_user',
     '../views/app/page_error',
+
 ], function ($, Backbone,CarroPage,Pages,CatalogoPage,ProductoSingle,Categorias,PageProcesar,PageUser,PageError) {
     'use strict';
 
@@ -31,13 +32,8 @@ define([
         initialize:function(){
             //this.bind('all', this.trackPageview);
         },
-        root:function(){
-            $('body').removeClass();            
+        root:function(){         
             Pages.buscar_page('front');
-            var url = Backbone.history.getFragment();
-            ga('set', 'dimension2', 'home');
-
-            ga('send', {'hitType': 'pageview','page':'/'+url});
         },
         perfil:function(){
             if ($.localStorage.get('pagina_procesar')===true) {

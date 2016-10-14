@@ -8,7 +8,7 @@ define([
     'use strict';
 
     var ProductosCollection = Backbone.Collection.extend({
-    	url: '/api/catalogo/',
+    	url: '/api/v2/productos/',
 
         model: ProductosModel,
     });

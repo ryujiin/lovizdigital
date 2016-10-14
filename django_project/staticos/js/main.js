@@ -47,7 +47,7 @@ require([
     '../js/backbone/routers/rutas',
     '../js/backbone/views/app',
     '../js/backbone/collections/categoria',
-], function (Backbone,Rutas,App,Categorias,ProductosTotal) {
+], function (Backbone,Rutas,App,Categorias) {
     var app = new App(Rutas);
 
     /* Views */
